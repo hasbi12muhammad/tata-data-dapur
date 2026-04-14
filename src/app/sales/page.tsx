@@ -60,13 +60,13 @@ export default function SalesPage() {
     >
       <Card>
         <CardHeader>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[#7C6352]">
             Sales history with auto-calculated profit
           </p>
         </CardHeader>
         <CardBody className="p-0">
           {isLoading ? (
-            <div className="py-12 text-center text-sm text-slate-400">
+            <div className="py-12 text-center text-sm text-[#B88D6A]">
               Loading...
             </div>
           ) : !sales?.length ? (
@@ -84,26 +84,26 @@ export default function SalesPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  <tr className="border-b border-[#E5DACA]">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Recipe
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Qty
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Sell Price
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       HPP
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Profit
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide hidden sm:table-cell">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Margin
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide hidden md:table-cell">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden md:table-cell">
                       Date
                     </th>
                   </tr>
@@ -117,33 +117,33 @@ export default function SalesPage() {
                     return (
                       <tr
                         key={s.id}
-                        className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
+                        className="border-b border-[#EDE4CF] hover:bg-[#F5EFE0] transition-colors"
                       >
-                        <td className="px-6 py-3 font-medium text-slate-800">
+                        <td className="px-6 py-3 font-medium text-[#2C1810]">
                           {(s.recipe as any)?.name ?? "—"}
                         </td>
-                        <td className="px-6 py-3 text-right tabular-nums text-slate-600">
+                        <td className="px-6 py-3 text-right tabular-nums text-[#5C4535]">
                           {s.quantity_sold}
                         </td>
-                        <td className="px-6 py-3 text-right tabular-nums text-slate-700">
+                        <td className="px-6 py-3 text-right tabular-nums text-[#4A3728]">
                           {formatCurrency(s.selling_price)}
                         </td>
-                        <td className="px-6 py-3 text-right tabular-nums text-slate-500">
+                        <td className="px-6 py-3 text-right tabular-nums text-[#7C6352]">
                           {formatCurrency(s.hpp_at_sale)}
                         </td>
                         <td
-                          className={`px-6 py-3 text-right tabular-nums font-semibold ${s.profit >= 0 ? "text-emerald-600" : "text-red-600"}`}
+                          className={`px-6 py-3 text-right tabular-nums font-semibold ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
                         >
                           {formatCurrency(s.profit * s.quantity_sold)}
                         </td>
                         <td className="px-6 py-3 text-right tabular-nums hidden sm:table-cell">
                           <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${saleMargin >= 30 ? "bg-emerald-50 text-emerald-700" : saleMargin >= 15 ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700"}`}
+                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${saleMargin >= 30 ? "bg-[#737B4C]/10 text-[#5C6B38]" : saleMargin >= 15 ? "bg-[#B88D6A]/10 text-[#7C563D]" : "bg-red-50 text-red-700"}`}
                           >
                             {saleMargin.toFixed(1)}%
                           </span>
                         </td>
-                        <td className="px-6 py-3 text-right text-slate-400 text-xs hidden md:table-cell">
+                        <td className="px-6 py-3 text-right text-[#B88D6A] text-xs hidden md:table-cell">
                           {format(new Date(s.created_at), "dd MMM yyyy")}
                         </td>
                       </tr>
@@ -194,22 +194,22 @@ export default function SalesPage() {
           />
           {selectedRecipe && Number(sellingPrice) > 0 && (
             <div
-              className={`rounded-lg px-4 py-3 border text-xs space-y-1 ${totalProfit >= 0 ? "bg-emerald-50 border-emerald-100" : "bg-red-50 border-red-100"}`}
+              className={`rounded-lg px-4 py-3 border text-xs space-y-1 ${totalProfit >= 0 ? "bg-[#737B4C]/10 border-[#737B4C]/20" : "bg-red-50 border-red-100"}`}
             >
               <div className="flex justify-between">
-                <span className="text-slate-600">Revenue</span>
+                <span className="text-[#5C4535]">Revenue</span>
                 <span className="font-semibold tabular-nums">
                   {formatCurrency(totalRevenue)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600">HPP (total)</span>
+                <span className="text-[#5C4535]">HPP (total)</span>
                 <span className="tabular-nums">
                   {formatCurrency(hpp * Number(quantity))}
                 </span>
               </div>
               <div
-                className={`flex justify-between font-bold border-t pt-1 ${totalProfit >= 0 ? "border-emerald-200 text-emerald-700" : "border-red-200 text-red-700"}`}
+                className={`flex justify-between font-bold border-t pt-1 ${totalProfit >= 0 ? "border-[#737B4C]/30 text-[#5C6B38]" : "border-red-200 text-red-700"}`}
               >
                 <span>Profit</span>
                 <span className="tabular-nums">

@@ -83,7 +83,7 @@ export default function RecipesPage() {
       }
     >
       {isLoading ? (
-        <div className="py-12 text-center text-sm text-slate-400">
+        <div className="py-12 text-center text-sm text-[#B88D6A]">
           Loading...
         </div>
       ) : !recipes?.length ? (
@@ -103,7 +103,7 @@ export default function RecipesPage() {
             <Card key={recipe.id}>
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold text-slate-800 text-sm">
+                  <h3 className="font-semibold text-[#2C1810] text-sm">
                     {recipe.name}
                   </h3>
                   <button
@@ -111,7 +111,7 @@ export default function RecipesPage() {
                       if (confirm("Delete recipe?"))
                         deleteRecipe.mutate(recipe.id);
                     }}
-                    className="p-1 rounded text-slate-300 hover:text-red-500 cursor-pointer transition-colors flex-shrink-0"
+                    className="p-1 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer transition-colors flex-shrink-0"
                     aria-label="Delete recipe"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -123,21 +123,21 @@ export default function RecipesPage() {
                   {(recipe.recipe_items ?? []).map((ri) => (
                     <div
                       key={ri.id}
-                      className="flex justify-between text-xs text-slate-600"
+                      className="flex justify-between text-xs text-[#5C4535]"
                     >
                       <span>{(ri.item as any)?.name ?? "—"}</span>
-                      <span className="tabular-nums text-slate-400">
+                      <span className="tabular-nums text-[#B88D6A]">
                         {ri.quantity_used} {(ri.item as any)?.unit}
                       </span>
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-slate-100 pt-3">
+                <div className="border-t border-[#E5DACA] pt-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-slate-500 font-medium">
+                    <span className="text-xs text-[#7C6352] font-medium">
                       HPP
                     </span>
-                    <span className="text-sm font-bold text-[#1E3A5F] tabular-nums">
+                    <span className="text-sm font-bold text-[#A05035] tabular-nums">
                       {formatCurrency(recipe.hpp)}
                     </span>
                   </div>
@@ -165,13 +165,13 @@ export default function RecipesPage() {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-slate-700">
+              <label className="text-sm font-medium text-[#4A3728]">
                 Ingredients (BoM)
               </label>
               <button
                 type="button"
                 onClick={addRow}
-                className="text-xs text-[#1E3A5F] hover:underline cursor-pointer font-medium flex items-center gap-1"
+                className="text-xs text-[#A05035] hover:underline cursor-pointer font-medium flex items-center gap-1"
               >
                 <Plus className="w-3 h-3" /> Add row
               </button>
@@ -208,7 +208,7 @@ export default function RecipesPage() {
                     <button
                       type="button"
                       onClick={() => removeRow(i)}
-                      className="mt-1 p-2 rounded text-slate-300 hover:text-red-500 cursor-pointer"
+                      className="mt-1 p-2 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer"
                       aria-label="Remove row"
                     >
                       <Minus className="w-4 h-4" />

@@ -19,22 +19,22 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-slate-50 p-4">
+    <div className="min-h-dvh flex items-center justify-center bg-[#F2EBD9] p-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-[#1E3A5F] flex items-center justify-center mb-3">
-            <div className="w-6 h-6 rounded bg-[#059669] flex items-center justify-center">
-              <span className="text-white text-xs font-bold">C</span>
+          <div className="w-12 h-12 rounded-2xl bg-[#7C563D] flex items-center justify-center mb-3">
+            <div className="w-6 h-6 rounded bg-[#A05035] flex items-center justify-center">
+              <span className="text-[#E9DFC6] text-xs font-bold">C</span>
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Costify</h1>
-          <p className="text-sm text-slate-500 mt-1">HPP & cost management</p>
+          <h1 className="text-2xl font-bold text-[#2C1810]">Costify</h1>
+          <p className="text-sm text-[#7C6352] mt-1">HPP & cost management</p>
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-          <h2 className="text-base font-semibold text-slate-900 mb-5">
+        <div className="bg-[#FBF8F2] rounded-2xl border border-[#D9CCAF] shadow-sm p-6">
+          <h2 className="text-base font-semibold text-[#2C1810] mb-5">
             Sign in to your account
           </h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -67,7 +67,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6">
+        <p className="text-center text-xs text-[#B88D6A] mt-6">
           Costify &copy; {new Date().getFullYear()}
         </p>
       </div>

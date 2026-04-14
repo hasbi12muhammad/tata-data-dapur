@@ -2,13 +2,20 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #1e3a5f;
-  --color-accent: #059669;
-  --color-background: #f8fafc;
-  --color-foreground: #0f172a;
-  --color-muted: #f1f3f5;
-  --color-border: #e4e7eb;
-  --color-destructive: #dc2626;
+  /* Warm Earthy Palette */
+  --color-cloth: #e9dfc6; /* base background */
+  --color-clay: #b88d6a; /* muted/neutral */
+  --color-casa: #7c563d; /* primary/sidebar */
+  --color-dune: #a05035; /* CTA/action */
+  --color-verde: #737b4c; /* success/profit */
+
+  --color-background: #f2ebd9; /* cloth lightened */
+  --color-surface: #fbf8f2; /* card surface */
+  --color-foreground: #2c1810; /* dark brown text */
+  --color-muted-fg: #7c6352; /* secondary text */
+  --color-border: #d9ccaf; /* warm border */
+  --color-ring: #a05035;
+  --color-destructive: #c0392b;
 }
 
 body {

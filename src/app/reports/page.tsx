@@ -76,25 +76,25 @@ export default function ReportsPage() {
             label="Total Revenue"
             value={formatCurrency(stats?.total_revenue ?? 0)}
             icon={DollarSign}
-            accent="blue"
+            accent="dune"
           />
           <StatCard
             label="Total HPP"
             value={formatCurrency(stats?.total_hpp ?? 0)}
             icon={TrendingDown}
-            accent="amber"
+            accent="clay"
           />
           <StatCard
             label="Total Profit"
             value={formatCurrency(stats?.total_profit ?? 0)}
             icon={TrendingUp}
-            accent="green"
+            accent="verde"
           />
           <StatCard
             label="Profit Margin"
             value={`${formatNumber(stats?.profit_margin ?? 0, 1)}%`}
             icon={BarChart3}
-            accent={(stats?.profit_margin ?? 0) >= 30 ? "green" : "amber"}
+            accent={(stats?.profit_margin ?? 0) >= 30 ? "verde" : "clay"}
             sub={`${stats?.sales_count ?? 0} total sales`}
           />
         </div>
@@ -102,7 +102,7 @@ export default function ReportsPage() {
         {/* Revenue chart */}
         <Card>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-slate-800">
+            <h2 className="text-sm font-semibold text-[#2C1810]">
               Revenue & Profit — Last 7 Days
             </h2>
           </CardHeader>
@@ -112,7 +112,7 @@ export default function ReportsPage() {
                 data={last7}
                 margin={{ top: 4, right: 4, left: 0, bottom: 0 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5DACA" />
                 <XAxis
                   dataKey="label"
                   tick={{ fontSize: 11, fill: "#94a3b8" }}
@@ -138,25 +138,25 @@ export default function ReportsPage() {
                 />
                 <Bar
                   dataKey="revenue"
-                  fill="#1E3A5F"
+                  fill="#A05035"
                   radius={[4, 4, 0, 0]}
                   name="revenue"
                 />
                 <Bar
                   dataKey="profit"
-                  fill="#059669"
+                  fill="#737B4C"
                   radius={[4, 4, 0, 0]}
                   name="profit"
                 />
               </BarChart>
             </ResponsiveContainer>
             <div className="flex items-center gap-4 mt-2 justify-center">
-              <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                <span className="w-3 h-3 rounded-sm bg-[#1E3A5F] inline-block" />
+              <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
+                <span className="w-3 h-3 rounded-sm bg-[#A05035] inline-block" />
                 Revenue
               </span>
-              <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                <span className="w-3 h-3 rounded-sm bg-[#059669] inline-block" />
+              <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
+                <span className="w-3 h-3 rounded-sm bg-[#737B4C] inline-block" />
                 Profit
               </span>
             </div>
@@ -166,29 +166,29 @@ export default function ReportsPage() {
         {/* Top recipes */}
         <Card>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-slate-800">
+            <h2 className="text-sm font-semibold text-[#2C1810]">
               Top Recipes by Profit
             </h2>
           </CardHeader>
           <CardBody className="p-0">
             {recipeProfit.length === 0 ? (
-              <div className="py-10 text-center text-sm text-slate-400">
+              <div className="py-10 text-center text-sm text-[#B88D6A]">
                 No data yet
               </div>
             ) : (
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  <tr className="border-b border-[#E5DACA]">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Recipe
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       HPP
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Revenue
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Profit
                     </th>
                   </tr>
@@ -197,19 +197,19 @@ export default function ReportsPage() {
                   {recipeProfit.map((r) => (
                     <tr
                       key={r.name}
-                      className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
+                      className="border-b border-[#EDE4CF] hover:bg-[#F5EFE0] transition-colors"
                     >
-                      <td className="px-6 py-3 font-medium text-slate-800">
+                      <td className="px-6 py-3 font-medium text-[#2C1810]">
                         {r.name}
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-slate-500">
+                      <td className="px-6 py-3 text-right tabular-nums text-[#7C6352]">
                         {formatCurrency(r.hpp)}
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-slate-700">
+                      <td className="px-6 py-3 text-right tabular-nums text-[#4A3728]">
                         {formatCurrency(r.revenue)}
                       </td>
                       <td
-                        className={`px-6 py-3 text-right tabular-nums font-semibold ${r.profit >= 0 ? "text-emerald-600" : "text-red-600"}`}
+                        className={`px-6 py-3 text-right tabular-nums font-semibold ${r.profit >= 0 ? "text-[#737B4C]" : "text-[#C0392B]"}`}
                       >
                         {formatCurrency(r.profit)}
                       </td>

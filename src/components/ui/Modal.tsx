@@ -39,7 +39,7 @@ export function Modal({
       />
       <div
         className={cn(
-          "relative w-full bg-white rounded-2xl shadow-xl",
+          "relative w-full bg-[#FBF8F2] rounded-2xl shadow-xl",
           "animate-in fade-in slide-in-from-bottom-4 duration-200",
           sizes[size],
         )}
@@ -47,16 +47,16 @@ export function Modal({
         aria-modal
         aria-labelledby="modal-title"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5DACA]">
           <h2
             id="modal-title"
-            className="text-base font-semibold text-slate-900"
+            className="text-base font-semibold text-[#2C1810]"
           >
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors"
+            className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#7C563D] hover:bg-[#E9DFC6] cursor-pointer transition-colors"
             aria-label="Close modal"
           >
             <X className="w-4 h-4" />

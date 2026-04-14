@@ -55,13 +55,13 @@ export default function PurchasesPage() {
     >
       <Card>
         <CardHeader>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[#7C6352]">
             Purchase history — auto-updates weighted average price
           </p>
         </CardHeader>
         <CardBody className="p-0">
           {isLoading ? (
-            <div className="py-12 text-center text-sm text-slate-400">
+            <div className="py-12 text-center text-sm text-[#B88D6A]">
               Loading...
             </div>
           ) : !purchases?.length ? (
@@ -79,20 +79,20 @@ export default function PurchasesPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  <tr className="border-b border-[#E5DACA]">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Item
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Qty
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Total Price
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Price/Unit
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide hidden sm:table-cell">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Date
                     </th>
                   </tr>
@@ -101,24 +101,24 @@ export default function PurchasesPage() {
                   {purchases.map((p) => (
                     <tr
                       key={p.id}
-                      className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
+                      className="border-b border-[#EDE4CF] hover:bg-[#F5EFE0] transition-colors"
                     >
-                      <td className="px-6 py-3 font-medium text-slate-800">
+                      <td className="px-6 py-3 font-medium text-[#2C1810]">
                         {(p.item as any)?.name ?? "—"}
-                        <span className="ml-1.5 text-xs text-slate-400">
+                        <span className="ml-1.5 text-xs text-[#B88D6A]">
                           {(p.item as any)?.unit}
                         </span>
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-slate-600">
+                      <td className="px-6 py-3 text-right tabular-nums text-[#5C4535]">
                         {p.quantity}
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums font-medium text-slate-800">
+                      <td className="px-6 py-3 text-right tabular-nums font-medium text-[#2C1810]">
                         {formatCurrency(p.total_price)}
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-slate-600">
+                      <td className="px-6 py-3 text-right tabular-nums text-[#5C4535]">
                         {formatCurrency(p.price_per_unit)}
                       </td>
-                      <td className="px-6 py-3 text-right text-slate-400 text-xs hidden sm:table-cell">
+                      <td className="px-6 py-3 text-right text-[#B88D6A] text-xs hidden sm:table-cell">
                         {format(new Date(p.created_at), "dd MMM yyyy")}
                       </td>
                     </tr>
@@ -168,8 +168,8 @@ export default function PurchasesPage() {
             required
           />
           {pricePerUnit > 0 && (
-            <div className="rounded-lg bg-emerald-50 border border-emerald-100 px-4 py-2.5">
-              <p className="text-xs text-emerald-700 font-medium">
+            <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5">
+              <p className="text-xs text-[#5C6B38] font-medium">
                 Price per unit:{" "}
                 <span className="font-bold">
                   {formatCurrency(pricePerUnit)}

@@ -74,13 +74,13 @@ export default function ItemsPage() {
     >
       <Card>
         <CardHeader>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[#7C6352]">
             Raw materials and ingredients
           </p>
         </CardHeader>
         <CardBody className="p-0">
           {isLoading ? (
-            <div className="py-12 text-center text-sm text-slate-400">
+            <div className="py-12 text-center text-sm text-[#B88D6A]">
               Loading...
             </div>
           ) : !items?.length ? (
@@ -98,17 +98,17 @@ export default function ItemsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  <tr className="border-b border-[#E5DACA]">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Name
                     </th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Unit
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Avg Price/Unit
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Stock
                     </th>
                     <th className="px-6 py-3" />
@@ -118,34 +118,34 @@ export default function ItemsPage() {
                   {items.map((item) => (
                     <tr
                       key={item.id}
-                      className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
+                      className="border-b border-[#EDE4CF] hover:bg-[#F5EFE0] transition-colors"
                     >
-                      <td className="px-6 py-3 font-medium text-slate-800">
+                      <td className="px-6 py-3 font-medium text-[#2C1810]">
                         {item.name}
                       </td>
                       <td className="px-6 py-3">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">
                           {item.unit}
                         </span>
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-slate-700">
+                      <td className="px-6 py-3 text-right tabular-nums text-[#4A3728]">
                         {formatCurrency(item.avg_price)}
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-slate-700">
+                      <td className="px-6 py-3 text-right tabular-nums text-[#4A3728]">
                         {item.stock} {item.unit}
                       </td>
                       <td className="px-6 py-3">
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => openEdit(item)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-[#1E3A5F] hover:bg-slate-100 cursor-pointer transition-colors"
+                            className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] cursor-pointer transition-colors"
                             aria-label="Edit"
                           >
                             <Pencil className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(item.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
+                            className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
                             aria-label="Delete"
                           >
                             <Trash2 className="w-4 h-4" />

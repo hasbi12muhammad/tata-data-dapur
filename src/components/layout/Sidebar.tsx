@@ -5,7 +5,6 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   BarChart3,
   BookOpen,
-  ChevronLeft,
   LayoutDashboard,
   LogOut,
   Package,
@@ -45,10 +44,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         />
       )}
 
-      {/* Sidebar panel */}
+      {/* Sidebar panel — Casa brown */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-full w-64 bg-[#1E3A5F] flex flex-col",
+          "fixed top-0 left-0 z-40 h-full w-64 flex flex-col",
+          "bg-[#7C563D]",
           "transition-transform duration-200 ease-in-out",
           "lg:translate-x-0 lg:static lg:z-auto",
           open ? "translate-x-0" : "-translate-x-full",
@@ -57,16 +57,16 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#059669] flex items-center justify-center">
-              <span className="text-white text-xs font-bold">C</span>
+            <div className="w-7 h-7 rounded-lg bg-[#A05035] flex items-center justify-center">
+              <span className="text-[#E9DFC6] text-xs font-bold">C</span>
             </div>
-            <span className="text-white font-bold text-lg tracking-tight">
+            <span className="text-[#E9DFC6] font-bold text-lg tracking-tight">
               Costify
             </span>
           </div>
           <button
             onClick={onClose}
-            className="lg:hidden p-1 rounded text-white/60 hover:text-white cursor-pointer"
+            className="lg:hidden p-1 rounded text-[#E9DFC6]/60 hover:text-[#E9DFC6] cursor-pointer"
             aria-label="Close sidebar"
           >
             <X className="w-5 h-5" />
@@ -85,8 +85,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   active
-                    ? "bg-white/15 text-white"
-                    : "text-white/65 hover:bg-white/10 hover:text-white",
+                    ? "bg-[#E9DFC6]/20 text-[#E9DFC6]"
+                    : "text-[#E9DFC6]/65 hover:bg-[#E9DFC6]/10 hover:text-[#E9DFC6]",
                 )}
                 aria-current={active ? "page" : undefined}
               >
@@ -101,7 +101,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <div className="px-3 py-4 border-t border-white/10">
           <button
             onClick={signOut}
-            className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+            className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#E9DFC6]/65 hover:bg-[#E9DFC6]/10 hover:text-[#E9DFC6] transition-colors cursor-pointer"
           >
             <LogOut className="w-5 h-5" />
             Sign Out
