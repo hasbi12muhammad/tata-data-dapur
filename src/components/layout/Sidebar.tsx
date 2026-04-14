@@ -1,0 +1,113 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  BarChart3,
+  BookOpen,
+  ChevronLeft,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  ShoppingCart,
+  TrendingUp,
+  X,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const nav = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/items", label: "Items", icon: Package },
+  { href: "/purchases", label: "Purchases", icon: ShoppingCart },
+  { href: "/recipes", label: "Recipes", icon: BookOpen },
+  { href: "/sales", label: "Sales", icon: TrendingUp },
+  { href: "/reports", label: "Reports", icon: BarChart3 },
+];
+
+interface SidebarProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export function Sidebar({ open, onClose }: SidebarProps) {
+  const pathname = usePathname();
+  const { signOut } = useAuth();
+
+  return (
+    <>
+      {/* Mobile overlay */}
+      {open && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          onClick={onClose}
+          aria-hidden
+        />
+      )}
+
+      {/* Sidebar panel */}
+      <aside
+        className={cn(
+          "fixed top-0 left-0 z-40 h-full w-64 bg-[#1E3A5F] flex flex-col",
+          "transition-transform duration-200 ease-in-out",
+          "lg:translate-x-0 lg:static lg:z-auto",
+          open ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-[#059669] flex items-center justify-center">
+              <span className="text-white text-xs font-bold">C</span>
+            </div>
+            <span className="text-white font-bold text-lg tracking-tight">
+              Costify
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            className="lg:hidden p-1 rounded text-white/60 hover:text-white cursor-pointer"
+            aria-label="Close sidebar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+          {nav.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href || pathname.startsWith(href + "/");
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={onClose}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  active
+                    ? "bg-white/15 text-white"
+                    : "text-white/65 hover:bg-white/10 hover:text-white",
+                )}
+                aria-current={active ? "page" : undefined}
+              >
+                <Icon className="w-5 h-5 flex-shrink-0" />
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Sign out */}
+        <div className="px-3 py-4 border-t border-white/10">
+          <button
+            onClick={signOut}
+            className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/65 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+          >
+            <LogOut className="w-5 h-5" />
+            Sign Out
+          </button>
+        </div>
+      </aside>
+    </>
+  );
+}

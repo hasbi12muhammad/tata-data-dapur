@@ -1,0 +1,58 @@
+"use client";
+
+import { createClient } from "@/lib/supabase/client";
+import { Purchase } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
+export function usePurchases() {
+  const supabase = createClient();
+
+  return useQuery<Purchase[]>({
+    queryKey: ["purchases"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("purchases")
+        .select("*, item:items(name, unit)")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+export function useCreatePurchase() {
+  const supabase = createClient();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (p: {
+      item_id: string;
+      quantity: number;
+      total_price: number;
+    }) => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const price_per_unit = p.total_price / p.quantity;
+
+      // weighted average update via DB function
+      const { error } = await supabase.rpc("record_purchase", {
+        p_user_id: user!.id,
+        p_item_id: p.item_id,
+        p_quantity: p.quantity,
+        p_total_price: p.total_price,
+        p_price_per_unit: price_per_unit,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["purchases"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+      toast.success("Purchase recorded");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
