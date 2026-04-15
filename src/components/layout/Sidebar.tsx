@@ -58,10 +58,10 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-[#A05035] flex items-center justify-center">
-              <span className="text-[#E9DFC6] text-xs font-bold">C</span>
+              <span className="text-[#E9DFC6] text-xs font-bold">TDD</span>
             </div>
             <span className="text-[#E9DFC6] font-bold text-lg tracking-tight">
-              Costify
+              Tata Data Dapur
             </span>
           </div>
           <button

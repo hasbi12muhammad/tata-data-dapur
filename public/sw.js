@@ -1,4 +1,4 @@
-const CACHE = "costify-v1";
+const CACHE = "tata-data-dapur-v1";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE = ["/", "/offline", "/manifest.json"];

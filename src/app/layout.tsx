@@ -4,10 +4,14 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Costify",
-  description: "HPP & cost management for F&B and manufacturing businesses",
+  title: "Tata Data Dapur",
+  description: "Kelola HPP, resep, dan laporan bisnis F&B kamu",
   manifest: "/manifest.json",
-  appleWebApp: { capable: true, statusBarStyle: "default", title: "Costify" },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Tata Data Dapur",
+  },
   formatDetection: { telephone: false },
 };
 

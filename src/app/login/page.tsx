@@ -28,11 +28,13 @@ export default function LoginPage() {
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 rounded-2xl bg-[#7C563D] flex items-center justify-center mb-3">
             <div className="w-6 h-6 rounded bg-[#A05035] flex items-center justify-center">
-              <span className="text-[#E9DFC6] text-xs font-bold">C</span>
+              <span className="text-[#E9DFC6] text-[9px] font-bold">TDD</span>
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-[#2C1810]">Costify</h1>
-          <p className="text-sm text-[#7C6352] mt-1">HPP & cost management</p>
+          <h1 className="text-2xl font-bold text-[#2C1810]">Tata Data Dapur</h1>
+          <p className="text-sm text-[#7C6352] mt-1">
+            Kelola HPP & laporan bisnis dapur kamu
+          </p>
         </div>
 
         {/* Form */}
@@ -71,7 +73,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-[#B88D6A] mt-6">
-          Costify &copy; {new Date().getFullYear()}
+          Tata Data Dapur &copy; {new Date().getFullYear()}
         </p>
       </div>
     </div>
