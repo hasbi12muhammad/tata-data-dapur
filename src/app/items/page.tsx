@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
-import { Card, CardBody, CardHeader } from "@/components/ui/Card";
+import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
@@ -16,11 +16,14 @@ import {
 } from "@/hooks/useItems";
 import { Item } from "@/types";
 import { formatCurrency } from "@/lib/utils";
-import { Package, Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Package, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 const UNITS: Item["unit"][] = ["gr", "ml", "pcs", "kg", "liter"];
+
+const cls =
+  "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
 
 export default function ItemsPage() {
   const { data: items, isLoading } = useItems();
@@ -28,10 +31,16 @@ export default function ItemsPage() {
   const updateItem = useUpdateItem();
   const deleteItem = useDeleteItem();
 
+  // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Item | null>(null);
   const [name, setName] = useState("");
   const [unit, setUnit] = useState<Item["unit"]>("gr");
+
+  // ── filter / sort state ──────────────────────────────────────
+  const [search, setSearch] = useState("");
+  const [filterUnit, setFilterUnit] = useState("");
+  const [sortBy, setSortBy] = useState("name_asc");
 
   function openCreate() {
     setEditing(null);
@@ -63,21 +72,113 @@ export default function ItemsPage() {
     deleteItem.mutate(id);
   }
 
+  const filtered = useMemo(() => {
+    let rows = items ?? [];
+
+    if (search) {
+      const q = search.toLowerCase();
+      rows = rows.filter((i) => i.name.toLowerCase().includes(q));
+    }
+    if (filterUnit) {
+      rows = rows.filter((i) => i.unit === filterUnit);
+    }
+
+    return [...rows].sort((a, b) => {
+      switch (sortBy) {
+        case "name_desc":
+          return b.name.localeCompare(a.name);
+        case "price_desc":
+          return b.avg_price - a.avg_price;
+        case "price_asc":
+          return a.avg_price - b.avg_price;
+        case "stock_desc":
+          return b.stock - a.stock;
+        case "stock_asc":
+          return a.stock - b.stock;
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
+  }, [items, search, filterUnit, sortBy]);
+
+  const hasFilters = search || filterUnit || sortBy !== "name_asc";
+
   return (
     <AppLayout
       title="Items"
       action={
         <Button size="sm" onClick={openCreate}>
-          <Plus className="w-4 h-4" /> Add Item
+          <Plus className="w-4 h-4" /> Add
         </Button>
       }
     >
       <Card>
-        <CardHeader>
-          <p className="text-sm text-[#7C6352]">
-            Raw materials and ingredients
-          </p>
-        </CardHeader>
+        {/* Filter bar */}
+        <div className="px-4 py-3 border-b border-[#E5DACA] space-y-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
+            <input
+              className={`${cls} w-full pl-8`}
+              placeholder="Search item name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#B88D6A] hover:text-[#7C6352]"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <select
+              className={`${cls} flex-1`}
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="name_asc">Nama A–Z</option>
+              <option value="name_desc">Nama Z–A</option>
+              <option value="price_desc">Harga ↑</option>
+              <option value="price_asc">Harga ↓</option>
+              <option value="stock_desc">Stock ↑</option>
+              <option value="stock_asc">Stock ↓</option>
+            </select>
+            <select
+              className={`${cls} flex-1`}
+              value={filterUnit}
+              onChange={(e) => setFilterUnit(e.target.value)}
+            >
+              <option value="">Semua unit</option>
+              {UNITS.map((u) => (
+                <option key={u} value={u}>
+                  {u}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center justify-between text-xs text-[#B88D6A]">
+            <span>
+              {filtered.length} item
+              {(items?.length ?? 0) > filtered.length &&
+                ` dari ${items?.length}`}
+            </span>
+            {hasFilters && (
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setFilterUnit("");
+                  setSortBy("name_asc");
+                }}
+                className="text-[#A05035] hover:underline font-medium"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+        </div>
+
         <CardBody className="p-0">
           {isLoading ? (
             <div className="py-12 text-center text-sm text-[#B88D6A]">
@@ -94,47 +195,51 @@ export default function ItemsPage() {
                 </Button>
               }
             />
+          ) : filtered.length === 0 ? (
+            <div className="py-10 text-center text-sm text-[#B88D6A]">
+              Tidak ada item untuk filter ini
+            </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[360px]">
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Name
                     </th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-left px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Unit
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Avg Price/Unit
+                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                      Avg Price
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Stock
                     </th>
-                    <th className="px-6 py-3" />
+                    <th className="px-3 sm:px-6 py-3" />
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item) => (
+                  {filtered.map((item) => (
                     <tr
                       key={item.id}
-                      className="border-b border-[#EDE4CF] hover:bg-[#F5EFE0] transition-colors"
+                      className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors"
                     >
-                      <td className="px-6 py-3 font-medium text-[#2C1810]">
-                        {item.name}
+                      <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
+                        <span className="line-clamp-1">{item.name}</span>
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-3 sm:px-6 py-2.5 sm:py-3">
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">
                           {item.unit}
                         </span>
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-[#4A3728]">
+                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs sm:text-sm whitespace-nowrap">
                         {formatCurrency(item.avg_price)}
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums text-[#4A3728]">
+                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs hidden sm:table-cell">
                         {item.stock} {item.unit}
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-3 sm:px-6 py-2.5 sm:py-3">
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => openEdit(item)}
