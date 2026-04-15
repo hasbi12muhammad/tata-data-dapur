@@ -12,20 +12,26 @@ export function useRecipes() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("recipes")
-        .select("*, recipe_items(*, item:items(name, unit, avg_price))")
+        .select(
+          "*, recipe_items(*, item:items(name, unit, avg_price, prev_avg_price))",
+        )
         .order("name");
       if (error) throw error;
       return (data ?? []).map((r) => ({
         ...r,
-        hpp: calcHPP(r.recipe_items ?? []),
+        hpp: calcHPP(r.recipe_items ?? [], false),
+        prev_hpp: calcHPP(r.recipe_items ?? [], true),
       }));
     },
   });
 }
 
-function calcHPP(items: RecipeItem[]): number {
+function calcHPP(items: RecipeItem[], usePrev: boolean): number {
   return items.reduce((sum, ri) => {
-    const price = (ri.item as any)?.avg_price ?? 0;
+    const item = ri.item as any;
+    const price = usePrev
+      ? (item?.prev_avg_price ?? item?.avg_price ?? 0)
+      : (item?.avg_price ?? 0);
     return sum + price * ri.quantity_used;
   }, 0);
 }

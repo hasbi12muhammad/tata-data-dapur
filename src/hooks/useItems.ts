@@ -25,7 +25,15 @@ export function useCreateItem() {
 
   return useMutation({
     mutationFn: async (
-      item: Omit<Item, "id" | "user_id" | "created_at" | "avg_price" | "stock">,
+      item: Omit<
+        Item,
+        | "id"
+        | "user_id"
+        | "created_at"
+        | "avg_price"
+        | "prev_avg_price"
+        | "stock"
+      >,
     ) => {
       const supabase = createClient();
       const {

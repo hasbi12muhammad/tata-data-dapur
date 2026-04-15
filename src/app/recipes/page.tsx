@@ -15,7 +15,14 @@ import {
   useRecipes,
 } from "@/hooks/useRecipes";
 import { formatCurrency } from "@/lib/utils";
-import { BookOpen, Minus, Plus, Trash2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  BookOpen,
+  Minus,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 
 interface BomRow {
@@ -133,13 +140,35 @@ export default function RecipesPage() {
                   ))}
                 </div>
                 <div className="border-t border-[#E5DACA] pt-3">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center gap-2">
                     <span className="text-xs text-[#7C6352] font-medium">
                       HPP
                     </span>
-                    <span className="text-sm font-bold text-[#A05035] tabular-nums">
-                      {formatCurrency(recipe.hpp)}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                      <span className="text-sm font-bold text-[#A05035] tabular-nums">
+                        {formatCurrency(recipe.hpp)}
+                      </span>
+                      {(() => {
+                        const diff = recipe.hpp - (recipe as any).prev_hpp;
+                        const prev = (recipe as any).prev_hpp;
+                        if (!prev || Math.abs(diff) < 1) return null;
+                        const pct = (diff / prev) * 100;
+                        const up = diff > 0;
+                        return (
+                          <span
+                            className={`inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded ${up ? "bg-red-50 text-red-600" : "bg-[#737B4C]/10 text-[#5C6B38]"}`}
+                          >
+                            {up ? (
+                              <ArrowUp className="w-2.5 h-2.5" />
+                            ) : (
+                              <ArrowDown className="w-2.5 h-2.5" />
+                            )}
+                            {formatCurrency(Math.abs(diff))}{" "}
+                            {Math.abs(pct).toFixed(1)}%
+                          </span>
+                        );
+                      })()}
+                    </div>
                   </div>
                 </div>
               </CardBody>
@@ -225,7 +254,9 @@ export default function RecipesPage() {
               <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-2.5">
                 <p className="text-xs text-blue-700 font-medium">
                   Estimated HPP:{" "}
-                  <span className="font-bold">{formatCurrency(previewHPP)}</span>
+                  <span className="font-bold">
+                    {formatCurrency(previewHPP)}
+                  </span>
                 </p>
               </div>
             ) : null;

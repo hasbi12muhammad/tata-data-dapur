@@ -4,6 +4,7 @@ export interface Item {
   name: string;
   unit: "gr" | "ml" | "pcs" | "kg" | "liter";
   avg_price: number;
+  prev_avg_price: number;
   stock: number;
   created_at: string;
 }
@@ -24,6 +25,7 @@ export interface Recipe {
   user_id: string;
   name: string;
   hpp: number;
+  prev_hpp: number;
   created_at: string;
   recipe_items?: RecipeItem[];
 }
