@@ -183,7 +183,7 @@ export default function PurchasesPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm min-w-[420px]">
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
                     <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
