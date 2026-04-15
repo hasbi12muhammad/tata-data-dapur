@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 export default function OfflinePage() {
   return (
     <div className="min-h-dvh flex items-center justify-center bg-slate-50 p-4">
@@ -10,7 +12,7 @@ export default function OfflinePage() {
           </div>
         </div>
         <h1 className="text-xl font-bold text-slate-900 mb-2">
-          You're offline
+          You&apos;re offline
         </h1>
         <p className="text-sm text-slate-500 mb-6">
           Check your internet connection and try again.
