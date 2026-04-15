@@ -219,16 +219,17 @@ export default function RecipesPage() {
             </div>
           </div>
 
-          {calcPreviewHPP() > 0 && (
-            <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-2.5">
-              <p className="text-xs text-blue-700 font-medium">
-                Estimated HPP:{" "}
-                <span className="font-bold">
-                  {formatCurrency(calcPreviewHPP())}
-                </span>
-              </p>
-            </div>
-          )}
+          {(() => {
+            const previewHPP = calcPreviewHPP();
+            return previewHPP > 0 ? (
+              <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-2.5">
+                <p className="text-xs text-blue-700 font-medium">
+                  Estimated HPP:{" "}
+                  <span className="font-bold">{formatCurrency(previewHPP)}</span>
+                </p>
+              </div>
+            ) : null;
+          })()}
 
           <div className="flex gap-2 pt-1">
             <Button

@@ -33,6 +33,8 @@ export default function PurchasesPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!itemId || !quantity || !totalPrice) return;
+    if (Number(quantity) <= 0) return;
+    if (Number(totalPrice) < 0) return;
     await createPurchase.mutateAsync({
       item_id: itemId,
       quantity: Number(quantity),

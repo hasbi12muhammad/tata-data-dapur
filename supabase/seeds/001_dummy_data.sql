@@ -92,101 +92,103 @@ BEGIN
   -- ============================================================
   -- 2. PURCHASES (price fluctuation over 2 months)
   -- ============================================================
-  INSERT INTO public.purchases (id, user_id, item_id, quantity, total_price, price_per_unit, created_at) VALUES
+  -- price_per_unit is a generated column (total_price / quantity), omit from INSERT
+  INSERT INTO public.purchases (id, user_id, item_id, quantity, total_price, created_at) VALUES
     -- BERAS (naik pelan)
-    (gen_random_uuid(), v_uid, id_beras, 50000,  580000,  11.60, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_beras, 50000,  600000,  12.00, '2026-02-20 07:00'),
-    (gen_random_uuid(), v_uid, id_beras, 50000,  612500,  12.25, '2026-03-10 07:00'),
-    (gen_random_uuid(), v_uid, id_beras, 50000,  620000,  12.40, '2026-03-28 07:00'),
+    (gen_random_uuid(), v_uid, id_beras, 50000,  580000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_beras, 50000,  600000, '2026-02-20 07:00'),
+    (gen_random_uuid(), v_uid, id_beras, 50000,  612500, '2026-03-10 07:00'),
+    (gen_random_uuid(), v_uid, id_beras, 50000,  620000, '2026-03-28 07:00'),
 
     -- AYAM FILLET (volatile)
-    (gen_random_uuid(), v_uid, id_ayam, 20000,  880000,  44.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_ayam, 20000,  900000,  45.00, '2026-02-15 07:00'),
-    (gen_random_uuid(), v_uid, id_ayam, 20000,  920000,  46.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_ayam, 20000,  910000,  45.50, '2026-03-15 07:00'),
-    (gen_random_uuid(), v_uid, id_ayam, 20000,  940000,  47.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_ayam, 20000,  880000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_ayam, 20000,  900000, '2026-02-15 07:00'),
+    (gen_random_uuid(), v_uid, id_ayam, 20000,  920000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_ayam, 20000,  910000, '2026-03-15 07:00'),
+    (gen_random_uuid(), v_uid, id_ayam, 20000,  940000, '2026-04-01 07:00'),
 
     -- MINYAK GORENG
-    (gen_random_uuid(), v_uid, id_minyak, 20000, 340000,  17.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_minyak, 20000, 360000,  18.00, '2026-02-25 07:00'),
-    (gen_random_uuid(), v_uid, id_minyak, 20000, 370000,  18.50, '2026-03-20 07:00'),
+    (gen_random_uuid(), v_uid, id_minyak, 20000, 340000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_minyak, 20000, 360000, '2026-02-25 07:00'),
+    (gen_random_uuid(), v_uid, id_minyak, 20000, 370000, '2026-03-20 07:00'),
 
     -- BAWANG MERAH (volatile — naik lebaran)
-    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 165000,  33.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 175000,  35.00, '2026-02-22 07:00'),
-    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 195000,  39.00, '2026-03-10 07:00'),
-    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 185000,  37.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 165000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 175000, '2026-02-22 07:00'),
+    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 195000, '2026-03-10 07:00'),
+    (gen_random_uuid(), v_uid, id_bawang_merah, 5000, 185000, '2026-04-01 07:00'),
 
     -- BAWANG PUTIH
-    (gen_random_uuid(), v_uid, id_bawang_putih, 5000, 135000,  27.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_bawang_putih, 5000, 140000,  28.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_bawang_putih, 5000, 145000,  29.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_bawang_putih, 5000, 135000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_bawang_putih, 5000, 140000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_bawang_putih, 5000, 145000, '2026-04-01 07:00'),
 
     -- TELUR AYAM
-    (gen_random_uuid(), v_uid, id_telur, 500, 1200000, 2400, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_telur, 500, 1225000, 2450, '2026-02-14 07:00'),
-    (gen_random_uuid(), v_uid, id_telur, 500, 1250000, 2500, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_telur, 500, 1275000, 2550, '2026-03-14 07:00'),
-    (gen_random_uuid(), v_uid, id_telur, 500, 1250000, 2500, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_telur, 500, 1200000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_telur, 500, 1225000, '2026-02-14 07:00'),
+    (gen_random_uuid(), v_uid, id_telur, 500, 1250000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_telur, 500, 1275000, '2026-03-14 07:00'),
+    (gen_random_uuid(), v_uid, id_telur, 500, 1250000, '2026-04-01 07:00'),
 
     -- TEPUNG TERIGU
-    (gen_random_uuid(), v_uid, id_tepung, 25000, 245000,  9.80, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_tepung, 25000, 250000, 10.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_tepung, 25000, 255000, 10.20, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_tepung, 25000, 245000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_tepung, 25000, 250000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_tepung, 25000, 255000, '2026-04-01 07:00'),
 
     -- GULA PASIR
-    (gen_random_uuid(), v_uid, id_gula, 15000, 200000, 13.33, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_gula, 15000, 210000, 14.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_gula, 15000, 217500, 14.50, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_gula, 15000, 200000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_gula, 15000, 210000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_gula, 15000, 217500, '2026-04-01 07:00'),
 
     -- KOPI ROBUSTA
-    (gen_random_uuid(), v_uid, id_kopi, 3000, 345000, 115.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_kopi, 3000, 360000, 120.00, '2026-02-20 07:00'),
-    (gen_random_uuid(), v_uid, id_kopi, 3000, 375000, 125.00, '2026-03-15 07:00'),
-    (gen_random_uuid(), v_uid, id_kopi, 3000, 360000, 120.00, '2026-04-05 07:00'),
+    (gen_random_uuid(), v_uid, id_kopi, 3000, 345000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_kopi, 3000, 360000, '2026-02-20 07:00'),
+    (gen_random_uuid(), v_uid, id_kopi, 3000, 375000, '2026-03-15 07:00'),
+    (gen_random_uuid(), v_uid, id_kopi, 3000, 360000, '2026-04-05 07:00'),
 
     -- SUSU KENTAL MANIS
-    (gen_random_uuid(), v_uid, id_susu, 8000, 232000, 29.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_susu, 8000, 240000, 30.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_susu, 8000, 248000, 31.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_susu, 8000, 232000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_susu, 8000, 240000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_susu, 8000, 248000, '2026-04-01 07:00'),
 
     -- MENTEGA
-    (gen_random_uuid(), v_uid, id_mentega, 3000, 228000, 76.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_mentega, 3000, 240000, 80.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_mentega, 3000, 252000, 84.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_mentega, 3000, 228000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_mentega, 3000, 240000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_mentega, 3000, 252000, '2026-04-01 07:00'),
 
     -- MIE KERING
-    (gen_random_uuid(), v_uid, id_mie, 15000, 210000, 14.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_mie, 15000, 225000, 15.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_mie, 15000, 240000, 16.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_mie, 15000, 210000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_mie, 15000, 225000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_mie, 15000, 240000, '2026-04-01 07:00'),
 
     -- KECAP MANIS
-    (gen_random_uuid(), v_uid, id_kecap, 8000, 192000, 24.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_kecap, 8000, 200000, 25.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_kecap, 8000, 208000, 26.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_kecap, 8000, 192000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_kecap, 8000, 200000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_kecap, 8000, 208000, '2026-04-01 07:00'),
 
     -- CABAI MERAH (paling volatile)
-    (gen_random_uuid(), v_uid, id_cabai, 3000, 165000,  55.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_cabai, 3000, 180000,  60.00, '2026-02-20 07:00'),
-    (gen_random_uuid(), v_uid, id_cabai, 3000, 210000,  70.00, '2026-03-10 07:00'),
-    (gen_random_uuid(), v_uid, id_cabai, 3000, 195000,  65.00, '2026-04-01 07:00'),
+    (gen_random_uuid(), v_uid, id_cabai, 3000, 165000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_cabai, 3000, 180000, '2026-02-20 07:00'),
+    (gen_random_uuid(), v_uid, id_cabai, 3000, 210000, '2026-03-10 07:00'),
+    (gen_random_uuid(), v_uid, id_cabai, 3000, 195000, '2026-04-01 07:00'),
 
     -- SANTAN
-    (gen_random_uuid(), v_uid, id_santan, 10000, 110000, 11.00, '2026-02-01 07:00'),
-    (gen_random_uuid(), v_uid, id_santan, 10000, 120000, 12.00, '2026-03-01 07:00'),
-    (gen_random_uuid(), v_uid, id_santan, 10000, 130000, 13.00, '2026-04-01 07:00');
+    (gen_random_uuid(), v_uid, id_santan, 10000, 110000, '2026-02-01 07:00'),
+    (gen_random_uuid(), v_uid, id_santan, 10000, 120000, '2026-03-01 07:00'),
+    (gen_random_uuid(), v_uid, id_santan, 10000, 130000, '2026-04-01 07:00');
 
   -- ============================================================
   -- 3. RECIPES
   -- ============================================================
-  INSERT INTO public.recipes (id, user_id, name, selling_price, created_at) VALUES
-    (id_r1, v_uid, 'Nasi Goreng Spesial', sp_r1, '2026-02-01 09:00'),
-    (id_r2, v_uid, 'Ayam Goreng Kremes',  sp_r2, '2026-02-01 09:00'),
-    (id_r3, v_uid, 'Es Kopi Susu',        sp_r3, '2026-02-01 09:00'),
-    (id_r4, v_uid, 'Mie Goreng',          sp_r4, '2026-02-01 09:00'),
-    (id_r5, v_uid, 'Pancake Susu',        sp_r5, '2026-02-05 09:00'),
-    (id_r6, v_uid, 'Nasi Ayam Bakar',     sp_r6, '2026-02-05 09:00'),
-    (id_r7, v_uid, 'Omelet Spesial',      sp_r7, '2026-02-10 09:00');
+  -- recipes schema: id, user_id, name, created_at (no selling_price column)
+  INSERT INTO public.recipes (id, user_id, name, created_at) VALUES
+    (id_r1, v_uid, 'Nasi Goreng Spesial', '2026-02-01 09:00'),
+    (id_r2, v_uid, 'Ayam Goreng Kremes',  '2026-02-01 09:00'),
+    (id_r3, v_uid, 'Es Kopi Susu',        '2026-02-01 09:00'),
+    (id_r4, v_uid, 'Mie Goreng',          '2026-02-01 09:00'),
+    (id_r5, v_uid, 'Pancake Susu',        '2026-02-05 09:00'),
+    (id_r6, v_uid, 'Nasi Ayam Bakar',     '2026-02-05 09:00'),
+    (id_r7, v_uid, 'Omelet Spesial',      '2026-02-10 09:00');
 
   -- ============================================================
   -- 4. RECIPE ITEMS (BoM)

@@ -14,8 +14,9 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    await signIn(email, password);
-    setLoading(false);
+    const ok = await signIn(email, password);
+    if (!ok) setLoading(false);
+    // On success keep loading=true so button stays disabled while navigating
   }
 
   return (

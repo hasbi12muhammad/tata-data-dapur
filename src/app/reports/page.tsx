@@ -58,6 +58,7 @@ export default function ReportsPage() {
         0,
       );
       return {
+        id: r.id,
         name: r.name,
         profit: totalProfit,
         revenue: totalRevenue,
@@ -196,7 +197,7 @@ export default function ReportsPage() {
                 <tbody>
                   {recipeProfit.map((r) => (
                     <tr
-                      key={r.name}
+                      key={r.id}
                       className="border-b border-[#EDE4CF] hover:bg-[#F5EFE0] transition-colors"
                     >
                       <td className="px-6 py-3 font-medium text-[#2C1810]">
