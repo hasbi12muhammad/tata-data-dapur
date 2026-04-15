@@ -95,19 +95,19 @@ export default function DashboardPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-left px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Recipe
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Qty
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Revenue
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Profit
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
+                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Date
                     </th>
                   </tr>
@@ -118,21 +118,21 @@ export default function DashboardPage() {
                       key={s.id}
                       className="border-b border-[#EDE4CF] hover:bg-[#F5EFE0] transition-colors"
                     >
-                      <td className="px-6 py-3 font-medium text-[#2C1810]">
-                        {(s.recipe as any)?.name ?? "—"}
+                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810] max-w-[110px] sm:max-w-none">
+                        <span className="line-clamp-1">{(s.recipe as any)?.name ?? "—"}</span>
                       </td>
-                      <td className="px-6 py-3 text-right text-[#5C4535] tabular-nums">
+                      <td className="px-2 sm:px-6 py-2.5 sm:py-3 text-right text-[#5C4535] tabular-nums text-xs sm:text-sm">
                         {s.quantity_sold}
                       </td>
-                      <td className="px-6 py-3 text-right tabular-nums font-medium text-[#2C1810]">
+                      <td className="px-2 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums font-medium text-[#2C1810] text-xs sm:text-sm">
                         {formatCurrency(s.selling_price * s.quantity_sold)}
                       </td>
                       <td
-                        className={`px-6 py-3 text-right tabular-nums font-semibold ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
+                        className={`px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums font-semibold text-xs sm:text-sm ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
                       >
                         {formatCurrency(s.profit * s.quantity_sold)}
                       </td>
-                      <td className="px-6 py-3 text-right text-[#B88D6A] text-xs hidden sm:table-cell">
+                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right text-[#B88D6A] text-xs hidden sm:table-cell">
                         {format(new Date(s.created_at), "dd MMM")}
                       </td>
                     </tr>
