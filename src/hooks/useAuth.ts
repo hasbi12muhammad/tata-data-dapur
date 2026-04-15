@@ -7,10 +7,10 @@ import toast from "react-hot-toast";
 
 export function useAuth() {
   const router = useRouter();
-  const supabase = createClient();
 
   const signIn = useCallback(
     async (email: string, password: string) => {
+      const supabase = createClient();
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -23,14 +23,15 @@ export function useAuth() {
       router.refresh();
       return true;
     },
-    [supabase, router],
+    [router],
   );
 
   const signOut = useCallback(async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
-  }, [supabase, router]);
+  }, [router]);
 
   return { signIn, signOut };
 }

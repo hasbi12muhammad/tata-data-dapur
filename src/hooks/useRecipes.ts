@@ -6,11 +6,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 export function useRecipes() {
-  const supabase = createClient();
-
   return useQuery<Recipe[]>({
     queryKey: ["recipes"],
     queryFn: async () => {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("recipes")
         .select("*, recipe_items(*, item:items(name, unit, avg_price))")
@@ -32,7 +31,6 @@ function calcHPP(items: RecipeItem[]): number {
 }
 
 export function useCreateRecipe() {
-  const supabase = createClient();
   const qc = useQueryClient();
 
   return useMutation({
@@ -40,6 +38,7 @@ export function useCreateRecipe() {
       name: string;
       items: Array<{ item_id: string; quantity_used: number }>;
     }) => {
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -64,11 +63,11 @@ export function useCreateRecipe() {
 }
 
 export function useDeleteRecipe() {
-  const supabase = createClient();
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
+      const supabase = createClient();
       const { error } = await supabase.from("recipes").delete().eq("id", id);
       if (error) throw error;
     },

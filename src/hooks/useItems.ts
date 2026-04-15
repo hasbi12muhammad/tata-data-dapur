@@ -6,11 +6,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 export function useItems() {
-  const supabase = createClient();
-
   return useQuery<Item[]>({
     queryKey: ["items"],
     queryFn: async () => {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("items")
         .select("*")
@@ -22,13 +21,13 @@ export function useItems() {
 }
 
 export function useCreateItem() {
-  const supabase = createClient();
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (
       item: Omit<Item, "id" | "user_id" | "created_at" | "avg_price" | "stock">,
     ) => {
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -46,11 +45,11 @@ export function useCreateItem() {
 }
 
 export function useUpdateItem() {
-  const supabase = createClient();
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, ...update }: Partial<Item> & { id: string }) => {
+      const supabase = createClient();
       const { error } = await supabase
         .from("items")
         .update(update)
@@ -66,11 +65,11 @@ export function useUpdateItem() {
 }
 
 export function useDeleteItem() {
-  const supabase = createClient();
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
+      const supabase = createClient();
       const { error } = await supabase.from("items").delete().eq("id", id);
       if (error) throw error;
     },

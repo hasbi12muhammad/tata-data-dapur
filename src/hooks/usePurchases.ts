@@ -6,11 +6,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 export function usePurchases() {
-  const supabase = createClient();
-
   return useQuery<Purchase[]>({
     queryKey: ["purchases"],
     queryFn: async () => {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("purchases")
         .select("*, item:items(name, unit)")
@@ -23,7 +22,6 @@ export function usePurchases() {
 }
 
 export function useCreatePurchase() {
-  const supabase = createClient();
   const qc = useQueryClient();
 
   return useMutation({
@@ -32,6 +30,7 @@ export function useCreatePurchase() {
       quantity: number;
       total_price: number;
     }) => {
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();

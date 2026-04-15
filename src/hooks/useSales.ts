@@ -6,11 +6,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 export function useSales() {
-  const supabase = createClient();
-
   return useQuery<Sale[]>({
     queryKey: ["sales"],
     queryFn: async () => {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("sales")
         .select("*, recipe:recipes(name)")
@@ -23,11 +22,10 @@ export function useSales() {
 }
 
 export function useDashboardStats() {
-  const supabase = createClient();
-
   return useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("sales")
         .select("selling_price, hpp_at_sale, profit, quantity_sold");
@@ -61,7 +59,6 @@ export function useDashboardStats() {
 }
 
 export function useCreateSale() {
-  const supabase = createClient();
   const qc = useQueryClient();
 
   return useMutation({
@@ -71,6 +68,7 @@ export function useCreateSale() {
       selling_price: number;
       hpp_at_sale: number;
     }) => {
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
