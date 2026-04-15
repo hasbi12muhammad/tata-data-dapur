@@ -183,22 +183,22 @@ export default function PurchasesPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full">
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
-                    <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-left px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Item
                     </th>
-                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Qty
                     </th>
-                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Total
                     </th>
-                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
+                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       /Unit
                     </th>
-                    <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
+                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Date
                     </th>
                   </tr>
@@ -209,26 +209,26 @@ export default function PurchasesPage() {
                       key={p.id}
                       className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors"
                     >
-                      <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
-                        <span className="line-clamp-1">
+                      <td className="px-2 sm:px-6 py-2 sm:py-3 font-medium text-[#2C1810]">
+                        <span className="line-clamp-1 text-xs sm:text-sm">
                           {(p.item as any)?.name ?? "—"}
                         </span>
-                        <span className="text-xs text-[#B88D6A]">
-                          {" "}
+                        <span className="text-[10px] text-[#B88D6A] hidden sm:block">
                           {(p.item as any)?.unit}
                         </span>
                       </td>
-                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs sm:text-sm">
+                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs sm:text-sm">
                         {p.quantity}
                       </td>
-                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums font-medium text-[#2C1810] text-xs sm:text-sm whitespace-nowrap">
+                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right tabular-nums font-medium text-[#2C1810] text-xs sm:text-sm whitespace-nowrap">
                         {formatCurrency(p.total_price)}
                       </td>
-                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs hidden sm:table-cell whitespace-nowrap">
+                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs whitespace-nowrap">
                         {formatCurrency(p.price_per_unit)}
                       </td>
-                      <td className="px-4 sm:px-6 py-2.5 sm:py-3 text-right text-[#B88D6A] text-xs hidden sm:table-cell whitespace-nowrap">
-                        {format(new Date(p.created_at), "dd MMM yyyy")}
+                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">
+                        <span className="sm:hidden">{format(new Date(p.created_at), "dd/MM")}</span>
+                        <span className="hidden sm:inline">{format(new Date(p.created_at), "dd MMM yyyy")}</span>
                       </td>
                     </tr>
                   ))}
