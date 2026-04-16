@@ -42,7 +42,8 @@ begin
          stock          = v_new_stock
    where id = p_item_id and user_id = p_user_id;
 
-  insert into public.purchases (user_id, item_id, quantity, total_price, price_per_unit)
-  values (p_user_id, p_item_id, p_quantity, p_total_price, p_price_per_unit);
+  -- price_per_unit is a generated column (total_price / quantity) — omit from INSERT
+  insert into public.purchases (user_id, item_id, quantity, total_price)
+  values (p_user_id, p_item_id, p_quantity, p_total_price);
 end;
 $$;
