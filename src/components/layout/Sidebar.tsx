@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, useCurrentUser } from "@/hooks/useAuth";
 import {
   BarChart3,
   BookOpen,
@@ -15,7 +15,9 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const nav = [
+const RECIPE_HIDDEN_UID = "0a6cfba1-0ac2-4792-b306-e67ee912390b";
+
+const ALL_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/items", label: "Items", icon: Package },
   { href: "/purchases", label: "Purchases", icon: ShoppingCart },
@@ -32,6 +34,11 @@ interface SidebarProps {
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { signOut } = useAuth();
+  const { data: user } = useCurrentUser();
+
+  const nav = ALL_NAV.filter(
+    (item) => !(item.href === "/recipes" && user?.id === RECIPE_HIDDEN_UID),
+  );
 
   return (
     <>

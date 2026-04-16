@@ -1,9 +1,22 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
+
+export function useCurrentUser() {
+  return useQuery({
+    queryKey: ["auth-user"],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      return user;
+    },
+    staleTime: 60_000,
+  });
+}
 
 export function useAuth() {
   const router = useRouter();
