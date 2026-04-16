@@ -21,6 +21,22 @@ export function useSales() {
   });
 }
 
+/** All sales (no limit) for reports — includes created_at for date filtering */
+export function useReportSales() {
+  return useQuery<Sale[]>({
+    queryKey: ["report-sales"],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("sales")
+        .select("*, recipe:recipes(name)")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
 export function useDashboardStats() {
   return useQuery({
     queryKey: ["dashboard-stats"],
