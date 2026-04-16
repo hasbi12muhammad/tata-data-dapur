@@ -9,10 +9,11 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { useItems } from "@/hooks/useItems";
-import { useCreatePurchase, usePurchases } from "@/hooks/usePurchases";
+import { useCreatePurchase, usePurchases, useUpdatePurchase } from "@/hooks/usePurchases";
+import { Purchase } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Plus, Search, ShoppingCart, X } from "lucide-react";
+import { Pencil, Plus, Search, ShoppingCart, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const cls =
@@ -22,12 +23,29 @@ export default function PurchasesPage() {
   const { data: purchases, isLoading } = usePurchases();
   const { data: items } = useItems();
   const createPurchase = useCreatePurchase();
+  const updatePurchase = useUpdatePurchase();
 
   // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<Purchase | null>(null);
   const [itemId, setItemId] = useState("");
   const [quantity, setQuantity] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
+
+  function openEdit(p: Purchase) {
+    setEditing(p);
+    setQuantity(String(p.quantity));
+    setTotalPrice(String(p.total_price));
+    setModalOpen(true);
+  }
+
+  function openCreate() {
+    setEditing(null);
+    setItemId("");
+    setQuantity("");
+    setTotalPrice("");
+    setModalOpen(true);
+  }
 
   // ── filter / sort state ──────────────────────────────────────
   const [search, setSearch] = useState("");
@@ -41,15 +59,25 @@ export default function PurchasesPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!itemId || !quantity || !totalPrice) return;
+    if (!quantity || !totalPrice) return;
     if (Number(quantity) <= 0) return;
     if (Number(totalPrice) < 0) return;
-    await createPurchase.mutateAsync({
-      item_id: itemId,
-      quantity: Number(quantity),
-      total_price: Number(totalPrice),
-    });
+    if (editing) {
+      await updatePurchase.mutateAsync({
+        id: editing.id,
+        quantity: Number(quantity),
+        total_price: Number(totalPrice),
+      });
+    } else {
+      if (!itemId) return;
+      await createPurchase.mutateAsync({
+        item_id: itemId,
+        quantity: Number(quantity),
+        total_price: Number(totalPrice),
+      });
+    }
     setModalOpen(false);
+    setEditing(null);
     setItemId("");
     setQuantity("");
     setTotalPrice("");
@@ -90,7 +118,7 @@ export default function PurchasesPage() {
     <AppLayout
       title="Purchases"
       action={
-        <Button size="sm" onClick={() => setModalOpen(true)}>
+        <Button size="sm" onClick={openCreate}>
           <Plus className="w-4 h-4" /> Add
         </Button>
       }
@@ -201,6 +229,7 @@ export default function PurchasesPage() {
                     <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Date
                     </th>
+                    <th className="px-2 sm:px-3 py-3" />
                   </tr>
                 </thead>
                 <tbody>
@@ -230,6 +259,15 @@ export default function PurchasesPage() {
                         <span className="sm:hidden">{format(new Date(p.created_at), "dd/MM")}</span>
                         <span className="hidden sm:inline">{format(new Date(p.created_at), "dd MMM yyyy")}</span>
                       </td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-3">
+                        <button
+                          onClick={() => openEdit(p)}
+                          className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors"
+                          aria-label="Edit"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -242,23 +280,33 @@ export default function PurchasesPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Record Purchase"
+        title={editing ? "Edit Purchase" : "Record Purchase"}
         size="sm"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Select
-            label="Item"
-            value={itemId}
-            onChange={(e) => setItemId(e.target.value)}
-            required
-          >
-            <option value="">Select item...</option>
-            {items?.map((i) => (
-              <option key={i.id} value={i.id}>
-                {i.name} ({i.unit})
-              </option>
-            ))}
-          </Select>
+          {editing ? (
+            <div className="rounded-lg bg-[#F5EFE0] border border-[#D9CCAF] px-4 py-2.5">
+              <p className="text-xs text-[#7C6352]">Item</p>
+              <p className="text-sm font-medium text-[#2C1810]">
+                {(editing.item as any)?.name ?? "—"}{" "}
+                <span className="text-xs text-[#B88D6A]">({(editing.item as any)?.unit})</span>
+              </p>
+            </div>
+          ) : (
+            <Select
+              label="Item"
+              value={itemId}
+              onChange={(e) => setItemId(e.target.value)}
+              required
+            >
+              <option value="">Select item...</option>
+              {items?.map((i) => (
+                <option key={i.id} value={i.id}>
+                  {i.name} ({i.unit})
+                </option>
+              ))}
+            </Select>
+          )}
           <Input
             label="Quantity"
             type="number"
@@ -295,10 +343,10 @@ export default function PurchasesPage() {
             </Button>
             <Button
               type="submit"
-              loading={createPurchase.isPending}
+              loading={createPurchase.isPending || updatePurchase.isPending}
               className="flex-1"
             >
-              Save
+              {editing ? "Save" : "Record"}
             </Button>
           </div>
         </form>

@@ -21,6 +21,38 @@ export function usePurchases() {
   });
 }
 
+export function useUpdatePurchase() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (p: {
+      id: string;
+      quantity: number;
+      total_price: number;
+    }) => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const { error } = await supabase.rpc("update_purchase", {
+        p_purchase_id: p.id,
+        p_user_id: user!.id,
+        p_quantity: p.quantity,
+        p_total_price: p.total_price,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["purchases"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+      toast.success("Purchase updated");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
 export function useCreatePurchase() {
   const qc = useQueryClient();
 
