@@ -7,24 +7,14 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function SettingsPage() {
+function EmailConfirmHandler() {
   const supabase = createClient();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [email, setEmail] = useState("");
-  const [emailLoading, setEmailLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
-
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordLoading, setPasswordLoading] = useState(false);
-
-  // Handle email change confirmation via token_hash
   useEffect(() => {
     const tokenHash = searchParams.get("token_hash");
     const type = searchParams.get("type");
@@ -40,7 +30,22 @@ export default function SettingsPage() {
         }
         router.replace("/settings");
       });
-  }, []);
+  }, [searchParams, supabase.auth, router]);
+
+  return null;
+}
+
+export default function SettingsPage() {
+  const supabase = createClient();
+
+  const [email, setEmail] = useState("");
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   async function handleEmailUpdate(e: React.FormEvent) {
     e.preventDefault();
@@ -80,6 +85,9 @@ export default function SettingsPage() {
 
   return (
     <AppLayout title="Pengaturan Akun">
+      <Suspense>
+        <EmailConfirmHandler />
+      </Suspense>
       <div className="max-w-lg mx-auto flex flex-col gap-6">
         {/* Email Section */}
         <div className="bg-[#FBF8F2] rounded-2xl border border-[#D9CCAF] shadow-sm p-6">
