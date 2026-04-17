@@ -13,6 +13,7 @@ import {
   useCreateRecipe,
   useDeleteRecipe,
   useRecipes,
+  useUpdateRecipe,
 } from "@/hooks/useRecipes";
 import { formatCurrency } from "@/lib/utils";
 import {
@@ -20,10 +21,12 @@ import {
   ArrowUp,
   BookOpen,
   Minus,
+  Pencil,
   Plus,
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { Recipe } from "@/types";
 
 interface BomRow {
   item_id: string;
@@ -34,13 +37,34 @@ export default function RecipesPage() {
   const { data: recipes, isLoading } = useRecipes();
   const { data: items } = useItems();
   const createRecipe = useCreateRecipe();
+  const updateRecipe = useUpdateRecipe();
   const deleteRecipe = useDeleteRecipe();
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<Recipe | null>(null);
   const [name, setName] = useState("");
   const [rows, setRows] = useState<BomRow[]>([
     { item_id: "", quantity_used: "" },
   ]);
+
+  function openCreate() {
+    setEditing(null);
+    setName("");
+    setRows([{ item_id: "", quantity_used: "" }]);
+    setModalOpen(true);
+  }
+
+  function openEdit(recipe: Recipe) {
+    setEditing(recipe);
+    setName(recipe.name);
+    setRows(
+      (recipe.recipe_items ?? []).map((ri) => ({
+        item_id: ri.item_id,
+        quantity_used: String(ri.quantity_used),
+      })),
+    );
+    setModalOpen(true);
+  }
 
   function addRow() {
     setRows((r) => [...r, { item_id: "", quantity_used: "" }]);
@@ -68,14 +92,17 @@ export default function RecipesPage() {
       (r) => r.item_id && Number(r.quantity_used) > 0,
     );
     if (!name.trim() || validRows.length === 0) return;
-    await createRecipe.mutateAsync({
-      name: name.trim(),
-      items: validRows.map((r) => ({
-        item_id: r.item_id,
-        quantity_used: Number(r.quantity_used),
-      })),
-    });
+    const items = validRows.map((r) => ({
+      item_id: r.item_id,
+      quantity_used: Number(r.quantity_used),
+    }));
+    if (editing) {
+      await updateRecipe.mutateAsync({ id: editing.id, name: name.trim(), items });
+    } else {
+      await createRecipe.mutateAsync({ name: name.trim(), items });
+    }
     setModalOpen(false);
+    setEditing(null);
     setName("");
     setRows([{ item_id: "", quantity_used: "" }]);
   }
@@ -84,7 +111,7 @@ export default function RecipesPage() {
     <AppLayout
       title="Recipes"
       action={
-        <Button size="sm" onClick={() => setModalOpen(true)}>
+        <Button size="sm" onClick={openCreate}>
           <Plus className="w-4 h-4" /> New Recipe
         </Button>
       }
@@ -99,7 +126,7 @@ export default function RecipesPage() {
           title="No recipes yet"
           description="Create a recipe (Bill of Materials) to calculate HPP automatically."
           action={
-            <Button size="sm" onClick={() => setModalOpen(true)}>
+            <Button size="sm" onClick={openCreate}>
               <Plus className="w-4 h-4" /> New Recipe
             </Button>
           }
@@ -113,16 +140,25 @@ export default function RecipesPage() {
                   <h3 className="font-semibold text-[#2C1810] text-sm">
                     {recipe.name}
                   </h3>
-                  <button
-                    onClick={() => {
-                      if (confirm("Delete recipe?"))
-                        deleteRecipe.mutate(recipe.id);
-                    }}
-                    className="p-1 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer transition-colors flex-shrink-0"
-                    aria-label="Delete recipe"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => openEdit(recipe)}
+                      className="p-1 rounded text-[#D9CCAF] hover:text-[#A05035] cursor-pointer transition-colors"
+                      aria-label="Edit recipe"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm("Delete recipe?"))
+                          deleteRecipe.mutate(recipe.id);
+                      }}
+                      className="p-1 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer transition-colors"
+                      aria-label="Delete recipe"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </CardHeader>
               <CardBody>
@@ -179,8 +215,8 @@ export default function RecipesPage() {
 
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="New Recipe"
+        onClose={() => { setModalOpen(false); setEditing(null); }}
+        title={editing ? "Edit Recipe" : "New Recipe"}
         size="lg"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -266,17 +302,17 @@ export default function RecipesPage() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setModalOpen(false)}
+              onClick={() => { setModalOpen(false); setEditing(null); }}
               className="flex-1"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              loading={createRecipe.isPending}
+              loading={editing ? updateRecipe.isPending : createRecipe.isPending}
               className="flex-1"
             >
-              Create
+              {editing ? "Save" : "Create"}
             </Button>
           </div>
         </form>

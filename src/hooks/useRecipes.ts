@@ -68,6 +68,41 @@ export function useCreateRecipe() {
   });
 }
 
+export function useUpdateRecipe() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: {
+      id: string;
+      name: string;
+      items: Array<{ item_id: string; quantity_used: number }>;
+    }) => {
+      const supabase = createClient();
+      const { error: re } = await supabase
+        .from("recipes")
+        .update({ name: payload.name })
+        .eq("id", payload.id);
+      if (re) throw re;
+
+      const { error: de } = await supabase
+        .from("recipe_items")
+        .delete()
+        .eq("recipe_id", payload.id);
+      if (de) throw de;
+
+      const { error: ie } = await supabase
+        .from("recipe_items")
+        .insert(payload.items.map((i) => ({ ...i, recipe_id: payload.id })));
+      if (ie) throw ie;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+      toast.success("Recipe updated");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
 export function useDeleteRecipe() {
   const qc = useQueryClient();
 
