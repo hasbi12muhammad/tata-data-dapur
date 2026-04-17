@@ -64,9 +64,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#A05035] flex items-center justify-center">
-              <span className="text-[#E9DFC6] text-xs font-bold">TDD</span>
-            </div>
+            <img src="/td-logo.png" alt="TD" className="w-7 h-7 rounded-lg object-contain bg-[#A05035] p-0.5" />
             <span className="text-[#E9DFC6] font-bold text-lg tracking-tight">
               Tata Data Dapur
             </span>
