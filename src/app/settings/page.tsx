@@ -25,7 +25,10 @@ export default function SettingsPage() {
     e.preventDefault();
     setEmailLoading(true);
     setEmailSent(false);
-    const { error } = await supabase.auth.updateUser({ email });
+    const { error } = await supabase.auth.updateUser(
+      { email },
+      { emailRedirectTo: `${window.location.origin}/settings` },
+    );
     setEmailLoading(false);
     if (error) {
       toast.error(error.message);
