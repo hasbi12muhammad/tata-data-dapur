@@ -1,7 +1,8 @@
 "use client";
 
 import { Sidebar } from "./Sidebar";
-import { Menu } from "lucide-react";
+import { Menu, Settings } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 interface AppLayoutProps {
@@ -31,10 +32,19 @@ export function AppLayout({ children, title, action }: AppLayoutProps) {
             {title}
           </h1>
           {action && <div className="flex-shrink-0">{action}</div>}
+          <Link
+            href="/settings"
+            className="p-2 rounded-lg text-[#7C6352] hover:bg-[#E9DFC6] transition-colors"
+            aria-label="Pengaturan akun"
+          >
+            <Settings className="w-5 h-5" />
+          </Link>
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 overflow-x-hidden">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 overflow-x-hidden">
+          {children}
+        </main>
       </div>
     </div>
   );
