@@ -2,6 +2,8 @@
 
 export const dynamic = "force-dynamic";
 
+import Image from "next/image";
+import TdLogo from "../../../public/td-logo.png";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,7 +29,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 rounded-2xl bg-[#7C563D] flex items-center justify-center mb-3">
-            <img src="/td-logo.png" alt="TD" className="w-9 h-9 object-contain" />
+            <Image src={TdLogo} alt="TD" width={36} height={36} className="object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-[#2C1810]">Tata Data Dapur</h1>
           <p className="text-sm text-[#7C6352] mt-1">

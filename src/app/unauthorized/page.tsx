@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import TdLogo from "../../../public/td-logo.png";
 
 export default function UnauthorizedPage() {
   return (
@@ -6,7 +8,7 @@ export default function UnauthorizedPage() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 rounded-2xl bg-[#7C563D] flex items-center justify-center mb-3">
-            <img src="/td-logo.png" alt="TD" className="w-9 h-9 object-contain" />
+            <Image src={TdLogo} alt="TD" width={36} height={36} className="object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-[#2C1810]">Tata Data Dapur</h1>
         </div>

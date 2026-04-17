@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import TdLogo from "../../../public/td-logo.png";
 import { cn } from "@/lib/utils";
 import { useAuth, useCurrentUser } from "@/hooks/useAuth";
 import {
@@ -64,7 +66,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <img src="/td-logo.png" alt="TD" className="w-7 h-7 rounded-lg object-contain bg-[#A05035] p-0.5" />
+            <Image src={TdLogo} alt="TD" width={28} height={28} className="rounded-lg object-contain bg-[#A05035] p-0.5" />
             <span className="text-[#E9DFC6] font-bold text-lg tracking-tight">
               Tata Data Dapur
             </span>
