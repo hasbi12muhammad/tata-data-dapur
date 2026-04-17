@@ -9,11 +9,17 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { useItems } from "@/hooks/useItems";
-import { useCreatePurchase, usePurchases, useUpdatePurchase } from "@/hooks/usePurchases";
+import {
+  useCreatePurchase,
+  usePurchases,
+  useUpdatePurchase,
+} from "@/hooks/usePurchases";
 import { Purchase } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Pencil, Plus, Search, ShoppingCart, X } from "lucide-react";
+import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { FileUp, Pencil, Plus, Search, ShoppingCart, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const cls =
@@ -24,6 +30,48 @@ export default function PurchasesPage() {
   const { data: items } = useItems();
   const createPurchase = useCreatePurchase();
   const updatePurchase = useUpdatePurchase();
+  const queryClient = useQueryClient();
+
+  const [importOpen, setImportOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
+
+  async function handleImportPurchases(rows: Record<string, unknown>[]) {
+    const supabase = (await import("@/lib/supabase/client")).createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    let success = 0;
+    const errors: string[] = [];
+    for (const r of rows) {
+      const itemName = String(r["nama_item"] ?? r["item"] ?? "").trim();
+      const qty = Number(r["quantity"] ?? r["qty"] ?? 0);
+      const total = Number(r["total_harga"] ?? r["total_price"] ?? 0);
+      if (!itemName || qty <= 0 || total < 0) continue;
+      const found = items?.find(
+        (i) => i.name.toLowerCase() === itemName.toLowerCase(),
+      );
+      if (!found) {
+        errors.push(`Item "${itemName}" tidak ditemukan`);
+        continue;
+      }
+      const { error } = await supabase.rpc("record_purchase", {
+        p_user_id: user!.id,
+        p_item_id: found.id,
+        p_quantity: qty,
+        p_total_price: total,
+        p_price_per_unit: total / qty,
+      });
+      if (error) errors.push(error.message);
+      else success++;
+    }
+    if (errors.length)
+      toast.error(`${errors.length} baris gagal: ${errors[0]}`);
+    if (success) {
+      toast.success(`${success} purchase berhasil diimport`);
+      queryClient.invalidateQueries({ queryKey: ["purchases"] });
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    }
+  }
 
   // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
@@ -99,7 +147,9 @@ export default function PurchasesPage() {
     return [...rows].sort((a, b) => {
       switch (sortBy) {
         case "date_asc":
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
         case "price_desc":
           return b.total_price - a.total_price;
         case "price_asc":
@@ -107,7 +157,9 @@ export default function PurchasesPage() {
         case "qty_desc":
           return b.quantity - a.quantity;
         default:
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
       }
     });
   }, [purchases, search, filterItem, sortBy]);
@@ -118,9 +170,18 @@ export default function PurchasesPage() {
     <AppLayout
       title="Purchases"
       action={
-        <Button size="sm" onClick={openCreate}>
-          <Plus className="w-4 h-4" /> Add
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setImportOpen(true)}
+          >
+            <FileUp className="w-4 h-4" /> Import
+          </Button>
+          <Button size="sm" onClick={openCreate}>
+            <Plus className="w-4 h-4" /> Add
+          </Button>
+        </div>
       }
     >
       <Card>
@@ -256,8 +317,12 @@ export default function PurchasesPage() {
                         {formatCurrency(p.price_per_unit)}
                       </td>
                       <td className="px-2 sm:px-6 py-2 sm:py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">
-                        <span className="sm:hidden">{format(new Date(p.created_at), "dd/MM")}</span>
-                        <span className="hidden sm:inline">{format(new Date(p.created_at), "dd MMM yyyy")}</span>
+                        <span className="sm:hidden">
+                          {format(new Date(p.created_at), "dd/MM")}
+                        </span>
+                        <span className="hidden sm:inline">
+                          {format(new Date(p.created_at), "dd MMM yyyy")}
+                        </span>
                       </td>
                       <td className="px-2 sm:px-3 py-2 sm:py-3">
                         <button
@@ -289,7 +354,9 @@ export default function PurchasesPage() {
               <p className="text-xs text-[#7C6352]">Item</p>
               <p className="text-sm font-medium text-[#2C1810]">
                 {(editing.item as any)?.name ?? "—"}{" "}
-                <span className="text-xs text-[#B88D6A]">({(editing.item as any)?.unit})</span>
+                <span className="text-xs text-[#B88D6A]">
+                  ({(editing.item as any)?.unit})
+                </span>
               </p>
             </div>
           ) : (
@@ -328,7 +395,9 @@ export default function PurchasesPage() {
             <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5">
               <p className="text-xs text-[#5C6B38] font-medium">
                 Price per unit:{" "}
-                <span className="font-bold">{formatCurrency(pricePerUnit)}</span>
+                <span className="font-bold">
+                  {formatCurrency(pricePerUnit)}
+                </span>
               </p>
             </div>
           )}
@@ -351,6 +420,25 @@ export default function PurchasesPage() {
           </div>
         </form>
       </Modal>
+
+      <ImportExcelModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        title="Import Purchases"
+        templateFilename="template_purchases.xlsx"
+        templateColumns={["nama_item", "quantity", "total_harga"]}
+        templateRows={[
+          ["Tepung Terigu", 1000, 15000],
+          ["Gula Pasir", 500, 8000],
+        ]}
+        previewColumns={[
+          { key: "nama_item", label: "Nama Item" },
+          { key: "quantity", label: "Qty" },
+          { key: "total_harga", label: "Total Harga" },
+        ]}
+        onImport={handleImportPurchases}
+        importing={importing}
+      />
     </AppLayout>
   );
 }

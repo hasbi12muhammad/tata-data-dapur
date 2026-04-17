@@ -16,8 +16,10 @@ import {
 } from "@/hooks/useItems";
 import { Item } from "@/types";
 import { formatCurrency } from "@/lib/utils";
-import { Package, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
+import { FileUp, Package, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const UNITS: Item["unit"][] = ["gr", "ml", "pcs", "kg", "liter"];
@@ -30,6 +32,46 @@ export default function ItemsPage() {
   const createItem = useCreateItem();
   const updateItem = useUpdateItem();
   const deleteItem = useDeleteItem();
+  const queryClient = useQueryClient();
+
+  const [importOpen, setImportOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
+
+  async function handleImportItems(rows: Record<string, unknown>[]) {
+    const supabase = (await import("@/lib/supabase/client")).createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const valid = rows
+      .map((r) => ({
+        name: String(r["nama"] ?? r["name"] ?? "").trim(),
+        unit: String(r["unit"] ?? "")
+          .trim()
+          .toLowerCase(),
+      }))
+      .filter(
+        (r) =>
+          r.name &&
+          (["gr", "ml", "pcs", "kg", "liter"] as string[]).includes(r.unit),
+      );
+    if (!valid.length) {
+      toast.error("Tidak ada baris valid. Cek kolom nama & unit.");
+      return;
+    }
+    setImporting(true);
+    const { error } = await supabase
+      .from("items")
+      .insert(
+        valid.map((r) => ({ ...r, user_id: user!.id, avg_price: 0, stock: 0 })),
+      );
+    setImporting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(`${valid.length} item berhasil diimport`);
+    queryClient.invalidateQueries({ queryKey: ["items"] });
+  }
 
   // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
@@ -107,9 +149,18 @@ export default function ItemsPage() {
     <AppLayout
       title="Items"
       action={
-        <Button size="sm" onClick={openCreate}>
-          <Plus className="w-4 h-4" /> Add
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setImportOpen(true)}
+          >
+            <FileUp className="w-4 h-4" /> Import
+          </Button>
+          <Button size="sm" onClick={openCreate}>
+            <Plus className="w-4 h-4" /> Add
+          </Button>
+        </div>
       }
     >
       <Card>
@@ -311,6 +362,25 @@ export default function ItemsPage() {
           </div>
         </form>
       </Modal>
+
+      <ImportExcelModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        title="Import Items"
+        templateFilename="template_items.xlsx"
+        templateColumns={["nama", "unit"]}
+        templateRows={[
+          ["Tepung Terigu", "gr"],
+          ["Gula Pasir", "kg"],
+          ["Minyak Goreng", "liter"],
+        ]}
+        previewColumns={[
+          { key: "nama", label: "Nama" },
+          { key: "unit", label: "Unit" },
+        ]}
+        onImport={handleImportItems}
+        importing={importing}
+      />
     </AppLayout>
   );
 }

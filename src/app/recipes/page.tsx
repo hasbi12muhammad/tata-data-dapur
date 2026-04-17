@@ -16,10 +16,13 @@ import {
   useUpdateRecipe,
 } from "@/hooks/useRecipes";
 import { formatCurrency } from "@/lib/utils";
+import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowDown,
   ArrowUp,
   BookOpen,
+  FileUp,
   Minus,
   Pencil,
   Plus,
@@ -39,6 +42,64 @@ export default function RecipesPage() {
   const createRecipe = useCreateRecipe();
   const updateRecipe = useUpdateRecipe();
   const deleteRecipe = useDeleteRecipe();
+  const queryClient = useQueryClient();
+
+  const [importOpen, setImportOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
+
+  async function handleImportRecipes(rows: Record<string, unknown>[]) {
+    const supabase = (await import("@/lib/supabase/client")).createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    // Group rows by recipe name
+    const grouped = new Map<
+      string,
+      { item_id: string; quantity_used: number }[]
+    >();
+    const errors: string[] = [];
+
+    for (const r of rows) {
+      const recipeName = String(r["nama_resep"] ?? r["recipe"] ?? "").trim();
+      const itemName = String(r["nama_item"] ?? r["item"] ?? "").trim();
+      const qty = Number(r["quantity_used"] ?? r["qty"] ?? 0);
+      if (!recipeName || !itemName || qty <= 0) continue;
+      const found = items?.find(
+        (i) => i.name.toLowerCase() === itemName.toLowerCase(),
+      );
+      if (!found) {
+        errors.push(`Item "${itemName}" tidak ditemukan`);
+        continue;
+      }
+      if (!grouped.has(recipeName)) grouped.set(recipeName, []);
+      grouped.get(recipeName)!.push({ item_id: found.id, quantity_used: qty });
+    }
+
+    let success = 0;
+    for (const [recipeName, recipeItems] of grouped) {
+      const { data: recipe, error: re } = await supabase
+        .from("recipes")
+        .insert({ name: recipeName, user_id: user!.id })
+        .select()
+        .single();
+      if (re) {
+        errors.push(re.message);
+        continue;
+      }
+      const { error: rie } = await supabase
+        .from("recipe_items")
+        .insert(recipeItems.map((i) => ({ ...i, recipe_id: recipe.id })));
+      if (rie) errors.push(rie.message);
+      else success++;
+    }
+
+    if (errors.length) toast.error(`${errors.length} error: ${errors[0]}`);
+    if (success) {
+      toast.success(`${success} resep berhasil diimport`);
+      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+    }
+  }
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Recipe | null>(null);
@@ -97,7 +158,11 @@ export default function RecipesPage() {
       quantity_used: Number(r.quantity_used),
     }));
     if (editing) {
-      await updateRecipe.mutateAsync({ id: editing.id, name: name.trim(), items });
+      await updateRecipe.mutateAsync({
+        id: editing.id,
+        name: name.trim(),
+        items,
+      });
     } else {
       await createRecipe.mutateAsync({ name: name.trim(), items });
     }
@@ -111,9 +176,18 @@ export default function RecipesPage() {
     <AppLayout
       title="Recipes"
       action={
-        <Button size="sm" onClick={openCreate}>
-          <Plus className="w-4 h-4" /> New Recipe
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setImportOpen(true)}
+          >
+            <FileUp className="w-4 h-4" /> Import
+          </Button>
+          <Button size="sm" onClick={openCreate}>
+            <Plus className="w-4 h-4" /> New Recipe
+          </Button>
+        </div>
       }
     >
       {isLoading ? (
@@ -215,7 +289,10 @@ export default function RecipesPage() {
 
       <Modal
         open={modalOpen}
-        onClose={() => { setModalOpen(false); setEditing(null); }}
+        onClose={() => {
+          setModalOpen(false);
+          setEditing(null);
+        }}
         title={editing ? "Edit Recipe" : "New Recipe"}
         size="lg"
       >
@@ -302,14 +379,19 @@ export default function RecipesPage() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => { setModalOpen(false); setEditing(null); }}
+              onClick={() => {
+                setModalOpen(false);
+                setEditing(null);
+              }}
               className="flex-1"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              loading={editing ? updateRecipe.isPending : createRecipe.isPending}
+              loading={
+                editing ? updateRecipe.isPending : createRecipe.isPending
+              }
               className="flex-1"
             >
               {editing ? "Save" : "Create"}
@@ -317,6 +399,27 @@ export default function RecipesPage() {
           </div>
         </form>
       </Modal>
+
+      <ImportExcelModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        title="Import Recipes"
+        templateFilename="template_recipes.xlsx"
+        templateColumns={["nama_resep", "nama_item", "quantity_used"]}
+        templateRows={[
+          ["Nasi Goreng", "Beras", 200],
+          ["Nasi Goreng", "Minyak Goreng", 10],
+          ["Mie Goreng", "Mie", 100],
+          ["Mie Goreng", "Telur", 1],
+        ]}
+        previewColumns={[
+          { key: "nama_resep", label: "Nama Resep" },
+          { key: "nama_item", label: "Nama Item" },
+          { key: "quantity_used", label: "Qty" },
+        ]}
+        onImport={handleImportRecipes}
+        importing={importing}
+      />
     </AppLayout>
   );
 }
