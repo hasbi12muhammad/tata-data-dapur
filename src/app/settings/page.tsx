@@ -6,11 +6,14 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { createClient } from "@/lib/supabase/client";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function SettingsPage() {
   const supabase = createClient();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [email, setEmail] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
@@ -20,6 +23,24 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
+
+  // Handle email change confirmation via token_hash
+  useEffect(() => {
+    const tokenHash = searchParams.get("token_hash");
+    const type = searchParams.get("type");
+    if (!tokenHash || type !== "email_change") return;
+
+    supabase.auth
+      .verifyOtp({ token_hash: tokenHash, type: "email_change" })
+      .then(({ error }) => {
+        if (error) {
+          toast.error("Konfirmasi gagal: " + error.message);
+        } else {
+          toast.success("Email berhasil diubah!");
+        }
+        router.replace("/settings");
+      });
+  }, []);
 
   async function handleEmailUpdate(e: React.FormEvent) {
     e.preventDefault();
