@@ -29,6 +29,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Recipe } from "@/types";
 
 interface BomRow {
@@ -48,6 +49,7 @@ export default function RecipesPage() {
   const [importing, setImporting] = useState(false);
 
   async function handleImportRecipes(rows: Record<string, unknown>[]) {
+    setImporting(true);
     const supabase = (await import("@/lib/supabase/client")).createClient();
     const {
       data: { user },
@@ -94,6 +96,7 @@ export default function RecipesPage() {
       else success++;
     }
 
+    setImporting(false);
     if (errors.length) toast.error(`${errors.length} error: ${errors[0]}`);
     if (success) {
       toast.success(`${success} resep berhasil diimport`);
