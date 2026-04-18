@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LogOut,
   Package,
+  Receipt,
   ShoppingCart,
   TrendingUp,
   X,
@@ -23,6 +24,7 @@ const ALL_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/items", label: "Items", icon: Package },
   { href: "/purchases", label: "Purchases", icon: ShoppingCart },
+  { href: "/expenses", label: "Expenses", icon: Receipt },
   { href: "/recipes", label: "Recipes", icon: BookOpen },
   { href: "/sales", label: "Sales", icon: TrendingUp },
   { href: "/reports", label: "Reports", icon: BarChart3 },
@@ -66,7 +68,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <Image src={TdLogo} alt="TD" width={28} height={28} className="rounded-lg object-contain bg-[#A05035] p-0.5" />
+            <Image
+              src={TdLogo}
+              alt="TD"
+              width={28}
+              height={28}
+              className="rounded-lg object-contain bg-[#A05035] p-0.5"
+            />
             <span className="text-[#E9DFC6] font-bold text-lg tracking-tight">
               Tata Data Dapur
             </span>

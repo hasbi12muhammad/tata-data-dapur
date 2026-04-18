@@ -50,6 +50,26 @@ export interface Sale {
   recipe?: Recipe;
 }
 
+export interface ExpenseCategory {
+  id: string;
+  user_id: string;
+  name: string;
+  created_at: string;
+}
+
+export interface Expense {
+  id: string;
+  user_id: string;
+  category_id: string | null;
+  name: string;
+  qty: number;
+  price: number;
+  total: number;
+  note: string | null;
+  created_at: string;
+  category?: ExpenseCategory;
+}
+
 export interface DashboardStats {
   total_revenue: number;
   total_hpp: number;
