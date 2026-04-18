@@ -86,6 +86,35 @@ export function useCreateExpense() {
   });
 }
 
+export function useUpdateExpense() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      id: string;
+      name: string;
+      qty: number;
+      price: number;
+      total: number;
+      category_id: string | null;
+      note: string | null;
+      created_at: string;
+    }) => {
+      const { id, ...rest } = p;
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("expenses")
+        .update(rest)
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["expenses"] });
+      toast.success("Expense diperbarui");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
 export function useDeleteExpense() {
   const qc = useQueryClient();
   return useMutation({

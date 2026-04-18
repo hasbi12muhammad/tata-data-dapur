@@ -9,7 +9,12 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { useRecipes } from "@/hooks/useRecipes";
-import { useCreateSale, useSales } from "@/hooks/useSales";
+import {
+  useCreateSale,
+  useCreateSaleCategory,
+  useSaleCategories,
+  useSales,
+} from "@/hooks/useSales";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { Plus, Search, TrendingUp, X } from "lucide-react";
@@ -21,17 +26,23 @@ const cls =
 export default function SalesPage() {
   const { data: sales, isLoading } = useSales();
   const { data: recipes } = useRecipes();
+  const { data: categories } = useSaleCategories();
   const createSale = useCreateSale();
+  const createCategory = useCreateSaleCategory();
 
   // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
   const [recipeId, setRecipeId] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [sellingPrice, setSellingPrice] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [newCatName, setNewCatName] = useState("");
+  const [addingCat, setAddingCat] = useState(false);
 
   // ── filter / sort state ──────────────────────────────────────
   const [search, setSearch] = useState("");
   const [filterRecipe, setFilterRecipe] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
   const [sortBy, setSortBy] = useState("date_desc");
 
   const selectedRecipe = recipes?.find((r) => r.id === recipeId);
@@ -43,6 +54,14 @@ export default function SalesPage() {
       ? ((Number(sellingPrice) - hpp) / Number(sellingPrice)) * 100
       : 0;
 
+  async function handleAddCategory() {
+    if (!newCatName.trim()) return;
+    const cat = await createCategory.mutateAsync(newCatName.trim());
+    setCategoryId(cat.id);
+    setNewCatName("");
+    setAddingCat(false);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!recipeId || !sellingPrice) return;
@@ -51,11 +70,25 @@ export default function SalesPage() {
       quantity_sold: Number(quantity),
       selling_price: Number(sellingPrice),
       hpp_at_sale: hpp,
+      category_id: categoryId || null,
     });
     setModalOpen(false);
     setRecipeId("");
     setQuantity("1");
     setSellingPrice("");
+    setCategoryId("");
+    setNewCatName("");
+    setAddingCat(false);
+  }
+
+  function openCreate() {
+    setRecipeId("");
+    setQuantity("1");
+    setSellingPrice("");
+    setCategoryId("");
+    setNewCatName("");
+    setAddingCat(false);
+    setModalOpen(true);
   }
 
   const filtered = useMemo(() => {
@@ -70,6 +103,9 @@ export default function SalesPage() {
     if (filterRecipe) {
       rows = rows.filter((s) => s.recipe_id === filterRecipe);
     }
+    if (filterCategory) {
+      rows = rows.filter((s) => s.category_id === filterCategory);
+    }
 
     return [...rows].sort((a, b) => {
       const profitA = a.profit * a.quantity_sold;
@@ -78,7 +114,9 @@ export default function SalesPage() {
       const revenueB = b.selling_price * b.quantity_sold;
       switch (sortBy) {
         case "date_asc":
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
         case "profit_desc":
           return profitB - profitA;
         case "profit_asc":
@@ -88,18 +126,21 @@ export default function SalesPage() {
         case "qty_desc":
           return b.quantity_sold - a.quantity_sold;
         default:
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
       }
     });
-  }, [sales, search, filterRecipe, sortBy]);
+  }, [sales, search, filterRecipe, filterCategory, sortBy]);
 
-  const hasFilters = search || filterRecipe || sortBy !== "date_desc";
+  const hasFilters =
+    search || filterRecipe || filterCategory || sortBy !== "date_desc";
 
   return (
     <AppLayout
       title="Sales"
       action={
-        <Button size="sm" onClick={() => setModalOpen(true)}>
+        <Button size="sm" onClick={openCreate}>
           <Plus className="w-4 h-4" /> Add
         </Button>
       }
@@ -139,6 +180,20 @@ export default function SalesPage() {
             </select>
             <select
               className={`${cls} flex-1`}
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+            >
+              <option value="">Semua kategori</option>
+              {categories?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex gap-2">
+            <select
+              className={`${cls} flex-1`}
               value={filterRecipe}
               onChange={(e) => setFilterRecipe(e.target.value)}
             >
@@ -161,6 +216,7 @@ export default function SalesPage() {
                 onClick={() => {
                   setSearch("");
                   setFilterRecipe("");
+                  setFilterCategory("");
                   setSortBy("date_desc");
                 }}
                 className="text-[#A05035] hover:underline font-medium"
@@ -182,7 +238,7 @@ export default function SalesPage() {
               title="No sales yet"
               description="Record a sale to start tracking revenue and profit."
               action={
-                <Button size="sm" onClick={() => setModalOpen(true)}>
+                <Button size="sm" onClick={openCreate}>
                   <Plus className="w-4 h-4" /> Record Sale
                 </Button>
               }
@@ -199,14 +255,14 @@ export default function SalesPage() {
                     <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Recipe
                     </th>
+                    <th className="text-left px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
+                      Kategori
+                    </th>
                     <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Qty
                     </th>
                     <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Sell Price
-                    </th>
-                    <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
-                      HPP
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Profit
@@ -235,14 +291,20 @@ export default function SalesPage() {
                             {(s.recipe as any)?.name ?? "—"}
                           </span>
                         </td>
+                        <td className="px-2 sm:px-6 py-2.5 sm:py-3 hidden sm:table-cell">
+                          {(s as any).category ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">
+                              {(s as any).category.name}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-[#D9CCAF]">—</span>
+                          )}
+                        </td>
                         <td className="px-2 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs sm:text-sm">
                           {s.quantity_sold}
                         </td>
                         <td className="px-2 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs hidden sm:table-cell whitespace-nowrap">
                           {formatCurrency(s.selling_price)}
-                        </td>
-                        <td className="px-2 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#7C6352] text-xs hidden sm:table-cell whitespace-nowrap">
-                          {formatCurrency(s.hpp_at_sale)}
                         </td>
                         <td
                           className={`px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums font-semibold text-xs sm:text-sm whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
@@ -289,6 +351,63 @@ export default function SalesPage() {
               </option>
             ))}
           </Select>
+
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-sm font-medium text-[#4A3728]">
+                Kategori
+              </label>
+              {!addingCat && (
+                <button
+                  type="button"
+                  onClick={() => setAddingCat(true)}
+                  className="text-xs text-[#A05035] hover:underline font-medium flex items-center gap-1"
+                >
+                  <Plus className="w-3 h-3" /> Kategori baru
+                </button>
+              )}
+            </div>
+            {addingCat ? (
+              <div className="flex gap-2">
+                <input
+                  className={`${cls} flex-1`}
+                  placeholder="Nama kategori..."
+                  value={newCatName}
+                  onChange={(e) => setNewCatName(e.target.value)}
+                  autoFocus
+                />
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleAddCategory}
+                  loading={createCategory.isPending}
+                >
+                  Simpan
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setAddingCat(false)}
+                >
+                  Batal
+                </Button>
+              </div>
+            ) : (
+              <Select
+                value={categoryId}
+                onChange={(e) => setCategoryId(e.target.value)}
+              >
+                <option value="">Tanpa kategori</option>
+                {categories?.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </Select>
+            )}
+          </div>
+
           <Input
             label="Quantity Sold"
             type="number"

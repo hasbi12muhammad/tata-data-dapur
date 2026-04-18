@@ -14,11 +14,12 @@ import {
   useDeleteExpense,
   useExpenseCategories,
   useExpenses,
+  useUpdateExpense,
 } from "@/hooks/useExpenses";
 import { Expense } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Plus, Receipt, Search, Trash2, X } from "lucide-react";
+import { Pencil, Plus, Receipt, Search, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const cls =
@@ -28,6 +29,7 @@ export default function ExpensesPage() {
   const { data: expenses, isLoading } = useExpenses();
   const { data: categories } = useExpenseCategories();
   const createExpense = useCreateExpense();
+  const updateExpense = useUpdateExpense();
   const deleteExpense = useDeleteExpense();
   const createCategory = useCreateExpenseCategory();
 
@@ -37,6 +39,7 @@ export default function ExpensesPage() {
 
   // ── modal state ─────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<Expense | null>(null);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [categoryId, setCategoryId] = useState("");
   const [name, setName] = useState("");
@@ -50,12 +53,26 @@ export default function ExpensesPage() {
     Number(qty) > 0 && Number(price) > 0 ? Number(qty) * Number(price) : 0;
 
   function openCreate() {
+    setEditing(null);
     setDate(new Date().toISOString().split("T")[0]);
     setCategoryId("");
     setName("");
     setQty("1");
     setPrice("");
     setNote("");
+    setNewCatName("");
+    setAddingCat(false);
+    setModalOpen(true);
+  }
+
+  function openEdit(exp: Expense) {
+    setEditing(exp);
+    setDate(exp.created_at.split("T")[0]);
+    setCategoryId(exp.category_id ?? "");
+    setName(exp.name);
+    setQty(String(exp.qty));
+    setPrice(String(exp.price));
+    setNote(exp.note ?? "");
     setNewCatName("");
     setAddingCat(false);
     setModalOpen(true);
@@ -72,7 +89,7 @@ export default function ExpensesPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || Number(qty) <= 0 || Number(price) <= 0) return;
-    await createExpense.mutateAsync({
+    const payload = {
       name: name.trim(),
       qty: Number(qty),
       price: Number(price),
@@ -80,8 +97,14 @@ export default function ExpensesPage() {
       category_id: categoryId || null,
       note: note.trim() || null,
       created_at: new Date(date).toISOString(),
-    });
+    };
+    if (editing) {
+      await updateExpense.mutateAsync({ id: editing.id, ...payload });
+    } else {
+      await createExpense.mutateAsync(payload);
+    }
     setModalOpen(false);
+    setEditing(null);
   }
 
   const filtered = useMemo(() => {
@@ -239,16 +262,25 @@ export default function ExpensesPage() {
                         {format(new Date(exp.created_at), "dd MMM yyyy")}
                       </td>
                       <td className="px-2 sm:px-3 py-2.5 sm:py-3">
-                        <button
-                          onClick={() => {
-                            if (confirm("Hapus expense ini?"))
-                              deleteExpense.mutate(exp.id);
-                          }}
-                          className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors"
-                          aria-label="Delete"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center gap-1 justify-end">
+                          <button
+                            onClick={() => openEdit(exp)}
+                            className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors"
+                            aria-label="Edit"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (confirm("Hapus expense ini?"))
+                                deleteExpense.mutate(exp.id);
+                            }}
+                            className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors"
+                            aria-label="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -261,8 +293,11 @@ export default function ExpensesPage() {
 
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Tambah Expense"
+        onClose={() => {
+          setModalOpen(false);
+          setEditing(null);
+        }}
+        title={editing ? "Edit Expense" : "Tambah Expense"}
         size="sm"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -378,17 +413,20 @@ export default function ExpensesPage() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setModalOpen(false)}
+              onClick={() => {
+                setModalOpen(false);
+                setEditing(null);
+              }}
               className="flex-1"
             >
               Batal
             </Button>
             <Button
               type="submit"
-              loading={createExpense.isPending}
+              loading={createExpense.isPending || updateExpense.isPending}
               className="flex-1"
             >
-              Simpan
+              {editing ? "Simpan" : "Tambah"}
             </Button>
           </div>
         </form>

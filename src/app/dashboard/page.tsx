@@ -87,17 +87,30 @@ export default function DashboardPage() {
   const totalPurchase = purchases.reduce((s, r) => s + r.total_price, 0);
   const netProfit = totalSales - totalExpense - totalPurchase;
 
-  // Aggregate sales by recipe name
-  const salesAgg = sales.reduce<Record<string, { qty: number; total: number }>>(
-    (acc, s) => {
-      const name = (s.recipe as any)?.name ?? "—";
-      if (!acc[name]) acc[name] = { qty: 0, total: 0 };
-      acc[name].qty += s.quantity_sold;
-      acc[name].total += s.selling_price * s.quantity_sold;
-      return acc;
-    },
-    {},
-  );
+  // Aggregate sales by category → recipe name
+  const salesByCategory = sales.reduce<
+    Record<
+      string,
+      { items: { name: string; qty: number; total: number }[]; total: number }
+    >
+  >((acc, s) => {
+    const cat = (s as any).category?.name ?? "Tanpa Kategori";
+    const recipeName = (s.recipe as any)?.name ?? "—";
+    if (!acc[cat]) acc[cat] = { items: [], total: 0 };
+    const existing = acc[cat].items.find((i) => i.name === recipeName);
+    if (existing) {
+      existing.qty += s.quantity_sold;
+      existing.total += s.selling_price * s.quantity_sold;
+    } else {
+      acc[cat].items.push({
+        name: recipeName,
+        qty: s.quantity_sold,
+        total: s.selling_price * s.quantity_sold,
+      });
+    }
+    acc[cat].total += s.selling_price * s.quantity_sold;
+    return acc;
+  }, {});
 
   // Aggregate expenses by category
   const expByCategory = expenses.reduce<
@@ -186,31 +199,43 @@ export default function DashboardPage() {
                 </div>
               </CardHeader>
               <CardBody className="p-0">
-                {Object.keys(salesAgg).length === 0 ? (
+                {Object.keys(salesByCategory).length === 0 ? (
                   <div className="px-4 py-8 text-center text-sm text-[#B88D6A]">
                     Belum ada penjualan
                   </div>
                 ) : (
                   <div className="divide-y divide-[#EDE4CF]">
-                    {Object.entries(salesAgg).map(([name, { qty, total }]) => (
-                      <div
-                        key={name}
-                        className="flex justify-between items-center px-4 py-2.5"
-                      >
-                        <div>
-                          <span className="text-sm font-medium text-[#2C1810]">
-                            {name}
-                          </span>
-                          <span className="text-xs text-[#B88D6A] ml-2">
-                            ×{qty}
-                          </span>
+                    {Object.entries(salesByCategory).map(
+                      ([cat, { items, total: catTotal }]) => (
+                        <div key={cat}>
+                          <div className="flex justify-between items-center px-4 py-2 bg-[#F5EFE0]">
+                            <span className="text-xs font-bold text-[#5C4535] uppercase tracking-wide">
+                              {cat}
+                            </span>
+                            <span className="text-xs font-bold text-[#737B4C] tabular-nums">
+                              {formatCurrency(catTotal)}
+                            </span>
+                          </div>
+                          {items.map((item) => (
+                            <div
+                              key={item.name}
+                              className="flex justify-between items-center px-4 py-2"
+                            >
+                              <span className="text-sm text-[#2C1810]">
+                                {item.name}
+                                <span className="text-xs text-[#B88D6A] ml-1">
+                                  ×{item.qty}
+                                </span>
+                              </span>
+                              <span className="text-sm font-semibold text-[#737B4C] tabular-nums">
+                                {formatCurrency(item.total)}
+                              </span>
+                            </div>
+                          ))}
                         </div>
-                        <span className="text-sm font-semibold text-[#737B4C] tabular-nums">
-                          {formatCurrency(total)}
-                        </span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between items-center px-4 py-2.5 bg-[#F5EFE0]">
+                      ),
+                    )}
+                    <div className="flex justify-between items-center px-4 py-2.5 bg-[#EDE4CF]">
                       <span className="text-xs font-semibold text-[#7C6352] uppercase tracking-wide">
                         Total
                       </span>

@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { Sale } from "@/types";
+import { Sale, SaleCategory } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -12,12 +12,51 @@ export function useSales() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("sales")
-        .select("*, recipe:recipes(name)")
+        .select("*, recipe:recipes(name), category:sale_categories(id, name)")
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
       return data ?? [];
     },
+  });
+}
+
+export function useSaleCategories() {
+  return useQuery<SaleCategory[]>({
+    queryKey: ["sale-categories"],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("sale_categories")
+        .select("*")
+        .order("name");
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+export function useCreateSaleCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (name: string) => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const { data, error } = await supabase
+        .from("sale_categories")
+        .insert({ name, user_id: user!.id })
+        .select()
+        .single();
+      if (error) throw error;
+      return data as SaleCategory;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["sale-categories"] });
+      toast.success("Kategori ditambahkan");
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
@@ -29,7 +68,7 @@ export function useReportSales() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("sales")
-        .select("*, recipe:recipes(name)")
+        .select("*, recipe:recipes(name), category:sale_categories(id, name)")
         .order("created_at", { ascending: true });
       if (error) throw error;
       return data ?? [];
@@ -83,6 +122,7 @@ export function useCreateSale() {
       quantity_sold: number;
       selling_price: number;
       hpp_at_sale: number;
+      category_id?: string | null;
     }) => {
       const supabase = createClient();
       const {

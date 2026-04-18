@@ -17,7 +17,7 @@ export function useSalesByDate(date: string) {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("sales")
-        .select("*, recipe:recipes(name)")
+        .select("*, recipe:recipes(name), category:sale_categories(id, name)")
         .gte("created_at", date)
         .lt("created_at", nextDay(date))
         .order("created_at", { ascending: true });

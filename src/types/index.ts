@@ -38,16 +38,25 @@ export interface RecipeItem {
   item?: Item;
 }
 
+export interface SaleCategory {
+  id: string;
+  user_id: string;
+  name: string;
+  created_at: string;
+}
+
 export interface Sale {
   id: string;
   user_id: string;
   recipe_id: string;
+  category_id: string | null;
   quantity_sold: number;
   selling_price: number;
   hpp_at_sale: number;
   profit: number;
   created_at: string;
   recipe?: Recipe;
+  category?: SaleCategory;
 }
 
 export interface ExpenseCategory {
