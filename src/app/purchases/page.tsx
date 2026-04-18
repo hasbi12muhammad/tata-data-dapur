@@ -22,7 +22,6 @@ import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { FileUp, Pencil, Plus, Search, ShoppingCart, X } from "lucide-react";
 import { useMemo, useState } from "react";
-import toast from "react-hot-toast";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
