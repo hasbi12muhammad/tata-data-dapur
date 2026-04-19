@@ -242,6 +242,16 @@ export default function ExpensesPage() {
                             {exp.note}
                           </span>
                         )}
+                        <div className="flex items-center gap-1.5 mt-0.5 sm:hidden flex-wrap">
+                          {exp.category ? (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#EDE4CF] text-[#5C4535]">
+                              {exp.category.name}
+                            </span>
+                          ) : null}
+                          <span className="text-[10px] text-[#B88D6A]">
+                            {format(new Date(exp.created_at), "dd MMM yyyy")}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-2 sm:px-6 py-2.5 sm:py-3 hidden sm:table-cell">
                         {exp.category ? (

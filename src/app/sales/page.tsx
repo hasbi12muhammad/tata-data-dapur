@@ -287,9 +287,19 @@ export default function SalesPage() {
                         className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors"
                       >
                         <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
-                          <span className="line-clamp-1">
+                          <span className="line-clamp-1 text-xs sm:text-sm">
                             {(s.recipe as any)?.name ?? "—"}
                           </span>
+                          <div className="flex items-center gap-1.5 mt-0.5 sm:hidden flex-wrap">
+                            {(s as any).category ? (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#EDE4CF] text-[#5C4535]">
+                                {(s as any).category.name}
+                              </span>
+                            ) : null}
+                            <span className="text-[10px] text-[#B88D6A]">
+                              {format(new Date(s.created_at), "dd MMM yyyy")}
+                            </span>
+                          </div>
                         </td>
                         <td className="px-2 sm:px-6 py-2.5 sm:py-3 hidden sm:table-cell">
                           {(s as any).category ? (
@@ -310,6 +320,10 @@ export default function SalesPage() {
                           className={`px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums font-semibold text-xs sm:text-sm whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
                         >
                           {formatCurrency(s.profit * s.quantity_sold)}
+                          <div className="sm:hidden text-[10px] font-normal text-[#B88D6A] tabular-nums">
+                            {formatCurrency(s.selling_price)} ·{" "}
+                            {saleMargin.toFixed(1)}%
+                          </div>
                         </td>
                         <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right hidden md:table-cell">
                           <span

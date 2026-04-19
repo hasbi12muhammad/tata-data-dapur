@@ -306,7 +306,7 @@ export default function PurchasesPage() {
                         <span className="line-clamp-1 text-xs sm:text-sm">
                           {(p.item as any)?.name ?? "—"}
                         </span>
-                        <span className="text-[10px] text-[#B88D6A] hidden sm:block">
+                        <span className="text-[10px] text-[#B88D6A]">
                           {(p.item as any)?.unit}
                         </span>
                       </td>
