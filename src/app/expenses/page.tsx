@@ -36,6 +36,8 @@ export default function ExpensesPage() {
   // ── filter state ────────────────────────────────────────────
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
+  const [filterFrom, setFilterFrom] = useState("");
+  const [filterTo, setFilterTo] = useState("");
 
   // ── modal state ─────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
@@ -116,14 +118,22 @@ export default function ExpensesPage() {
     if (filterCategory) {
       rows = rows.filter((e) => e.category_id === filterCategory);
     }
+    if (filterFrom) {
+      const from = new Date(filterFrom);
+      rows = rows.filter((e) => new Date(e.created_at) >= from);
+    }
+    if (filterTo) {
+      const to = new Date(filterTo + "T23:59:59");
+      rows = rows.filter((e) => new Date(e.created_at) <= to);
+    }
     return rows;
-  }, [expenses, search, filterCategory]);
+  }, [expenses, search, filterCategory, filterFrom, filterTo]);
 
-  const hasFilters = search || filterCategory;
+  const hasFilters = search || filterCategory || filterFrom || filterTo;
 
   return (
     <AppLayout
-      title="Expenses"
+      title="Pengeluaran"
       action={
         <Button size="sm" onClick={openCreate}>
           <Plus className="w-4 h-4" /> Tambah
@@ -137,7 +147,7 @@ export default function ExpensesPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
             <input
               className={`${cls} w-full pl-8`}
-              placeholder="Search expense..."
+              placeholder="Cari pengeluaran..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -150,9 +160,9 @@ export default function ExpensesPage() {
               </button>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <select
-              className={`${cls} flex-1`}
+              className={`${cls} flex-1 min-w-[120px]`}
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
             >
@@ -163,6 +173,22 @@ export default function ExpensesPage() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="flex gap-2 flex-wrap items-center">
+            <span className="text-xs text-[#7C6352] font-medium">Periode:</span>
+            <input
+              type="date"
+              value={filterFrom}
+              onChange={(e) => setFilterFrom(e.target.value)}
+              className={`${cls} w-auto`}
+            />
+            <span className="text-xs text-[#B88D6A]">–</span>
+            <input
+              type="date"
+              value={filterTo}
+              onChange={(e) => setFilterTo(e.target.value)}
+              className={`${cls} w-auto`}
+            />
           </div>
           <div className="flex items-center justify-between text-xs text-[#B88D6A]">
             <span>
@@ -175,6 +201,8 @@ export default function ExpensesPage() {
                 onClick={() => {
                   setSearch("");
                   setFilterCategory("");
+                  setFilterFrom("");
+                  setFilterTo("");
                 }}
                 className="text-[#A05035] hover:underline font-medium"
               >

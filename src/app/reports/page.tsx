@@ -14,6 +14,7 @@ import {
   BarChart3,
   DollarSign,
   Download,
+  FileText,
   Receipt,
   TrendingDown,
   TrendingUp,
@@ -371,6 +372,254 @@ export default function ReportsPage() {
     XLSX.writeFile(wb, filename);
   }
 
+  function downloadPDF() {
+    const isWeekly = differenceInDays(rangeTo, rangeFrom) > 60;
+    const periodLabel = `${format(rangeFrom, "dd MMM yyyy")} – ${format(rangeTo, "dd MMM yyyy")}`;
+    const printedAt = format(new Date(), "dd MMM yyyy, HH:mm");
+
+    const fmt = (n: number) =>
+      "Rp " +
+      Math.round(n)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    const pct = (n: number) => n.toFixed(1) + "%";
+
+    const kpiCards = [
+      {
+        label: "Total Pendapatan",
+        value: fmt(stats.total_revenue),
+        sub: `${stats.sales_count} transaksi`,
+      },
+      {
+        label: "Laba Kotor",
+        value: fmt(stats.gross_profit),
+        sub: `Margin ${pct(stats.gross_margin)}`,
+      },
+      {
+        label: "Total Pengeluaran",
+        value: fmt(stats.total_expenses),
+        sub: `${filteredExpenses.length} entri`,
+      },
+      {
+        label: "Laba Bersih",
+        value: fmt(stats.net_profit),
+        sub: `Margin ${pct(stats.net_margin)}`,
+        highlight: true,
+      },
+    ];
+
+    const kpiHtml = kpiCards
+      .map(
+        (k) => `
+        <div style="border:1px solid #e0d8c8;border-radius:8px;padding:14px 16px;min-width:0;">
+          <div style="font-size:9px;color:#7c6352;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">${k.label}</div>
+          <div style="font-size:15px;font-weight:700;color:${k.highlight ? (stats.net_profit >= 0 ? "#1b4332" : "#c0392b") : "#2c1810"};">${k.value}</div>
+          <div style="font-size:9px;color:#b88d6a;margin-top:3px;">${k.sub}</div>
+        </div>`,
+      )
+      .join("");
+
+    const plRows = [
+      {
+        label: "Pendapatan",
+        value: fmt(stats.total_revenue),
+        style: "font-weight:600;",
+      },
+      {
+        label: "− HPP (Biaya Bahan)",
+        value: `(${fmt(stats.total_hpp)})`,
+        style: "color:#b88d6a;",
+      },
+      {
+        label: `Laba Kotor (${pct(stats.gross_margin)})`,
+        value: fmt(stats.gross_profit),
+        style: "font-weight:700;background:#f0f4e8;border-radius:4px;",
+      },
+      ...expByCategory.map((c) => ({
+        label: `  · ${c.name}`,
+        value: fmt(c.total),
+        style: "color:#7c6352;font-size:10px;",
+      })),
+      ...(expByCategory.length > 0
+        ? [
+            {
+              label: "− Total Biaya Operasional",
+              value: `(${fmt(stats.total_expenses)})`,
+              style: "color:#7c6352;font-weight:600;",
+            },
+          ]
+        : []),
+      {
+        label: `Laba Bersih (${pct(stats.net_margin)})`,
+        value: fmt(stats.net_profit),
+        style: `font-weight:700;background:${stats.net_profit >= 0 ? "#e8f5ee" : "#fdecea"};border-radius:4px;color:${stats.net_profit >= 0 ? "#1b4332" : "#c0392b"};`,
+      },
+    ];
+
+    const plHtml = plRows
+      .map(
+        (r) => `
+        <tr>
+          <td style="padding:6px 10px;font-size:11px;${r.style}">${r.label}</td>
+          <td style="padding:6px 10px;font-size:11px;text-align:right;${r.style}">${r.value}</td>
+        </tr>`,
+      )
+      .join("");
+
+    const topProdukHtml = recipeProfit
+      .map(
+        (r, i) => `
+        <tr style="${i % 2 === 1 ? "background:#faf7f2;" : ""}">
+          <td style="padding:6px 10px;font-size:11px;">${i + 1}. ${r.name}</td>
+          <td style="padding:6px 10px;font-size:11px;text-align:right;color:#7c6352;">${fmt(r.hpp)}</td>
+          <td style="padding:6px 10px;font-size:11px;text-align:right;">${fmt(r.revenue)}</td>
+          <td style="padding:6px 10px;font-size:11px;text-align:right;font-weight:600;color:${r.profit >= 0 ? "#5c6b38" : "#c0392b"};">${fmt(r.profit)}</td>
+        </tr>`,
+      )
+      .join("");
+
+    const expCatHtml = expByCategory
+      .map(
+        (c, i) => `
+        <tr style="${i % 2 === 1 ? "background:#faf7f2;" : ""}">
+          <td style="padding:6px 10px;font-size:11px;">${c.name}</td>
+          <td style="padding:6px 10px;font-size:11px;text-align:right;color:#7c6352;">${fmt(c.total)}</td>
+        </tr>`,
+      )
+      .join("");
+
+    const rincianRows = isWeekly ? chartData.slice(0, 52) : chartData;
+    const rincianHtml = rincianRows
+      .map(
+        (d, i) => `
+        <tr style="${i % 2 === 1 ? "background:#faf7f2;" : ""}">
+          <td style="padding:5px 10px;font-size:10px;">${d.label}</td>
+          <td style="padding:5px 10px;font-size:10px;text-align:right;">${fmt(d.revenue)}</td>
+          <td style="padding:5px 10px;font-size:10px;text-align:right;color:#5c6b38;">${fmt(d.grossProfit)}</td>
+          <td style="padding:5px 10px;font-size:10px;text-align:right;font-weight:600;color:${stats.net_profit >= 0 ? "#1b4332" : "#c0392b"};">${fmt(d.netProfit)}</td>
+        </tr>`,
+      )
+      .join("");
+
+    const th = (label: string, align = "left") =>
+      `<th style="padding:7px 10px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#7c6352;text-align:${align};border-bottom:2px solid #e0d8c8;font-weight:600;">${label}</th>`;
+
+    const html = `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<title>Laporan TataData Dapur — ${periodLabel}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#2c1810;background:#fff;font-size:12px;}
+  @page{margin:18mm 16mm;}
+  @media print{
+    .no-print{display:none!important;}
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+  .page{max-width:800px;margin:0 auto;padding:24px;}
+  table{width:100%;border-collapse:collapse;}
+  .section{margin-bottom:28px;}
+  .section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c6352;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #e0d8c8;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:18px;border-bottom:2px solid #2c1810;">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div style="width:32px;height:32px;background:#2c1810;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2h18v6H3z"/><path d="M3 10h18v12H3z"/><path d="M9 14h6"/></svg>
+        </div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#2c1810;letter-spacing:-.02em;">TataData Dapur</div>
+          <div style="font-size:9px;color:#b88d6a;letter-spacing:.04em;text-transform:uppercase;">Laporan Keuangan</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:12px;font-weight:700;color:#2c1810;">${periodLabel}</div>
+      <div style="font-size:9px;color:#b88d6a;margin-top:3px;">Dicetak: ${printedAt}</div>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="section">
+    <div class="section-title">Ringkasan</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+      ${kpiHtml}
+    </div>
+  </div>
+
+  <!-- P&L -->
+  <div class="section">
+    <div class="section-title">Rincian Laba Rugi</div>
+    <table>
+      <tbody>${plHtml}</tbody>
+    </table>
+  </div>
+
+  <!-- Top Produk -->
+  ${
+    recipeProfit.length > 0
+      ? `
+  <div class="section">
+    <div class="section-title">Top Produk berdasarkan Laba</div>
+    <table>
+      <thead><tr>${th("Produk")}${th("HPP", "right")}${th("Pendapatan", "right")}${th("Laba Kotor", "right")}</tr></thead>
+      <tbody>${topProdukHtml}</tbody>
+    </table>
+  </div>`
+      : ""
+  }
+
+  <!-- Pengeluaran per Kategori -->
+  ${
+    expByCategory.length > 0
+      ? `
+  <div class="section">
+    <div class="section-title">Pengeluaran per Kategori</div>
+    <table>
+      <thead><tr>${th("Kategori")}${th("Total", "right")}</tr></thead>
+      <tbody>${expCatHtml}</tbody>
+      <tfoot><tr>
+        <td style="padding:7px 10px;font-size:11px;font-weight:700;border-top:2px solid #e0d8c8;">Total</td>
+        <td style="padding:7px 10px;font-size:11px;font-weight:700;text-align:right;border-top:2px solid #e0d8c8;">${fmt(stats.total_expenses)}</td>
+      </tr></tfoot>
+    </table>
+  </div>`
+      : ""
+  }
+
+  <!-- Rincian Harian/Mingguan -->
+  <div class="section">
+    <div class="section-title">Rincian ${isWeekly ? "Mingguan" : "Harian"}</div>
+    <table>
+      <thead><tr>${th(isWeekly ? "Minggu" : "Tanggal")}${th("Pendapatan", "right")}${th("Laba Kotor", "right")}${th("Laba Bersih", "right")}</tr></thead>
+      <tbody>${rincianHtml}</tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div style="margin-top:32px;padding-top:12px;border-top:1px solid #e0d8c8;display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-size:9px;color:#b88d6a;">TataData Dapur — Sistem Manajemen Dapur</span>
+    <span style="font-size:9px;color:#b88d6a;">${periodLabel}</span>
+  </div>
+
+</div>
+<script>window.onload=()=>{window.print();}</script>
+</body>
+</html>`;
+
+    const win = window.open("", "_blank");
+    if (!win) return;
+    win.document.write(html);
+    win.document.close();
+  }
+
   const barSize = chartData.length > 20 ? 5 : 12;
   const tickInterval =
     chartData.length > 20 ? Math.floor(chartData.length / 10) : 0;
@@ -399,13 +648,22 @@ export default function ReportsPage() {
                   {label}
                 </button>
               ))}
-              <button
-                onClick={downloadXLSX}
-                className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#737B4C] text-white hover:bg-[#5C6B38] transition-colors"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Unduh </span>Excel
-              </button>
+              <div className="ml-auto flex items-center gap-2">
+                <button
+                  onClick={downloadPDF}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#A05035] text-white hover:bg-[#8B4530] transition-colors"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Unduh </span>PDF
+                </button>
+                <button
+                  onClick={downloadXLSX}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#737B4C] text-white hover:bg-[#5C6B38] transition-colors"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Unduh </span>Excel
+                </button>
+              </div>
             </div>
 
             {preset === "custom" && (
