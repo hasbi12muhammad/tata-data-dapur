@@ -20,12 +20,12 @@ import { usePathname } from "next/navigation";
 
 const ALL_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/items", label: "Items", icon: Package },
-  { href: "/purchases", label: "Purchases", icon: ShoppingCart },
-  { href: "/expenses", label: "Expenses", icon: Receipt },
-  { href: "/recipes", label: "Products", icon: BookOpen },
-  { href: "/sales", label: "Sales", icon: TrendingUp },
-  { href: "/reports", label: "Reports", icon: BarChart3 },
+  { href: "/items", label: "Bahan Baku", icon: Package },
+  { href: "/purchases", label: "Pembelian", icon: ShoppingCart },
+  { href: "/expenses", label: "Pengeluaran", icon: Receipt },
+  { href: "/recipes", label: "Produk", icon: BookOpen },
+  { href: "/sales", label: "Penjualan", icon: TrendingUp },
+  { href: "/reports", label: "Laporan", icon: BarChart3 },
 ];
 
 interface SidebarProps {

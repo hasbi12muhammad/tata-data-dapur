@@ -30,7 +30,6 @@ export default function SalesPage() {
   const createSale = useCreateSale();
   const createCategory = useCreateSaleCategory();
 
-  // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
   const [recipeId, setRecipeId] = useState("");
   const [quantity, setQuantity] = useState("1");
@@ -39,7 +38,6 @@ export default function SalesPage() {
   const [newCatName, setNewCatName] = useState("");
   const [addingCat, setAddingCat] = useState(false);
 
-  // ── filter / sort state ──────────────────────────────────────
   const [search, setSearch] = useState("");
   const [filterRecipe, setFilterRecipe] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
@@ -93,7 +91,6 @@ export default function SalesPage() {
 
   const filtered = useMemo(() => {
     let rows = sales ?? [];
-
     if (search) {
       const q = search.toLowerCase();
       rows = rows.filter((s) =>
@@ -106,7 +103,6 @@ export default function SalesPage() {
     if (filterCategory) {
       rows = rows.filter((s) => s.category_id === filterCategory);
     }
-
     return [...rows].sort((a, b) => {
       const profitA = a.profit * a.quantity_sold;
       const profitB = b.profit * b.quantity_sold;
@@ -138,21 +134,20 @@ export default function SalesPage() {
 
   return (
     <AppLayout
-      title="Sales"
+      title="Penjualan"
       action={
         <Button size="sm" onClick={openCreate}>
-          <Plus className="w-4 h-4" /> Add
+          <Plus className="w-4 h-4" /> Tambah
         </Button>
       }
     >
       <Card>
-        {/* Filter bar */}
         <div className="px-4 py-3 border-b border-[#E5DACA] space-y-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
             <input
               className={`${cls} w-full pl-8`}
-              placeholder="Search product..."
+              placeholder="Cari produk..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -173,9 +168,9 @@ export default function SalesPage() {
             >
               <option value="date_desc">Terbaru</option>
               <option value="date_asc">Terlama</option>
-              <option value="profit_desc">Profit ↑</option>
-              <option value="profit_asc">Profit ↓</option>
-              <option value="revenue_desc">Revenue ↑</option>
+              <option value="profit_desc">Laba ↑</option>
+              <option value="profit_asc">Laba ↓</option>
+              <option value="revenue_desc">Pendapatan ↑</option>
               <option value="qty_desc">Qty terbanyak</option>
             </select>
             <select
@@ -230,16 +225,16 @@ export default function SalesPage() {
         <CardBody className="p-0">
           {isLoading ? (
             <div className="py-12 text-center text-sm text-[#B88D6A]">
-              Loading...
+              Memuat...
             </div>
           ) : !sales?.length ? (
             <EmptyState
               icon={TrendingUp}
-              title="No sales yet"
-              description="Record a sale to start tracking revenue and profit."
+              title="Belum ada penjualan"
+              description="Catat penjualan untuk mulai melacak pendapatan dan laba."
               action={
                 <Button size="sm" onClick={openCreate}>
-                  <Plus className="w-4 h-4" /> Record Sale
+                  <Plus className="w-4 h-4" /> Catat Penjualan
                 </Button>
               }
             />
@@ -253,7 +248,7 @@ export default function SalesPage() {
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
                     <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Product
+                      Produk
                     </th>
                     <th className="text-left px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Kategori
@@ -262,16 +257,16 @@ export default function SalesPage() {
                       Qty
                     </th>
                     <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
-                      Sell Price
+                      Harga Jual
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Profit
+                      Laba
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden md:table-cell">
                       Margin
                     </th>
                     <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden md:table-cell">
-                      Date
+                      Tanggal
                     </th>
                   </tr>
                 </thead>
@@ -348,17 +343,17 @@ export default function SalesPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Record Sale"
+        title="Catat Penjualan"
         size="sm"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Select
-            label="Product"
+            label="Produk"
             value={recipeId}
             onChange={(e) => setRecipeId(e.target.value)}
             required
           >
-            <option value="">Select product...</option>
+            <option value="">Pilih produk...</option>
             {recipes?.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.name} — HPP {formatCurrency(r.hpp)}
@@ -423,7 +418,7 @@ export default function SalesPage() {
           </div>
 
           <Input
-            label="Quantity Sold"
+            label="Jumlah Terjual"
             type="number"
             min="1"
             value={quantity}
@@ -431,7 +426,7 @@ export default function SalesPage() {
             required
           />
           <Input
-            label="Selling Price per Unit (IDR)"
+            label="Harga Jual per Unit (Rp)"
             type="number"
             min="0"
             value={sellingPrice}
@@ -443,7 +438,7 @@ export default function SalesPage() {
               className={`rounded-lg px-4 py-3 border text-xs space-y-1 ${totalProfit >= 0 ? "bg-[#737B4C]/10 border-[#737B4C]/20" : "bg-red-50 border-red-100"}`}
             >
               <div className="flex justify-between">
-                <span className="text-[#5C4535]">Revenue</span>
+                <span className="text-[#5C4535]">Pendapatan</span>
                 <span className="font-semibold tabular-nums">
                   {formatCurrency(totalRevenue)}
                 </span>
@@ -457,7 +452,7 @@ export default function SalesPage() {
               <div
                 className={`flex justify-between font-bold border-t pt-1 ${totalProfit >= 0 ? "border-[#737B4C]/30 text-[#5C6B38]" : "border-red-200 text-red-700"}`}
               >
-                <span>Profit</span>
+                <span>Laba</span>
                 <span className="tabular-nums">
                   {formatCurrency(totalProfit)} ({margin.toFixed(1)}%)
                 </span>
@@ -471,14 +466,14 @@ export default function SalesPage() {
               onClick={() => setModalOpen(false)}
               className="flex-1"
             >
-              Cancel
+              Batal
             </Button>
             <Button
               type="submit"
               loading={createSale.isPending}
               className="flex-1"
             >
-              Save
+              Simpan
             </Button>
           </div>
         </form>

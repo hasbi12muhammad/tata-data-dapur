@@ -126,7 +126,7 @@ export default function ExpensesPage() {
       title="Expenses"
       action={
         <Button size="sm" onClick={openCreate}>
-          <Plus className="w-4 h-4" /> Add
+          <Plus className="w-4 h-4" /> Tambah
         </Button>
       }
     >

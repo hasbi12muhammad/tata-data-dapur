@@ -169,7 +169,7 @@ export default function DashboardPage() {
           colorClass="text-amber-600"
         />
         <SummaryCard
-          label="Net Profit"
+          label="Laba Bersih"
           amount={netProfit}
           icon={ShoppingBag}
           colorClass="text-[#1B4332]"

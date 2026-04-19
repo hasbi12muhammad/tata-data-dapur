@@ -139,7 +139,7 @@ export function useCreateSale() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["sales"] });
       qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
-      toast.success("Sale recorded");
+      toast.success("Penjualan dicatat");
     },
     onError: (e: Error) => toast.error(e.message),
   });

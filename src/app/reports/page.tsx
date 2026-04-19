@@ -86,9 +86,9 @@ function CustomTooltip({ active, payload, label }: any) {
     netProfit: "#3B7A57",
   };
   const labelMap: Record<string, string> = {
-    revenue: "Revenue",
-    grossProfit: "Gross Profit",
-    netProfit: "Net Profit",
+    revenue: "Pendapatan",
+    grossProfit: "Laba Kotor",
+    netProfit: "Laba Bersih",
   };
   return (
     <div className="bg-[#2C1810] text-[#F5EFE0] rounded-lg px-3 py-2.5 text-xs shadow-xl border border-[#4A3728]">
@@ -273,12 +273,12 @@ export default function ReportsPage() {
 
   const chartTitle = useMemo(() => {
     const map: Record<Preset, string> = {
-      today: `Revenue & Profit — ${format(rangeFrom, "dd MMM yyyy")}`,
-      "7d": "Revenue & Profit — 7 Hari Terakhir",
-      "30d": "Revenue & Profit — 30 Hari Terakhir",
-      thisMonth: `Revenue & Profit — ${format(rangeFrom, "MMMM yyyy")}`,
-      lastMonth: `Revenue & Profit — ${format(rangeFrom, "MMMM yyyy")}`,
-      custom: `Revenue & Profit — ${format(rangeFrom, "dd MMM")} – ${format(rangeTo, "dd MMM yyyy")}`,
+      today: `Pendapatan & Laba — ${format(rangeFrom, "dd MMM yyyy")}`,
+      "7d": "Pendapatan & Laba — 7 Hari Terakhir",
+      "30d": "Pendapatan & Laba — 30 Hari Terakhir",
+      thisMonth: `Pendapatan & Laba — ${format(rangeFrom, "MMMM yyyy")}`,
+      lastMonth: `Pendapatan & Laba — ${format(rangeFrom, "MMMM yyyy")}`,
+      custom: `Pendapatan & Laba — ${format(rangeFrom, "dd MMM")} – ${format(rangeTo, "dd MMM yyyy")}`,
     };
     return map[preset];
   }, [preset, rangeFrom, rangeTo]);
@@ -298,13 +298,13 @@ export default function ReportsPage() {
       [`Diunduh: ${format(new Date(), "dd MMM yyyy HH:mm")}`],
       [],
       ["Metrik", "Nilai"],
-      ["Total Revenue", stats.total_revenue],
-      ["Total HPP (COGS)", stats.total_hpp],
-      ["Gross Profit", stats.gross_profit],
-      ["Gross Margin (%)", stats.gross_margin],
-      ["Total Expenses", stats.total_expenses],
-      ["Net Profit", stats.net_profit],
-      ["Net Margin (%)", stats.net_margin],
+      ["Total Pendapatan", stats.total_revenue],
+      ["Total HPP (Biaya Bahan)", stats.total_hpp],
+      ["Laba Kotor", stats.gross_profit],
+      ["Margin Kotor (%)", stats.gross_margin],
+      ["Total Pengeluaran", stats.total_expenses],
+      ["Laba Bersih", stats.net_profit],
+      ["Margin Bersih (%)", stats.net_margin],
       ["Jumlah Transaksi", stats.sales_count],
     ];
     const ws1 = XLSX.utils.aoa_to_sheet(summaryRows);
@@ -319,11 +319,11 @@ export default function ReportsPage() {
       if (ws1[ref]) ws1[ref].z = '0.0"%"';
     });
     ws1["!cols"] = [{ wch: 25 }, { wch: 20 }];
-    XLSX.utils.book_append_sheet(wb, ws1, "Ringkasan P&L");
+    XLSX.utils.book_append_sheet(wb, ws1, "Ringkasan Laba Rugi");
 
     // ── Sheet 2: Rincian Harian/Mingguan ──
     const periodRows: (string | number)[][] = [
-      ["Periode", "Revenue", "Gross Profit", "Net Profit"],
+      ["Periode", "Pendapatan", "Laba Kotor", "Laba Bersih"],
       ...chartData.map((d) => [d.label, d.revenue, d.grossProfit, d.netProfit]),
     ];
     const ws2 = XLSX.utils.aoa_to_sheet(periodRows);
@@ -342,7 +342,7 @@ export default function ReportsPage() {
 
     // ── Sheet 3: Top Products ──
     const productRows: (string | number)[][] = [
-      ["Product", "HPP", "Revenue", "Gross Profit"],
+      ["Produk", "HPP", "Pendapatan", "Laba Kotor"],
       ...recipeProfit.map((r) => [r.name, r.hpp, r.revenue, r.profit]),
     ];
     const ws3 = XLSX.utils.aoa_to_sheet(productRows);
@@ -353,7 +353,7 @@ export default function ReportsPage() {
       });
     });
     ws3["!cols"] = [{ wch: 25 }, { wch: 18 }, { wch: 18 }, { wch: 18 }];
-    XLSX.utils.book_append_sheet(wb, ws3, "Top Products");
+    XLSX.utils.book_append_sheet(wb, ws3, "Top Produk");
 
     // ── Sheet 4: Expenses ──
     const expRows: (string | number)[][] = [
@@ -366,7 +366,7 @@ export default function ReportsPage() {
       if (ws4[ref]) ws4[ref].z = IDR;
     });
     ws4["!cols"] = [{ wch: 25 }, { wch: 18 }];
-    XLSX.utils.book_append_sheet(wb, ws4, "Expenses");
+    XLSX.utils.book_append_sheet(wb, ws4, "Pengeluaran");
 
     XLSX.writeFile(wb, filename);
   }
@@ -376,7 +376,7 @@ export default function ReportsPage() {
     chartData.length > 20 ? Math.floor(chartData.length / 10) : 0;
 
   return (
-    <AppLayout title="Reports">
+    <AppLayout title="Laporan">
       <div className="space-y-4 sm:space-y-6">
         {/* ── Filter + download ── */}
         <Card>
@@ -404,7 +404,7 @@ export default function ReportsPage() {
                 className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#737B4C] text-white hover:bg-[#5C6B38] transition-colors"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Download </span>Excel
+                <span className="hidden sm:inline">Unduh </span>Excel
               </button>
             </div>
 
@@ -441,28 +441,28 @@ export default function ReportsPage() {
         {/* ── KPI ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatCard
-            label="Total Revenue"
+            label="Total Pendapatan"
             value={formatCurrency(stats.total_revenue)}
             icon={DollarSign}
             accent="dune"
             sub={`${stats.sales_count} transaksi`}
           />
           <StatCard
-            label="Gross Profit"
+            label="Laba Kotor"
             value={formatCurrency(stats.gross_profit)}
             icon={TrendingUp}
             accent="verde"
             sub={`Margin ${formatNumber(stats.gross_margin, 1)}%`}
           />
           <StatCard
-            label="Total Expenses"
+            label="Total Pengeluaran"
             value={formatCurrency(stats.total_expenses)}
             icon={Receipt}
             accent="clay"
             sub={`${filteredExpenses.length} entri`}
           />
           <StatCard
-            label="Net Profit"
+            label="Laba Bersih"
             value={formatCurrency(stats.net_profit)}
             icon={stats.net_profit >= 0 ? TrendingUp : TrendingDown}
             accent={stats.net_profit >= 0 ? "verde" : "clay"}
@@ -474,14 +474,14 @@ export default function ReportsPage() {
         <Card>
           <CardHeader>
             <h2 className="text-sm font-semibold text-[#2C1810]">
-              P&L Breakdown
+              Rincian Laba Rugi
             </h2>
           </CardHeader>
           <CardBody className="px-4 sm:px-6 py-4 space-y-1">
             {/* Revenue */}
             <div className="flex justify-between items-baseline py-1.5">
               <span className="text-sm font-semibold text-[#2C1810]">
-                Revenue
+                Pendapatan
               </span>
               <span className="text-sm font-bold text-[#2C1810] tabular-nums">
                 {formatCurrency(stats.total_revenue)}
@@ -489,7 +489,9 @@ export default function ReportsPage() {
             </div>
             {/* HPP */}
             <div className="flex justify-between items-baseline py-1 pb-3">
-              <span className="text-xs text-[#B88D6A]">− HPP (COGS)</span>
+              <span className="text-xs text-[#B88D6A]">
+                − HPP (Biaya Bahan)
+              </span>
               <span className="text-xs text-[#B88D6A] tabular-nums">
                 ({formatCurrency(stats.total_hpp)})
               </span>
@@ -497,7 +499,7 @@ export default function ReportsPage() {
             {/* Gross Profit pill */}
             <div className="flex justify-between items-baseline rounded-xl bg-[#737B4C]/10 px-4 py-3">
               <span className="text-sm font-bold text-[#5C6B38]">
-                Gross Profit
+                Laba Kotor
                 <span className="ml-2 text-xs font-normal text-[#737B4C]/70">
                   {formatNumber(stats.gross_margin, 1)}%
                 </span>
@@ -511,7 +513,7 @@ export default function ReportsPage() {
               <div className="pt-3 pb-1 space-y-1">
                 <div className="flex justify-between items-baseline pb-1">
                   <span className="text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                    − Operational Expenses
+                    − Biaya Operasional
                   </span>
                   <span className="text-xs font-medium text-[#7C6352] tabular-nums">
                     ({formatCurrency(stats.total_expenses)})
@@ -537,7 +539,7 @@ export default function ReportsPage() {
               }`}
             >
               <span className="text-sm font-bold text-white">
-                Net Profit
+                Laba Bersih
                 <span className="ml-2 text-xs font-normal text-white/60">
                   {formatNumber(stats.net_margin, 1)}%
                 </span>
@@ -559,7 +561,7 @@ export default function ReportsPage() {
           <CardBody>
             {isLoading ? (
               <div className="h-[220px] flex items-center justify-center text-sm text-[#B88D6A]">
-                Loading...
+                Memuat...
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={240}>
@@ -649,15 +651,15 @@ export default function ReportsPage() {
             <div className="flex items-center gap-5 mt-3 justify-center flex-wrap">
               <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
                 <span className="w-3 h-3 rounded-sm bg-[#A05035] inline-block" />
-                Revenue
+                Pendapatan
               </span>
               <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
                 <span className="w-3 h-3 rounded-sm bg-[#737B4C] inline-block" />
-                Gross Profit
+                Laba Kotor
               </span>
               <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
                 <span className="w-3 h-3 rounded-sm bg-[#1B4332] inline-block" />
-                Net Profit
+                Laba Bersih
               </span>
             </div>
           </CardBody>
@@ -667,7 +669,7 @@ export default function ReportsPage() {
         <Card>
           <CardHeader>
             <h2 className="text-sm font-semibold text-[#2C1810]">
-              Top Products by Profit
+              Top Produk berdasarkan Laba
             </h2>
           </CardHeader>
           <CardBody className="p-0">
@@ -681,16 +683,16 @@ export default function ReportsPage() {
                   <thead>
                     <tr className="border-b border-[#E5DACA]">
                       <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                        Product
+                        Produk
                       </th>
                       <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                         HPP
                       </th>
                       <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                        Revenue
+                        Pendapatan
                       </th>
                       <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                        Gross Profit
+                        Laba Kotor
                       </th>
                     </tr>
                   </thead>

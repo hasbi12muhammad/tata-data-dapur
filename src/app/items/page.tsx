@@ -69,17 +69,15 @@ export default function ItemsPage() {
       toast.error(error.message);
       return;
     }
-    toast.success(`${valid.length} item berhasil diimport`);
+    toast.success(`${valid.length} bahan berhasil diimpor`);
     queryClient.invalidateQueries({ queryKey: ["items"] });
   }
 
-  // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Item | null>(null);
   const [name, setName] = useState("");
   const [unit, setUnit] = useState<Item["unit"]>("gr");
 
-  // ── filter / sort state ──────────────────────────────────────
   const [search, setSearch] = useState("");
   const [filterUnit, setFilterUnit] = useState("");
   const [sortBy, setSortBy] = useState("name_asc");
@@ -110,13 +108,12 @@ export default function ItemsPage() {
   }
 
   function handleDelete(id: string) {
-    if (!confirm("Delete this item?")) return;
+    if (!confirm("Hapus bahan ini?")) return;
     deleteItem.mutate(id);
   }
 
   const filtered = useMemo(() => {
     let rows = items ?? [];
-
     if (search) {
       const q = search.toLowerCase();
       rows = rows.filter((i) => i.name.toLowerCase().includes(q));
@@ -124,7 +121,6 @@ export default function ItemsPage() {
     if (filterUnit) {
       rows = rows.filter((i) => i.unit === filterUnit);
     }
-
     return [...rows].sort((a, b) => {
       switch (sortBy) {
         case "name_desc":
@@ -147,7 +143,7 @@ export default function ItemsPage() {
 
   return (
     <AppLayout
-      title="Items"
+      title="Bahan Baku"
       action={
         <div className="flex gap-2">
           <Button
@@ -155,22 +151,21 @@ export default function ItemsPage() {
             variant="secondary"
             onClick={() => setImportOpen(true)}
           >
-            <FileUp className="w-4 h-4" /> Import
+            <FileUp className="w-4 h-4" /> Impor
           </Button>
           <Button size="sm" onClick={openCreate}>
-            <Plus className="w-4 h-4" /> Add
+            <Plus className="w-4 h-4" /> Tambah
           </Button>
         </div>
       }
     >
       <Card>
-        {/* Filter bar */}
         <div className="px-4 py-3 border-b border-[#E5DACA] space-y-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
             <input
               className={`${cls} w-full pl-8`}
-              placeholder="Search item name..."
+              placeholder="Cari nama bahan..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -193,15 +188,15 @@ export default function ItemsPage() {
               <option value="name_desc">Nama Z–A</option>
               <option value="price_desc">Harga ↑</option>
               <option value="price_asc">Harga ↓</option>
-              <option value="stock_desc">Stock ↑</option>
-              <option value="stock_asc">Stock ↓</option>
+              <option value="stock_desc">Stok ↑</option>
+              <option value="stock_asc">Stok ↓</option>
             </select>
             <select
               className={`${cls} flex-1`}
               value={filterUnit}
               onChange={(e) => setFilterUnit(e.target.value)}
             >
-              <option value="">Semua unit</option>
+              <option value="">Semua satuan</option>
               {UNITS.map((u) => (
                 <option key={u} value={u}>
                   {u}
@@ -211,7 +206,7 @@ export default function ItemsPage() {
           </div>
           <div className="flex items-center justify-between text-xs text-[#B88D6A]">
             <span>
-              {filtered.length} item
+              {filtered.length} bahan
               {(items?.length ?? 0) > filtered.length &&
                 ` dari ${items?.length}`}
             </span>
@@ -233,22 +228,22 @@ export default function ItemsPage() {
         <CardBody className="p-0">
           {isLoading ? (
             <div className="py-12 text-center text-sm text-[#B88D6A]">
-              Loading...
+              Memuat...
             </div>
           ) : !items?.length ? (
             <EmptyState
               icon={Package}
-              title="No items yet"
-              description="Add raw materials to track costs and inventory."
+              title="Belum ada bahan"
+              description="Tambah bahan baku untuk melacak biaya dan stok."
               action={
                 <Button size="sm" onClick={openCreate}>
-                  <Plus className="w-4 h-4" /> Add Item
+                  <Plus className="w-4 h-4" /> Tambah Bahan
                 </Button>
               }
             />
           ) : filtered.length === 0 ? (
             <div className="py-10 text-center text-sm text-[#B88D6A]">
-              Tidak ada item untuk filter ini
+              Tidak ada bahan untuk filter ini
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -256,16 +251,16 @@ export default function ItemsPage() {
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
                     <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Name
+                      Nama
                     </th>
                     <th className="text-left px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Unit
+                      Satuan
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Avg Price
+                      Harga Rata-rata
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
-                      Stock
+                      Stok
                     </th>
                     <th className="px-3 sm:px-6 py-3" />
                   </tr>
@@ -302,7 +297,7 @@ export default function ItemsPage() {
                           <button
                             onClick={() => handleDelete(item.id)}
                             className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
-                            aria-label="Delete"
+                            aria-label="Hapus"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -320,19 +315,19 @@ export default function ItemsPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editing ? "Edit Item" : "Add Item"}
+        title={editing ? "Edit Bahan" : "Tambah Bahan"}
         size="sm"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
-            label="Item Name"
+            label="Nama Bahan"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="e.g. Wheat Flour"
+            placeholder="mis. Tepung Terigu"
           />
           <Select
-            label="Unit"
+            label="Satuan"
             value={unit}
             onChange={(e) => setUnit(e.target.value as Item["unit"])}
             required
@@ -350,14 +345,14 @@ export default function ItemsPage() {
               onClick={() => setModalOpen(false)}
               className="flex-1"
             >
-              Cancel
+              Batal
             </Button>
             <Button
               type="submit"
               loading={createItem.isPending || updateItem.isPending}
               className="flex-1"
             >
-              {editing ? "Save" : "Create"}
+              {editing ? "Simpan" : "Buat"}
             </Button>
           </div>
         </form>
@@ -366,7 +361,7 @@ export default function ItemsPage() {
       <ImportExcelModal
         open={importOpen}
         onClose={() => setImportOpen(false)}
-        title="Import Items"
+        title="Impor Bahan Baku"
         templateFilename="template_items.xlsx"
         templateColumns={["nama", "unit"]}
         templateRows={[
@@ -376,7 +371,7 @@ export default function ItemsPage() {
         ]}
         previewColumns={[
           { key: "nama", label: "Nama" },
-          { key: "unit", label: "Unit" },
+          { key: "unit", label: "Satuan" },
         ]}
         onImport={handleImportItems}
         importing={importing}

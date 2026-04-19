@@ -53,7 +53,7 @@ export default function PurchasesPage() {
         (i) => i.name.toLowerCase() === itemName.toLowerCase(),
       );
       if (!found) {
-        errors.push(`Item "${itemName}" tidak ditemukan`);
+        errors.push(`Bahan "${itemName}" tidak ditemukan`);
         continue;
       }
       const { error } = await supabase.rpc("record_purchase", {
@@ -70,13 +70,12 @@ export default function PurchasesPage() {
     if (errors.length)
       toast.error(`${errors.length} baris gagal: ${errors[0]}`);
     if (success) {
-      toast.success(`${success} purchase berhasil diimport`);
+      toast.success(`${success} pembelian berhasil diimpor`);
       queryClient.invalidateQueries({ queryKey: ["purchases"] });
       queryClient.invalidateQueries({ queryKey: ["items"] });
     }
   }
 
-  // ── form state ──────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Purchase | null>(null);
   const [itemId, setItemId] = useState("");
@@ -98,7 +97,6 @@ export default function PurchasesPage() {
     setModalOpen(true);
   }
 
-  // ── filter / sort state ──────────────────────────────────────
   const [search, setSearch] = useState("");
   const [filterItem, setFilterItem] = useState("");
   const [sortBy, setSortBy] = useState("date_desc");
@@ -136,7 +134,6 @@ export default function PurchasesPage() {
 
   const filtered = useMemo(() => {
     let rows = purchases ?? [];
-
     if (search) {
       const q = search.toLowerCase();
       rows = rows.filter((p) =>
@@ -146,7 +143,6 @@ export default function PurchasesPage() {
     if (filterItem) {
       rows = rows.filter((p) => p.item_id === filterItem);
     }
-
     return [...rows].sort((a, b) => {
       switch (sortBy) {
         case "date_asc":
@@ -171,7 +167,7 @@ export default function PurchasesPage() {
 
   return (
     <AppLayout
-      title="Purchases"
+      title="Pembelian"
       action={
         <div className="flex gap-2">
           <Button
@@ -179,22 +175,21 @@ export default function PurchasesPage() {
             variant="secondary"
             onClick={() => setImportOpen(true)}
           >
-            <FileUp className="w-4 h-4" /> Import
+            <FileUp className="w-4 h-4" /> Impor
           </Button>
           <Button size="sm" onClick={openCreate}>
-            <Plus className="w-4 h-4" /> Add
+            <Plus className="w-4 h-4" /> Tambah
           </Button>
         </div>
       }
     >
       <Card>
-        {/* Filter bar */}
         <div className="px-4 py-3 border-b border-[#E5DACA] space-y-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
             <input
               className={`${cls} w-full pl-8`}
-              placeholder="Search item..."
+              placeholder="Cari bahan..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -224,7 +219,7 @@ export default function PurchasesPage() {
               value={filterItem}
               onChange={(e) => setFilterItem(e.target.value)}
             >
-              <option value="">Semua item</option>
+              <option value="">Semua bahan</option>
               {items?.map((i) => (
                 <option key={i.id} value={i.id}>
                   {i.name}
@@ -256,16 +251,16 @@ export default function PurchasesPage() {
         <CardBody className="p-0">
           {isLoading ? (
             <div className="py-12 text-center text-sm text-[#B88D6A]">
-              Loading...
+              Memuat...
             </div>
           ) : !purchases?.length ? (
             <EmptyState
               icon={ShoppingCart}
-              title="No purchases yet"
-              description="Record a purchase to start tracking ingredient costs."
+              title="Belum ada pembelian"
+              description="Catat pembelian untuk mulai melacak biaya bahan."
               action={
                 <Button size="sm" onClick={() => setModalOpen(true)}>
-                  <Plus className="w-4 h-4" /> Add Purchase
+                  <Plus className="w-4 h-4" /> Tambah Pembelian
                 </Button>
               }
             />
@@ -279,7 +274,7 @@ export default function PurchasesPage() {
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
                     <th className="text-left px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Item
+                      Bahan
                     </th>
                     <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Qty
@@ -291,7 +286,7 @@ export default function PurchasesPage() {
                       /Unit
                     </th>
                     <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Date
+                      Tanggal
                     </th>
                     <th className="px-2 sm:px-3 py-3" />
                   </tr>
@@ -348,13 +343,13 @@ export default function PurchasesPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editing ? "Edit Purchase" : "Record Purchase"}
+        title={editing ? "Edit Pembelian" : "Catat Pembelian"}
         size="sm"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {editing ? (
             <div className="rounded-lg bg-[#F5EFE0] border border-[#D9CCAF] px-4 py-2.5">
-              <p className="text-xs text-[#7C6352]">Item</p>
+              <p className="text-xs text-[#7C6352]">Bahan</p>
               <p className="text-sm font-medium text-[#2C1810]">
                 {(editing.item as any)?.name ?? "—"}{" "}
                 <span className="text-xs text-[#B88D6A]">
@@ -364,12 +359,12 @@ export default function PurchasesPage() {
             </div>
           ) : (
             <Select
-              label="Item"
+              label="Bahan"
               value={itemId}
               onChange={(e) => setItemId(e.target.value)}
               required
             >
-              <option value="">Select item...</option>
+              <option value="">Pilih bahan...</option>
               {items?.map((i) => (
                 <option key={i.id} value={i.id}>
                   {i.name} ({i.unit})
@@ -378,7 +373,7 @@ export default function PurchasesPage() {
             </Select>
           )}
           <Input
-            label="Quantity"
+            label="Jumlah"
             type="number"
             min="0.01"
             step="0.01"
@@ -387,7 +382,7 @@ export default function PurchasesPage() {
             required
           />
           <Input
-            label="Total Price (IDR)"
+            label="Total Harga (Rp)"
             type="number"
             min="0"
             value={totalPrice}
@@ -397,7 +392,7 @@ export default function PurchasesPage() {
           {pricePerUnit > 0 && (
             <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5">
               <p className="text-xs text-[#5C6B38] font-medium">
-                Price per unit:{" "}
+                Harga per unit:{" "}
                 <span className="font-bold">
                   {formatCurrency(pricePerUnit)}
                 </span>
@@ -411,14 +406,14 @@ export default function PurchasesPage() {
               onClick={() => setModalOpen(false)}
               className="flex-1"
             >
-              Cancel
+              Batal
             </Button>
             <Button
               type="submit"
               loading={createPurchase.isPending || updatePurchase.isPending}
               className="flex-1"
             >
-              {editing ? "Save" : "Record"}
+              {editing ? "Simpan" : "Catat"}
             </Button>
           </div>
         </form>
@@ -427,7 +422,7 @@ export default function PurchasesPage() {
       <ImportExcelModal
         open={importOpen}
         onClose={() => setImportOpen(false)}
-        title="Import Purchases"
+        title="Impor Pembelian"
         templateFilename="template_purchases.xlsx"
         templateColumns={["nama_item", "quantity", "total_harga"]}
         templateRows={[
@@ -435,7 +430,7 @@ export default function PurchasesPage() {
           ["Gula Pasir", 500, 8000],
         ]}
         previewColumns={[
-          { key: "nama_item", label: "Nama Item" },
+          { key: "nama_item", label: "Nama Bahan" },
           { key: "quantity", label: "Qty" },
           { key: "total_harga", label: "Total Harga" },
         ]}

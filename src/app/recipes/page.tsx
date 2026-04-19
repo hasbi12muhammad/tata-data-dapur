@@ -55,7 +55,6 @@ export default function RecipesPage() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Group rows by recipe name
     const grouped = new Map<
       string,
       { item_id: string; quantity_used: number }[]
@@ -71,7 +70,7 @@ export default function RecipesPage() {
         (i) => i.name.toLowerCase() === itemName.toLowerCase(),
       );
       if (!found) {
-        errors.push(`Item "${itemName}" tidak ditemukan`);
+        errors.push(`Bahan "${itemName}" tidak ditemukan`);
         continue;
       }
       if (!grouped.has(recipeName)) grouped.set(recipeName, []);
@@ -99,7 +98,7 @@ export default function RecipesPage() {
     setImporting(false);
     if (errors.length) toast.error(`${errors.length} error: ${errors[0]}`);
     if (success) {
-      toast.success(`${success} resep berhasil diimport`);
+      toast.success(`${success} produk berhasil diimpor`);
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
     }
   }
@@ -177,7 +176,7 @@ export default function RecipesPage() {
 
   return (
     <AppLayout
-      title="Products"
+      title="Produk"
       action={
         <div className="flex gap-2">
           <Button
@@ -185,26 +184,26 @@ export default function RecipesPage() {
             variant="secondary"
             onClick={() => setImportOpen(true)}
           >
-            <FileUp className="w-4 h-4" /> Import
+            <FileUp className="w-4 h-4" /> Impor
           </Button>
           <Button size="sm" onClick={openCreate}>
-            <Plus className="w-4 h-4" /> New Product
+            <Plus className="w-4 h-4" /> Produk Baru
           </Button>
         </div>
       }
     >
       {isLoading ? (
         <div className="py-12 text-center text-sm text-[#B88D6A]">
-          Loading...
+          Memuat...
         </div>
       ) : !recipes?.length ? (
         <EmptyState
           icon={BookOpen}
-          title="No products yet"
-          description="Create a product (Bill of Materials) to calculate HPP automatically."
+          title="Belum ada produk"
+          description="Buat produk (Bill of Materials) untuk menghitung HPP secara otomatis."
           action={
             <Button size="sm" onClick={openCreate}>
-              <Plus className="w-4 h-4" /> New Product
+              <Plus className="w-4 h-4" /> Produk Baru
             </Button>
           }
         />
@@ -221,17 +220,17 @@ export default function RecipesPage() {
                     <button
                       onClick={() => openEdit(recipe)}
                       className="p-1 rounded text-[#D9CCAF] hover:text-[#A05035] cursor-pointer transition-colors"
-                      aria-label="Edit product"
+                      aria-label="Edit produk"
                     >
                       <Pencil className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => {
-                        if (confirm("Delete product?"))
+                        if (confirm("Hapus produk ini?"))
                           deleteRecipe.mutate(recipe.id);
                       }}
                       className="p-1 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer transition-colors"
-                      aria-label="Delete product"
+                      aria-label="Hapus produk"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -296,29 +295,29 @@ export default function RecipesPage() {
           setModalOpen(false);
           setEditing(null);
         }}
-        title={editing ? "Edit Product" : "New Product"}
+        title={editing ? "Edit Produk" : "Produk Baru"}
         size="lg"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
-            label="Product Name"
+            label="Nama Produk"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="e.g. Fried Rice"
+            placeholder="mis. Nasi Goreng"
           />
 
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-[#4A3728]">
-                Ingredients (BoM)
+                Bahan (BoM)
               </label>
               <button
                 type="button"
                 onClick={addRow}
                 className="text-xs text-[#A05035] hover:underline cursor-pointer font-medium flex items-center gap-1"
               >
-                <Plus className="w-3 h-3" /> Add row
+                <Plus className="w-3 h-3" /> Tambah baris
               </button>
             </div>
             <div className="space-y-2">
@@ -329,7 +328,7 @@ export default function RecipesPage() {
                       value={row.item_id}
                       onChange={(e) => updateRow(i, "item_id", e.target.value)}
                     >
-                      <option value="">Select item...</option>
+                      <option value="">Pilih bahan...</option>
                       {items?.map((it) => (
                         <option key={it.id} value={it.id}>
                           {it.name} ({it.unit})
@@ -354,7 +353,7 @@ export default function RecipesPage() {
                       type="button"
                       onClick={() => removeRow(i)}
                       className="mt-1 p-2 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer"
-                      aria-label="Remove row"
+                      aria-label="Hapus baris"
                     >
                       <Minus className="w-4 h-4" />
                     </button>
@@ -369,7 +368,7 @@ export default function RecipesPage() {
             return previewHPP > 0 ? (
               <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-2.5">
                 <p className="text-xs text-blue-700 font-medium">
-                  Estimated HPP:{" "}
+                  Estimasi HPP:{" "}
                   <span className="font-bold">
                     {formatCurrency(previewHPP)}
                   </span>
@@ -388,7 +387,7 @@ export default function RecipesPage() {
               }}
               className="flex-1"
             >
-              Cancel
+              Batal
             </Button>
             <Button
               type="submit"
@@ -397,7 +396,7 @@ export default function RecipesPage() {
               }
               className="flex-1"
             >
-              {editing ? "Save" : "Create"}
+              {editing ? "Simpan" : "Buat"}
             </Button>
           </div>
         </form>
@@ -406,7 +405,7 @@ export default function RecipesPage() {
       <ImportExcelModal
         open={importOpen}
         onClose={() => setImportOpen(false)}
-        title="Import Products"
+        title="Impor Produk"
         templateFilename="template_recipes.xlsx"
         templateColumns={["nama_resep", "nama_item", "quantity_used"]}
         templateRows={[
@@ -416,8 +415,8 @@ export default function RecipesPage() {
           ["Mie Goreng", "Telur", 1],
         ]}
         previewColumns={[
-          { key: "nama_resep", label: "Nama Resep" },
-          { key: "nama_item", label: "Nama Item" },
+          { key: "nama_resep", label: "Nama Produk" },
+          { key: "nama_item", label: "Nama Bahan" },
           { key: "quantity_used", label: "Qty" },
         ]}
         onImport={handleImportRecipes}
