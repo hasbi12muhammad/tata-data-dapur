@@ -9,6 +9,7 @@ import { useReportSales } from "@/hooks/useSales";
 import { useReportExpenses } from "@/hooks/useExpenses";
 import { useRecipes } from "@/hooks/useRecipes";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import * as XLSX from "xlsx";
 import {
   BarChart3,
   DollarSign,
@@ -282,61 +283,92 @@ export default function ReportsPage() {
     return map[preset];
   }, [preset, rangeFrom, rangeTo]);
 
-  function downloadCSV() {
+  function downloadXLSX() {
+    const IDR = '"Rp "* #,##0';
     const isWeekly = differenceInDays(rangeTo, rangeFrom) > 60;
-    const rows: string[][] = [
+    const filename = `laporan_${format(rangeFrom, "yyyyMMdd")}_${format(rangeTo, "yyyyMMdd")}.xlsx`;
+    const wb = XLSX.utils.book_new();
+
+    // ── Sheet 1: Ringkasan P&L ──
+    const summaryRows: (string | number)[][] = [
       ["LAPORAN TATA DATA DAPUR"],
       [
         `Periode: ${format(rangeFrom, "dd MMM yyyy")} - ${format(rangeTo, "dd MMM yyyy")}`,
       ],
       [`Diunduh: ${format(new Date(), "dd MMM yyyy HH:mm")}`],
       [],
-      ["=== RINGKASAN P&L ==="],
-      ["Metrik", "Nilai (Rp)"],
-      ["Total Revenue", String(stats.total_revenue)],
-      ["Total HPP (COGS)", String(stats.total_hpp)],
-      ["Gross Profit", String(stats.gross_profit)],
-      ["Gross Margin (%)", stats.gross_margin.toFixed(2)],
-      ["Total Expenses", String(stats.total_expenses)],
-      ["Net Profit", String(stats.net_profit)],
-      ["Net Margin (%)", stats.net_margin.toFixed(2)],
-      ["Jumlah Transaksi", String(stats.sales_count)],
-      [],
-      [`=== RINCIAN ${isWeekly ? "MINGGUAN" : "HARIAN"} ===`],
-      ["Periode", "Revenue (Rp)", "Gross Profit (Rp)", "Net Profit (Rp)"],
-      ...chartData.map((d) => [
-        d.label,
-        String(d.revenue),
-        String(d.grossProfit),
-        String(d.netProfit),
-      ]),
-      [],
-      ["=== TOP PRODUCTS ==="],
-      ["Product", "Revenue (Rp)", "HPP (Rp)", "Gross Profit (Rp)"],
-      ...recipeProfit.map((r) => [
-        r.name,
-        String(r.revenue),
-        String(r.hpp),
-        String(r.profit),
-      ]),
-      [],
-      ["=== RINCIAN EXPENSES ==="],
-      ["Kategori", "Total (Rp)"],
-      ...expByCategory.map((c) => [c.name, String(c.total)]),
+      ["Metrik", "Nilai"],
+      ["Total Revenue", stats.total_revenue],
+      ["Total HPP (COGS)", stats.total_hpp],
+      ["Gross Profit", stats.gross_profit],
+      ["Gross Margin (%)", stats.gross_margin],
+      ["Total Expenses", stats.total_expenses],
+      ["Net Profit", stats.net_profit],
+      ["Net Margin (%)", stats.net_margin],
+      ["Jumlah Transaksi", stats.sales_count],
     ];
-
-    const csv = rows
-      .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
-      .join("\n");
-    const blob = new Blob(["\uFEFF" + csv], {
-      type: "text/csv;charset=utf-8;",
+    const ws1 = XLSX.utils.aoa_to_sheet(summaryRows);
+    // Currency format: rows 5,6,7,9,10 (0-indexed), col 1
+    [5, 6, 7, 9, 10].forEach((r) => {
+      const ref = XLSX.utils.encode_cell({ r, c: 1 });
+      if (ws1[ref]) ws1[ref].z = IDR;
     });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `laporan_${format(rangeFrom, "yyyyMMdd")}_${format(rangeTo, "yyyyMMdd")}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    // Percent format: rows 8, 11
+    [8, 11].forEach((r) => {
+      const ref = XLSX.utils.encode_cell({ r, c: 1 });
+      if (ws1[ref]) ws1[ref].z = '0.0"%"';
+    });
+    ws1["!cols"] = [{ wch: 25 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(wb, ws1, "Ringkasan P&L");
+
+    // ── Sheet 2: Rincian Harian/Mingguan ──
+    const periodRows: (string | number)[][] = [
+      ["Periode", "Revenue", "Gross Profit", "Net Profit"],
+      ...chartData.map((d) => [d.label, d.revenue, d.grossProfit, d.netProfit]),
+    ];
+    const ws2 = XLSX.utils.aoa_to_sheet(periodRows);
+    chartData.forEach((_, i) => {
+      [1, 2, 3].forEach((c) => {
+        const ref = XLSX.utils.encode_cell({ r: i + 1, c });
+        if (ws2[ref]) ws2[ref].z = IDR;
+      });
+    });
+    ws2["!cols"] = [{ wch: 12 }, { wch: 18 }, { wch: 18 }, { wch: 18 }];
+    XLSX.utils.book_append_sheet(
+      wb,
+      ws2,
+      `Rincian ${isWeekly ? "Mingguan" : "Harian"}`,
+    );
+
+    // ── Sheet 3: Top Products ──
+    const productRows: (string | number)[][] = [
+      ["Product", "HPP", "Revenue", "Gross Profit"],
+      ...recipeProfit.map((r) => [r.name, r.hpp, r.revenue, r.profit]),
+    ];
+    const ws3 = XLSX.utils.aoa_to_sheet(productRows);
+    recipeProfit.forEach((_, i) => {
+      [1, 2, 3].forEach((c) => {
+        const ref = XLSX.utils.encode_cell({ r: i + 1, c });
+        if (ws3[ref]) ws3[ref].z = IDR;
+      });
+    });
+    ws3["!cols"] = [{ wch: 25 }, { wch: 18 }, { wch: 18 }, { wch: 18 }];
+    XLSX.utils.book_append_sheet(wb, ws3, "Top Products");
+
+    // ── Sheet 4: Expenses ──
+    const expRows: (string | number)[][] = [
+      ["Kategori", "Total"],
+      ...expByCategory.map((c) => [c.name, c.total]),
+    ];
+    const ws4 = XLSX.utils.aoa_to_sheet(expRows);
+    expByCategory.forEach((_, i) => {
+      const ref = XLSX.utils.encode_cell({ r: i + 1, c: 1 });
+      if (ws4[ref]) ws4[ref].z = IDR;
+    });
+    ws4["!cols"] = [{ wch: 25 }, { wch: 18 }];
+    XLSX.utils.book_append_sheet(wb, ws4, "Expenses");
+
+    XLSX.writeFile(wb, filename);
   }
 
   const barSize = chartData.length > 20 ? 5 : 12;
@@ -368,11 +400,11 @@ export default function ReportsPage() {
                 </button>
               ))}
               <button
-                onClick={downloadCSV}
+                onClick={downloadXLSX}
                 className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#737B4C] text-white hover:bg-[#5C6B38] transition-colors"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Download </span>CSV
+                <span className="hidden sm:inline">Download </span>Excel
               </button>
             </div>
 
@@ -445,76 +477,74 @@ export default function ReportsPage() {
               P&L Breakdown
             </h2>
           </CardHeader>
-          <CardBody className="p-0">
-            <div className="divide-y divide-[#EDE4CF]">
-              {/* Revenue */}
-              <div className="flex justify-between items-center px-4 sm:px-6 py-3">
-                <span className="text-sm text-[#2C1810] font-medium">
-                  Revenue
+          <CardBody className="px-4 sm:px-6 py-4 space-y-1">
+            {/* Revenue */}
+            <div className="flex justify-between items-baseline py-1.5">
+              <span className="text-sm font-semibold text-[#2C1810]">
+                Revenue
+              </span>
+              <span className="text-sm font-bold text-[#2C1810] tabular-nums">
+                {formatCurrency(stats.total_revenue)}
+              </span>
+            </div>
+            {/* HPP */}
+            <div className="flex justify-between items-baseline py-1 pb-3">
+              <span className="text-xs text-[#B88D6A]">− HPP (COGS)</span>
+              <span className="text-xs text-[#B88D6A] tabular-nums">
+                ({formatCurrency(stats.total_hpp)})
+              </span>
+            </div>
+            {/* Gross Profit pill */}
+            <div className="flex justify-between items-baseline rounded-xl bg-[#737B4C]/10 px-4 py-3">
+              <span className="text-sm font-bold text-[#5C6B38]">
+                Gross Profit
+                <span className="ml-2 text-xs font-normal text-[#737B4C]/70">
+                  {formatNumber(stats.gross_margin, 1)}%
                 </span>
-                <span className="text-sm font-semibold text-[#2C1810] tabular-nums">
-                  {formatCurrency(stats.total_revenue)}
-                </span>
-              </div>
-              {/* HPP */}
-              <div className="flex justify-between items-center px-4 sm:px-6 py-3">
-                <span className="text-sm text-[#7C6352]">− HPP (COGS)</span>
-                <span className="text-sm text-[#7C6352] tabular-nums">
-                  ({formatCurrency(stats.total_hpp)})
-                </span>
-              </div>
-              {/* Gross Profit */}
-              <div className="flex justify-between items-center px-4 sm:px-6 py-3 bg-[#F5EFE0]">
-                <span className="text-sm font-semibold text-[#737B4C]">
-                  = Gross Profit
-                  <span className="ml-2 text-xs font-normal text-[#B88D6A]">
-                    ({formatNumber(stats.gross_margin, 1)}%)
+              </span>
+              <span className="text-sm font-bold text-[#5C6B38] tabular-nums">
+                {formatCurrency(stats.gross_profit)}
+              </span>
+            </div>
+            {/* Expenses breakdown */}
+            {expByCategory.length > 0 && (
+              <div className="pt-3 pb-1 space-y-1">
+                <div className="flex justify-between items-baseline pb-1">
+                  <span className="text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    − Operational Expenses
                   </span>
-                </span>
-                <span className="text-sm font-bold text-[#737B4C] tabular-nums">
-                  {formatCurrency(stats.gross_profit)}
-                </span>
-              </div>
-              {/* Expenses breakdown */}
-              {expByCategory.length > 0 && (
-                <>
-                  <div className="flex justify-between items-center px-4 sm:px-6 py-2">
-                    <span className="text-sm text-[#7C6352]">
-                      − Operational Expenses
-                    </span>
-                    <span className="text-sm text-[#7C6352] tabular-nums">
-                      ({formatCurrency(stats.total_expenses)})
+                  <span className="text-xs font-medium text-[#7C6352] tabular-nums">
+                    ({formatCurrency(stats.total_expenses)})
+                  </span>
+                </div>
+                {expByCategory.map((cat) => (
+                  <div
+                    key={cat.name}
+                    className="flex justify-between items-baseline pl-3"
+                  >
+                    <span className="text-xs text-[#B88D6A]">· {cat.name}</span>
+                    <span className="text-xs text-[#B88D6A] tabular-nums">
+                      {formatCurrency(cat.total)}
                     </span>
                   </div>
-                  {expByCategory.map((cat) => (
-                    <div
-                      key={cat.name}
-                      className="flex justify-between items-center px-6 sm:px-10 py-1.5"
-                    >
-                      <span className="text-xs text-[#B88D6A]">
-                        · {cat.name}
-                      </span>
-                      <span className="text-xs text-[#B88D6A] tabular-nums">
-                        {formatCurrency(cat.total)}
-                      </span>
-                    </div>
-                  ))}
-                </>
-              )}
-              {/* Net Profit */}
-              <div
-                className={`flex justify-between items-center px-4 sm:px-6 py-3 ${stats.net_profit >= 0 ? "bg-[#1B4332]" : "bg-red-700"}`}
-              >
-                <span className="text-sm font-semibold text-white">
-                  = Net Profit
-                  <span className="ml-2 text-xs font-normal text-white/70">
-                    ({formatNumber(stats.net_margin, 1)}%)
-                  </span>
-                </span>
-                <span className="text-sm font-bold text-white tabular-nums">
-                  {formatCurrency(stats.net_profit)}
-                </span>
+                ))}
               </div>
+            )}
+            {/* Net Profit pill */}
+            <div
+              className={`flex justify-between items-baseline rounded-xl px-4 py-3 mt-2 ${
+                stats.net_profit >= 0 ? "bg-[#1B4332]" : "bg-red-700"
+              }`}
+            >
+              <span className="text-sm font-bold text-white">
+                Net Profit
+                <span className="ml-2 text-xs font-normal text-white/60">
+                  {formatNumber(stats.net_margin, 1)}%
+                </span>
+              </span>
+              <span className="text-sm font-bold text-white tabular-nums">
+                {formatCurrency(stats.net_profit)}
+              </span>
             </div>
           </CardBody>
         </Card>
