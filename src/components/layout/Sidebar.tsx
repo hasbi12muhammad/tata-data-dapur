@@ -3,7 +3,7 @@
 import Image from "next/image";
 import TdLogo from "../../../public/td-logo.png";
 import { cn } from "@/lib/utils";
-import { useAuth, useCurrentUser } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import {
   BarChart3,
   BookOpen,
@@ -18,14 +18,12 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const RECIPE_HIDDEN_UID = "0a6cfba1-0ac2-4792-b306-e67ee912390b";
-
 const ALL_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/items", label: "Items", icon: Package },
   { href: "/purchases", label: "Purchases", icon: ShoppingCart },
   { href: "/expenses", label: "Expenses", icon: Receipt },
-  { href: "/recipes", label: "Recipes", icon: BookOpen },
+  { href: "/recipes", label: "Products", icon: BookOpen },
   { href: "/sales", label: "Sales", icon: TrendingUp },
   { href: "/reports", label: "Reports", icon: BarChart3 },
 ];
@@ -38,11 +36,7 @@ interface SidebarProps {
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { signOut } = useAuth();
-  const { data: user } = useCurrentUser();
-
-  const nav = ALL_NAV.filter(
-    (item) => !(item.href === "/recipes" && user?.id === RECIPE_HIDDEN_UID),
-  );
+  const nav = ALL_NAV;
 
   return (
     <>

@@ -177,7 +177,7 @@ export default function RecipesPage() {
 
   return (
     <AppLayout
-      title="Recipes"
+      title="Products"
       action={
         <div className="flex gap-2">
           <Button
