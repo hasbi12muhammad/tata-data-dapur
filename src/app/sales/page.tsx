@@ -152,7 +152,7 @@ export default function SalesPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
             <input
               className={`${cls} w-full pl-8`}
-              placeholder="Search recipe..."
+              placeholder="Search product..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -197,7 +197,7 @@ export default function SalesPage() {
               value={filterRecipe}
               onChange={(e) => setFilterRecipe(e.target.value)}
             >
-              <option value="">Semua resep</option>
+              <option value="">Semua produk</option>
               {recipes?.map((r) => (
                 <option key={r.id} value={r.id}>
                   {r.name}
@@ -253,7 +253,7 @@ export default function SalesPage() {
                 <thead>
                   <tr className="border-b border-[#E5DACA]">
                     <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Recipe
+                      Product
                     </th>
                     <th className="text-left px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Kategori
@@ -339,12 +339,12 @@ export default function SalesPage() {
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Select
-            label="Recipe / Product"
+            label="Product"
             value={recipeId}
             onChange={(e) => setRecipeId(e.target.value)}
             required
           >
-            <option value="">Select recipe...</option>
+            <option value="">Select product...</option>
             {recipes?.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.name} — HPP {formatCurrency(r.hpp)}

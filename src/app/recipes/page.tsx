@@ -188,7 +188,7 @@ export default function RecipesPage() {
             <FileUp className="w-4 h-4" /> Import
           </Button>
           <Button size="sm" onClick={openCreate}>
-            <Plus className="w-4 h-4" /> New Recipe
+            <Plus className="w-4 h-4" /> New Product
           </Button>
         </div>
       }
@@ -200,11 +200,11 @@ export default function RecipesPage() {
       ) : !recipes?.length ? (
         <EmptyState
           icon={BookOpen}
-          title="No recipes yet"
-          description="Create a recipe (Bill of Materials) to calculate HPP automatically."
+          title="No products yet"
+          description="Create a product (Bill of Materials) to calculate HPP automatically."
           action={
             <Button size="sm" onClick={openCreate}>
-              <Plus className="w-4 h-4" /> New Recipe
+              <Plus className="w-4 h-4" /> New Product
             </Button>
           }
         />
@@ -221,17 +221,17 @@ export default function RecipesPage() {
                     <button
                       onClick={() => openEdit(recipe)}
                       className="p-1 rounded text-[#D9CCAF] hover:text-[#A05035] cursor-pointer transition-colors"
-                      aria-label="Edit recipe"
+                      aria-label="Edit product"
                     >
                       <Pencil className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => {
-                        if (confirm("Delete recipe?"))
+                        if (confirm("Delete product?"))
                           deleteRecipe.mutate(recipe.id);
                       }}
                       className="p-1 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer transition-colors"
-                      aria-label="Delete recipe"
+                      aria-label="Delete product"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -296,12 +296,12 @@ export default function RecipesPage() {
           setModalOpen(false);
           setEditing(null);
         }}
-        title={editing ? "Edit Recipe" : "New Recipe"}
+        title={editing ? "Edit Product" : "New Product"}
         size="lg"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
-            label="Recipe Name"
+            label="Product Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -406,7 +406,7 @@ export default function RecipesPage() {
       <ImportExcelModal
         open={importOpen}
         onClose={() => setImportOpen(false)}
-        title="Import Recipes"
+        title="Import Products"
         templateFilename="template_recipes.xlsx"
         templateColumns={["nama_resep", "nama_item", "quantity_used"]}
         templateRows={[

@@ -160,10 +160,7 @@ export default function ReportsPage() {
             (sum, s) => sum + s.selling_price * s.quantity_sold,
             0,
           ),
-          profit: ds.reduce(
-            (sum, s) => sum + s.profit * s.quantity_sold,
-            0,
-          ),
+          profit: ds.reduce((sum, s) => sum + s.profit * s.quantity_sold, 0),
         };
       });
     }
@@ -199,10 +196,7 @@ export default function ReportsPage() {
               (sum, s) => sum + s.selling_price * s.quantity_sold,
               0,
             ),
-            profit: rs.reduce(
-              (sum, s) => sum + s.profit * s.quantity_sold,
-              0,
-            ),
+            profit: rs.reduce((sum, s) => sum + s.profit * s.quantity_sold, 0),
           };
         })
         .filter((r) => r.revenue > 0)
@@ -255,9 +249,7 @@ export default function ReportsPage() {
     ];
 
     const csv = rows
-      .map((r) =>
-        r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","),
-      )
+      .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
       .join("\n");
     const blob = new Blob(["\uFEFF" + csv], {
       type: "text/csv;charset=utf-8;",
@@ -277,7 +269,6 @@ export default function ReportsPage() {
   return (
     <AppLayout title="Reports">
       <div className="space-y-4 sm:space-y-6">
-
         {/* ── Filter + download ── */}
         <Card>
           <CardBody className="py-3 px-4">
@@ -390,28 +381,20 @@ export default function ReportsPage() {
                   <defs>
                     <linearGradient
                       id="gradRevenue"
-                      x1="0" y1="0" x2="0" y2="1"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
                     >
-                      <stop
-                        offset="0%"
-                        stopColor="#A05035"
-                        stopOpacity={1}
-                      />
+                      <stop offset="0%" stopColor="#A05035" stopOpacity={1} />
                       <stop
                         offset="100%"
                         stopColor="#C0714F"
                         stopOpacity={0.75}
                       />
                     </linearGradient>
-                    <linearGradient
-                      id="gradProfit"
-                      x1="0" y1="0" x2="0" y2="1"
-                    >
-                      <stop
-                        offset="0%"
-                        stopColor="#737B4C"
-                        stopOpacity={1}
-                      />
+                    <linearGradient id="gradProfit" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#737B4C" stopOpacity={1} />
                       <stop
                         offset="100%"
                         stopColor="#8E9960"
@@ -476,7 +459,7 @@ export default function ReportsPage() {
         <Card>
           <CardHeader>
             <h2 className="text-sm font-semibold text-[#2C1810]">
-              Top Resep by Profit
+              Top Products by Profit
             </h2>
           </CardHeader>
           <CardBody className="p-0">
@@ -490,7 +473,7 @@ export default function ReportsPage() {
                   <thead>
                     <tr className="border-b border-[#E5DACA]">
                       <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                        Resep
+                        Product
                       </th>
                       <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                         HPP
@@ -527,9 +510,7 @@ export default function ReportsPage() {
                         </td>
                         <td
                           className={`px-4 sm:px-6 py-3 text-right tabular-nums font-semibold text-xs sm:text-sm whitespace-nowrap ${
-                            r.profit >= 0
-                              ? "text-[#737B4C]"
-                              : "text-[#C0392B]"
+                            r.profit >= 0 ? "text-[#737B4C]" : "text-[#C0392B]"
                           }`}
                         >
                           {formatCurrency(r.profit)}
