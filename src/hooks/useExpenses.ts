@@ -57,6 +57,21 @@ export function useExpenseCategories() {
   });
 }
 
+export function useReportExpenses() {
+  return useQuery<Expense[]>({
+    queryKey: ["report-expenses"],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("expenses")
+        .select("*, category:expense_categories(id, name)")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
 export function useCreateExpense() {
   const qc = useQueryClient();
   return useMutation({

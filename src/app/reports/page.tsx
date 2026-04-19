@@ -6,12 +6,14 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { StatCard } from "@/components/ui/StatCard";
 import { useReportSales } from "@/hooks/useSales";
+import { useReportExpenses } from "@/hooks/useExpenses";
 import { useRecipes } from "@/hooks/useRecipes";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
 import {
   BarChart3,
   DollarSign,
   Download,
+  Receipt,
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
@@ -19,6 +21,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -76,6 +79,16 @@ function getRange(preset: Preset, from: string, to: string): [Date, Date] {
 // ── Tooltip ──────────────────────────────────────────────────
 function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
+  const colorMap: Record<string, string> = {
+    revenue: "#C0714F",
+    grossProfit: "#8E9960",
+    netProfit: "#3B7A57",
+  };
+  const labelMap: Record<string, string> = {
+    revenue: "Revenue",
+    grossProfit: "Gross Profit",
+    netProfit: "Net Profit",
+  };
   return (
     <div className="bg-[#2C1810] text-[#F5EFE0] rounded-lg px-3 py-2.5 text-xs shadow-xl border border-[#4A3728]">
       <p className="font-semibold text-[#D9CCAF] mb-1.5">{label}</p>
@@ -83,12 +96,10 @@ function CustomTooltip({ active, payload, label }: any) {
         <p key={p.dataKey} className="flex items-center gap-1.5">
           <span
             className="w-2 h-2 rounded-sm inline-block flex-shrink-0"
-            style={{
-              backgroundColor: p.dataKey === "revenue" ? "#C0714F" : "#8E9960",
-            }}
+            style={{ backgroundColor: colorMap[p.dataKey] ?? "#ccc" }}
           />
           <span className="text-[#E9DFC6]">
-            {p.dataKey === "revenue" ? "Revenue" : "Profit"}:{" "}
+            {labelMap[p.dataKey] ?? p.dataKey}:{" "}
           </span>
           <span className="font-semibold">
             {formatCurrency(Number(p.value))}
@@ -101,8 +112,11 @@ function CustomTooltip({ active, payload, label }: any) {
 
 // ── Page ─────────────────────────────────────────────────────
 export default function ReportsPage() {
-  const { data: allSales = [], isLoading } = useReportSales();
+  const { data: allSales = [], isLoading: salesLoading } = useReportSales();
+  const { data: allExpenses = [], isLoading: expLoading } = useReportExpenses();
   const { data: recipes } = useRecipes();
+
+  const isLoading = salesLoading || expLoading;
 
   const [preset, setPreset] = useState<Preset>("7d");
   const [customFrom, setCustomFrom] = useState("");
@@ -122,6 +136,15 @@ export default function ReportsPage() {
     [allSales, rangeFrom, rangeTo],
   );
 
+  const filteredExpenses = useMemo(
+    () =>
+      allExpenses.filter((e) => {
+        const d = new Date(e.created_at);
+        return d >= rangeFrom && d <= rangeTo;
+      }),
+    [allExpenses, rangeFrom, rangeTo],
+  );
+
   const stats = useMemo(() => {
     const total_revenue = filteredSales.reduce(
       (sum, s) => sum + s.selling_price * s.quantity_sold,
@@ -131,19 +154,36 @@ export default function ReportsPage() {
       (sum, s) => sum + s.hpp_at_sale * s.quantity_sold,
       0,
     );
-    const total_profit = filteredSales.reduce(
-      (sum, s) => sum + s.profit * s.quantity_sold,
+    const gross_profit = total_revenue - total_hpp;
+    const total_expenses = filteredExpenses.reduce(
+      (sum, e) => sum + e.total,
       0,
     );
+    const net_profit = gross_profit - total_expenses;
     return {
       total_revenue,
       total_hpp,
-      total_profit,
-      profit_margin:
-        total_revenue > 0 ? (total_profit / total_revenue) * 100 : 0,
+      gross_profit,
+      total_expenses,
+      net_profit,
+      gross_margin:
+        total_revenue > 0 ? (gross_profit / total_revenue) * 100 : 0,
+      net_margin: total_revenue > 0 ? (net_profit / total_revenue) * 100 : 0,
       sales_count: filteredSales.length,
     };
-  }, [filteredSales]);
+  }, [filteredSales, filteredExpenses]);
+
+  // Expense breakdown by category
+  const expByCategory = useMemo(() => {
+    const map: Record<string, { name: string; total: number }> = {};
+    filteredExpenses.forEach((e) => {
+      const key = e.category_id ?? "__none__";
+      const name = e.category?.name ?? "Tanpa Kategori";
+      if (!map[key]) map[key] = { name, total: 0 };
+      map[key].total += e.total;
+    });
+    return Object.values(map).sort((a, b) => b.total - a.total);
+  }, [filteredExpenses]);
 
   // Daily (≤60 days) or weekly chart
   const chartData = useMemo(() => {
@@ -154,34 +194,59 @@ export default function ReportsPage() {
         const ds = filteredSales.filter((s) =>
           isSameDay(new Date(s.created_at), day),
         );
+        const de = filteredExpenses.filter((e) =>
+          isSameDay(new Date(e.created_at), day),
+        );
+        const revenue = ds.reduce(
+          (sum, s) => sum + s.selling_price * s.quantity_sold,
+          0,
+        );
+        const hpp = ds.reduce(
+          (sum, s) => sum + s.hpp_at_sale * s.quantity_sold,
+          0,
+        );
+        const grossProfit = revenue - hpp;
+        const expenses = de.reduce((sum, e) => sum + e.total, 0);
         return {
           label: format(day, "dd/MM"),
-          revenue: ds.reduce(
-            (sum, s) => sum + s.selling_price * s.quantity_sold,
-            0,
-          ),
-          profit: ds.reduce((sum, s) => sum + s.profit * s.quantity_sold, 0),
+          revenue,
+          grossProfit,
+          netProfit: grossProfit - expenses,
         };
       });
     }
     // Weekly aggregation
     const weeks: Record<
       string,
-      { label: string; revenue: number; profit: number }
+      { label: string; revenue: number; grossProfit: number; netProfit: number }
     > = {};
     filteredSales.forEach((s) => {
       const d = new Date(s.created_at);
       const mon = startOfDay(subDays(d, (d.getDay() + 6) % 7));
       const key = format(mon, "yyyy-MM-dd");
       if (!weeks[key])
-        weeks[key] = { label: format(mon, "dd/MM"), revenue: 0, profit: 0 };
+        weeks[key] = {
+          label: format(mon, "dd/MM"),
+          revenue: 0,
+          grossProfit: 0,
+          netProfit: 0,
+        };
       weeks[key].revenue += s.selling_price * s.quantity_sold;
-      weeks[key].profit += s.profit * s.quantity_sold;
+      const gp =
+        s.selling_price * s.quantity_sold - s.hpp_at_sale * s.quantity_sold;
+      weeks[key].grossProfit += gp;
+      weeks[key].netProfit += gp;
+    });
+    filteredExpenses.forEach((e) => {
+      const d = new Date(e.created_at);
+      const mon = startOfDay(subDays(d, (d.getDay() + 6) % 7));
+      const key = format(mon, "yyyy-MM-dd");
+      if (weeks[key]) weeks[key].netProfit -= e.total;
     });
     return Object.entries(weeks)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([, v]) => v);
-  }, [filteredSales, rangeFrom, rangeTo]);
+  }, [filteredSales, filteredExpenses, rangeFrom, rangeTo]);
 
   const recipeProfit = useMemo(
     () =>
@@ -226,26 +291,38 @@ export default function ReportsPage() {
       ],
       [`Diunduh: ${format(new Date(), "dd MMM yyyy HH:mm")}`],
       [],
-      ["=== RINGKASAN ==="],
+      ["=== RINGKASAN P&L ==="],
       ["Metrik", "Nilai (Rp)"],
       ["Total Revenue", String(stats.total_revenue)],
-      ["Total HPP", String(stats.total_hpp)],
-      ["Total Profit", String(stats.total_profit)],
-      ["Profit Margin (%)", stats.profit_margin.toFixed(2)],
+      ["Total HPP (COGS)", String(stats.total_hpp)],
+      ["Gross Profit", String(stats.gross_profit)],
+      ["Gross Margin (%)", stats.gross_margin.toFixed(2)],
+      ["Total Expenses", String(stats.total_expenses)],
+      ["Net Profit", String(stats.net_profit)],
+      ["Net Margin (%)", stats.net_margin.toFixed(2)],
       ["Jumlah Transaksi", String(stats.sales_count)],
       [],
       [`=== RINCIAN ${isWeekly ? "MINGGUAN" : "HARIAN"} ===`],
-      ["Periode", "Revenue (Rp)", "Profit (Rp)"],
-      ...chartData.map((d) => [d.label, String(d.revenue), String(d.profit)]),
+      ["Periode", "Revenue (Rp)", "Gross Profit (Rp)", "Net Profit (Rp)"],
+      ...chartData.map((d) => [
+        d.label,
+        String(d.revenue),
+        String(d.grossProfit),
+        String(d.netProfit),
+      ]),
       [],
-      ["=== TOP RESEP ==="],
-      ["Resep", "Revenue (Rp)", "HPP (Rp)", "Profit (Rp)"],
+      ["=== TOP PRODUCTS ==="],
+      ["Product", "Revenue (Rp)", "HPP (Rp)", "Gross Profit (Rp)"],
       ...recipeProfit.map((r) => [
         r.name,
         String(r.revenue),
         String(r.hpp),
         String(r.profit),
       ]),
+      [],
+      ["=== RINCIAN EXPENSES ==="],
+      ["Kategori", "Total (Rp)"],
+      ...expByCategory.map((c) => [c.name, String(c.total)]),
     ];
 
     const csv = rows
@@ -262,7 +339,7 @@ export default function ReportsPage() {
     URL.revokeObjectURL(url);
   }
 
-  const barSize = chartData.length > 20 ? 6 : 14;
+  const barSize = chartData.length > 20 ? 5 : 12;
   const tickInterval =
     chartData.length > 20 ? Math.floor(chartData.length / 10) : 0;
 
@@ -336,27 +413,111 @@ export default function ReportsPage() {
             value={formatCurrency(stats.total_revenue)}
             icon={DollarSign}
             accent="dune"
-          />
-          <StatCard
-            label="Total HPP"
-            value={formatCurrency(stats.total_hpp)}
-            icon={TrendingDown}
-            accent="clay"
-          />
-          <StatCard
-            label="Total Profit"
-            value={formatCurrency(stats.total_profit)}
-            icon={TrendingUp}
-            accent="verde"
-          />
-          <StatCard
-            label="Profit Margin"
-            value={`${formatNumber(stats.profit_margin, 1)}%`}
-            icon={BarChart3}
-            accent={stats.profit_margin >= 30 ? "verde" : "clay"}
             sub={`${stats.sales_count} transaksi`}
           />
+          <StatCard
+            label="Gross Profit"
+            value={formatCurrency(stats.gross_profit)}
+            icon={TrendingUp}
+            accent="verde"
+            sub={`Margin ${formatNumber(stats.gross_margin, 1)}%`}
+          />
+          <StatCard
+            label="Total Expenses"
+            value={formatCurrency(stats.total_expenses)}
+            icon={Receipt}
+            accent="clay"
+            sub={`${filteredExpenses.length} entri`}
+          />
+          <StatCard
+            label="Net Profit"
+            value={formatCurrency(stats.net_profit)}
+            icon={stats.net_profit >= 0 ? TrendingUp : TrendingDown}
+            accent={stats.net_profit >= 0 ? "verde" : "clay"}
+            sub={`Margin ${formatNumber(stats.net_margin, 1)}%`}
+          />
         </div>
+
+        {/* ── P&L Breakdown ── */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-sm font-semibold text-[#2C1810]">
+              P&L Breakdown
+            </h2>
+          </CardHeader>
+          <CardBody className="p-0">
+            <div className="divide-y divide-[#EDE4CF]">
+              {/* Revenue */}
+              <div className="flex justify-between items-center px-4 sm:px-6 py-3">
+                <span className="text-sm text-[#2C1810] font-medium">
+                  Revenue
+                </span>
+                <span className="text-sm font-semibold text-[#2C1810] tabular-nums">
+                  {formatCurrency(stats.total_revenue)}
+                </span>
+              </div>
+              {/* HPP */}
+              <div className="flex justify-between items-center px-4 sm:px-6 py-3">
+                <span className="text-sm text-[#7C6352]">− HPP (COGS)</span>
+                <span className="text-sm text-[#7C6352] tabular-nums">
+                  ({formatCurrency(stats.total_hpp)})
+                </span>
+              </div>
+              {/* Gross Profit */}
+              <div className="flex justify-between items-center px-4 sm:px-6 py-3 bg-[#F5EFE0]">
+                <span className="text-sm font-semibold text-[#737B4C]">
+                  = Gross Profit
+                  <span className="ml-2 text-xs font-normal text-[#B88D6A]">
+                    ({formatNumber(stats.gross_margin, 1)}%)
+                  </span>
+                </span>
+                <span className="text-sm font-bold text-[#737B4C] tabular-nums">
+                  {formatCurrency(stats.gross_profit)}
+                </span>
+              </div>
+              {/* Expenses breakdown */}
+              {expByCategory.length > 0 && (
+                <>
+                  <div className="flex justify-between items-center px-4 sm:px-6 py-2">
+                    <span className="text-sm text-[#7C6352]">
+                      − Operational Expenses
+                    </span>
+                    <span className="text-sm text-[#7C6352] tabular-nums">
+                      ({formatCurrency(stats.total_expenses)})
+                    </span>
+                  </div>
+                  {expByCategory.map((cat) => (
+                    <div
+                      key={cat.name}
+                      className="flex justify-between items-center px-6 sm:px-10 py-1.5"
+                    >
+                      <span className="text-xs text-[#B88D6A]">
+                        · {cat.name}
+                      </span>
+                      <span className="text-xs text-[#B88D6A] tabular-nums">
+                        {formatCurrency(cat.total)}
+                      </span>
+                    </div>
+                  ))}
+                </>
+              )}
+              {/* Net Profit */}
+              <div
+                className={`flex justify-between items-center px-4 sm:px-6 py-3 ${stats.net_profit >= 0 ? "bg-[#1B4332]" : "bg-red-700"}`}
+              >
+                <span className="text-sm font-semibold text-white">
+                  = Net Profit
+                  <span className="ml-2 text-xs font-normal text-white/70">
+                    ({formatNumber(stats.net_margin, 1)}%)
+                  </span>
+                </span>
+                <span className="text-sm font-bold text-white tabular-nums">
+                  {formatCurrency(stats.net_profit)}
+                </span>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
 
         {/* ── Chart ── */}
         <Card>
@@ -371,11 +532,11 @@ export default function ReportsPage() {
                 Loading...
               </div>
             ) : (
-              <ResponsiveContainer width="100%" height={220}>
+              <ResponsiveContainer width="100%" height={240}>
                 <BarChart
                   data={chartData}
                   margin={{ top: 4, right: 4, left: -8, bottom: 0 }}
-                  barGap={3}
+                  barGap={2}
                   barSize={barSize}
                 >
                   <defs>
@@ -393,11 +554,19 @@ export default function ReportsPage() {
                         stopOpacity={0.75}
                       />
                     </linearGradient>
-                    <linearGradient id="gradProfit" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="gradGross" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#737B4C" stopOpacity={1} />
                       <stop
                         offset="100%"
                         stopColor="#8E9960"
+                        stopOpacity={0.75}
+                      />
+                    </linearGradient>
+                    <linearGradient id="gradNet" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#1B4332" stopOpacity={1} />
+                      <stop
+                        offset="100%"
+                        stopColor="#3B7A57"
                         stopOpacity={0.75}
                       />
                     </linearGradient>
@@ -432,30 +601,39 @@ export default function ReportsPage() {
                   <Bar
                     dataKey="revenue"
                     fill="url(#gradRevenue)"
-                    radius={[5, 5, 0, 0]}
+                    radius={[4, 4, 0, 0]}
                   />
                   <Bar
-                    dataKey="profit"
-                    fill="url(#gradProfit)"
-                    radius={[5, 5, 0, 0]}
+                    dataKey="grossProfit"
+                    fill="url(#gradGross)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="netProfit"
+                    fill="url(#gradNet)"
+                    radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
               </ResponsiveContainer>
             )}
-            <div className="flex items-center gap-5 mt-3 justify-center">
+            <div className="flex items-center gap-5 mt-3 justify-center flex-wrap">
               <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
                 <span className="w-3 h-3 rounded-sm bg-[#A05035] inline-block" />
                 Revenue
               </span>
               <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
                 <span className="w-3 h-3 rounded-sm bg-[#737B4C] inline-block" />
-                Profit
+                Gross Profit
+              </span>
+              <span className="flex items-center gap-1.5 text-xs text-[#7C6352]">
+                <span className="w-3 h-3 rounded-sm bg-[#1B4332] inline-block" />
+                Net Profit
               </span>
             </div>
           </CardBody>
         </Card>
 
-        {/* ── Top recipes ── */}
+        {/* ── Top Products ── */}
         <Card>
           <CardHeader>
             <h2 className="text-sm font-semibold text-[#2C1810]">
@@ -482,7 +660,7 @@ export default function ReportsPage() {
                         Revenue
                       </th>
                       <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                        Profit
+                        Gross Profit
                       </th>
                     </tr>
                   </thead>
