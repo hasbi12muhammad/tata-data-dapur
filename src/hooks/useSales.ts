@@ -123,16 +123,19 @@ export function useCreateSale() {
       selling_price: number;
       hpp_at_sale: number;
       category_id?: string | null;
+      date?: string;
     }) => {
       const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
       const profit = p.selling_price - p.hpp_at_sale;
+      const { date, ...rest } = p;
       const { error } = await supabase.from("sales").insert({
-        ...p,
+        ...rest,
         profit,
         user_id: user!.id,
+        ...(date ? { created_at: new Date(date).toISOString() } : {}),
       });
       if (error) throw error;
     },

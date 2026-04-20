@@ -61,6 +61,7 @@ export function useCreatePurchase() {
       item_id: string;
       quantity: number;
       total_price: number;
+      date?: string;
     }) => {
       const supabase = createClient();
       const {
@@ -68,13 +69,13 @@ export function useCreatePurchase() {
       } = await supabase.auth.getUser();
       const price_per_unit = p.total_price / p.quantity;
 
-      // weighted average update via DB function
       const { error } = await supabase.rpc("record_purchase", {
         p_user_id: user!.id,
         p_item_id: p.item_id,
         p_quantity: p.quantity,
         p_total_price: p.total_price,
         p_price_per_unit: price_per_unit,
+        ...(p.date ? { p_created_at: new Date(p.date).toISOString() } : {}),
       });
       if (error) throw error;
     },

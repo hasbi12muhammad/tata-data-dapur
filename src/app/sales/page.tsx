@@ -37,6 +37,7 @@ export default function SalesPage() {
   const [categoryId, setCategoryId] = useState("");
   const [newCatName, setNewCatName] = useState("");
   const [addingCat, setAddingCat] = useState(false);
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
 
   const [search, setSearch] = useState("");
   const [filterRecipe, setFilterRecipe] = useState("");
@@ -69,6 +70,7 @@ export default function SalesPage() {
       selling_price: Number(sellingPrice),
       hpp_at_sale: hpp,
       category_id: categoryId || null,
+      date,
     });
     setModalOpen(false);
     setRecipeId("");
@@ -77,6 +79,7 @@ export default function SalesPage() {
     setCategoryId("");
     setNewCatName("");
     setAddingCat(false);
+    setDate(new Date().toISOString().slice(0, 10));
   }
 
   function openCreate() {
@@ -86,6 +89,7 @@ export default function SalesPage() {
     setCategoryId("");
     setNewCatName("");
     setAddingCat(false);
+    setDate(new Date().toISOString().slice(0, 10));
     setModalOpen(true);
   }
 
@@ -243,99 +247,96 @@ export default function SalesPage() {
               Tidak ada hasil untuk filter ini
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-[#E5DACA]">
-                    <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Produk
-                    </th>
-                    <th className="text-left px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
-                      Kategori
-                    </th>
-                    <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Qty
-                    </th>
-                    <th className="text-right px-2 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
-                      Harga Jual
-                    </th>
-                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Laba
-                    </th>
-                    <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden md:table-cell">
-                      Margin
-                    </th>
-                    <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden md:table-cell">
-                      Tanggal
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((s) => {
-                    const saleMargin =
-                      s.selling_price > 0
-                        ? (s.profit / s.selling_price) * 100
-                        : 0;
-                    return (
-                      <tr
-                        key={s.id}
-                        className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors"
-                      >
-                        <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
-                          <span className="line-clamp-1 text-xs sm:text-sm">
+            <>
+              {/* Mobile card list */}
+              <div className="sm:hidden divide-y divide-[#EDE4CF]">
+                {filtered.map((s) => {
+                  const saleMargin = s.selling_price > 0 ? (s.profit / s.selling_price) * 100 : 0;
+                  return (
+                    <div key={s.id} className="px-4 py-3 hover:bg-[#F5EFE0] transition-colors">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-[#2C1810] truncate">
                             {(s.recipe as any)?.name ?? "—"}
-                          </span>
-                          <div className="flex items-center gap-1.5 mt-0.5 sm:hidden flex-wrap">
+                          </p>
+                          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                             {(s as any).category ? (
                               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#EDE4CF] text-[#5C4535]">
                                 {(s as any).category.name}
                               </span>
                             ) : null}
-                            <span className="text-[10px] text-[#B88D6A]">
-                              {format(new Date(s.created_at), "dd MMM yyyy")}
-                            </span>
+                            <span className="text-[10px] text-[#B88D6A]">{format(new Date(s.created_at), "dd MMM yyyy")}</span>
                           </div>
-                        </td>
-                        <td className="px-2 sm:px-6 py-2.5 sm:py-3 hidden sm:table-cell">
-                          {(s as any).category ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">
-                              {(s as any).category.name}
-                            </span>
-                          ) : (
-                            <span className="text-xs text-[#D9CCAF]">—</span>
-                          )}
-                        </td>
-                        <td className="px-2 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs sm:text-sm">
-                          {s.quantity_sold}
-                        </td>
-                        <td className="px-2 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs hidden sm:table-cell whitespace-nowrap">
-                          {formatCurrency(s.selling_price)}
-                        </td>
-                        <td
-                          className={`px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums font-semibold text-xs sm:text-sm whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
-                        >
-                          {formatCurrency(s.profit * s.quantity_sold)}
-                          <div className="sm:hidden text-[10px] font-normal text-[#B88D6A] tabular-nums">
-                            {formatCurrency(s.selling_price)} ·{" "}
-                            {saleMargin.toFixed(1)}%
-                          </div>
-                        </td>
-                        <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right hidden md:table-cell">
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${saleMargin >= 30 ? "bg-[#737B4C]/10 text-[#5C6B38]" : saleMargin >= 15 ? "bg-[#B88D6A]/10 text-[#7C563D]" : "bg-red-50 text-red-700"}`}
-                          >
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className={`text-sm font-semibold tabular-nums whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
+                            {formatCurrency(s.profit * s.quantity_sold)}
+                          </p>
+                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded tabular-nums ${saleMargin >= 30 ? "text-[#5C6B38]" : saleMargin >= 15 ? "text-[#7C563D]" : "text-red-600"}`}>
                             {saleMargin.toFixed(1)}%
                           </span>
-                        </td>
-                        <td className="px-4 sm:px-6 py-2.5 sm:py-3 text-right text-[#B88D6A] text-xs hidden md:table-cell whitespace-nowrap">
-                          {format(new Date(s.created_at), "dd MMM yyyy")}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1 text-[10px] text-[#B88D6A] tabular-nums flex-wrap">
+                        <span>{s.quantity_sold}×</span>
+                        <span>{formatCurrency(s.selling_price)}/unit</span>
+                        <span>·</span>
+                        <span>HPP {formatCurrency(s.hpp_at_sale * s.quantity_sold)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-[#E5DACA]">
+                      <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Produk</th>
+                      <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Kategori</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Qty</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Harga Jual</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Laba</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Margin</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Tanggal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((s) => {
+                      const saleMargin = s.selling_price > 0 ? (s.profit / s.selling_price) * 100 : 0;
+                      return (
+                        <tr key={s.id} className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors">
+                          <td className="px-6 py-3 font-medium text-[#2C1810]">
+                            <span className="line-clamp-1 text-sm">{(s.recipe as any)?.name ?? "—"}</span>
+                          </td>
+                          <td className="px-6 py-3">
+                            {(s as any).category ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">{(s as any).category.name}</span>
+                            ) : (
+                              <span className="text-xs text-[#D9CCAF]">—</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-sm">{s.quantity_sold}</td>
+                          <td className="px-6 py-3 text-right tabular-nums text-[#4A3728] text-xs whitespace-nowrap">{formatCurrency(s.selling_price)}</td>
+                          <td className={`px-6 py-3 text-right tabular-nums font-semibold text-sm whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
+                            {formatCurrency(s.profit * s.quantity_sold)}
+                          </td>
+                          <td className="px-6 py-3 text-right">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${saleMargin >= 30 ? "bg-[#737B4C]/10 text-[#5C6B38]" : saleMargin >= 15 ? "bg-[#B88D6A]/10 text-[#7C563D]" : "bg-red-50 text-red-700"}`}>
+                              {saleMargin.toFixed(1)}%
+                            </span>
+                          </td>
+                          <td className="px-6 py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">
+                            {format(new Date(s.created_at), "dd MMM yyyy")}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardBody>
       </Card>
@@ -433,6 +434,17 @@ export default function SalesPage() {
             onChange={(e) => setSellingPrice(e.target.value)}
             required
           />
+          <div>
+            <label className="block text-sm font-medium text-[#4A3728] mb-1">Tanggal Transaksi</label>
+            <input
+              type="date"
+              className={`${cls} w-full`}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              max={new Date().toISOString().slice(0, 10)}
+              required
+            />
+          </div>
           {selectedRecipe && Number(sellingPrice) > 0 && (
             <div
               className={`rounded-lg px-4 py-3 border text-xs space-y-1 ${totalProfit >= 0 ? "bg-[#737B4C]/10 border-[#737B4C]/20" : "bg-red-50 border-red-100"}`}

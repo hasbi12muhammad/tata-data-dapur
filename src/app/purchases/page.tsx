@@ -81,11 +81,13 @@ export default function PurchasesPage() {
   const [itemId, setItemId] = useState("");
   const [quantity, setQuantity] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
 
   function openEdit(p: Purchase) {
     setEditing(p);
     setQuantity(String(p.quantity));
     setTotalPrice(String(p.total_price));
+    setDate(new Date(p.created_at).toISOString().slice(0, 10));
     setModalOpen(true);
   }
 
@@ -94,6 +96,7 @@ export default function PurchasesPage() {
     setItemId("");
     setQuantity("");
     setTotalPrice("");
+    setDate(new Date().toISOString().slice(0, 10));
     setModalOpen(true);
   }
 
@@ -123,6 +126,7 @@ export default function PurchasesPage() {
         item_id: itemId,
         quantity: Number(quantity),
         total_price: Number(totalPrice),
+        date,
       });
     }
     setModalOpen(false);
@@ -130,6 +134,7 @@ export default function PurchasesPage() {
     setItemId("");
     setQuantity("");
     setTotalPrice("");
+    setDate(new Date().toISOString().slice(0, 10));
   }
 
   const filtered = useMemo(() => {
@@ -269,73 +274,79 @@ export default function PurchasesPage() {
               Tidak ada hasil untuk filter ini
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[#E5DACA]">
-                    <th className="text-left px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Bahan
-                    </th>
-                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Qty
-                    </th>
-                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Total
-                    </th>
-                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      /Unit
-                    </th>
-                    <th className="text-right px-2 sm:px-6 py-3 text-[10px] sm:text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Tanggal
-                    </th>
-                    <th className="px-2 sm:px-3 py-3" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((p) => (
-                    <tr
-                      key={p.id}
-                      className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors"
-                    >
-                      <td className="px-2 sm:px-6 py-2 sm:py-3 font-medium text-[#2C1810]">
-                        <span className="line-clamp-1 text-xs sm:text-sm">
-                          {(p.item as any)?.name ?? "—"}
-                        </span>
-                        <span className="text-[10px] text-[#B88D6A]">
-                          {(p.item as any)?.unit}
-                        </span>
-                      </td>
-                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs sm:text-sm">
-                        {p.quantity}
-                      </td>
-                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right tabular-nums font-medium text-[#2C1810] text-xs sm:text-sm whitespace-nowrap">
-                        {formatCurrency(p.total_price)}
-                      </td>
-                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right tabular-nums text-[#5C4535] text-xs whitespace-nowrap">
-                        {formatCurrency(p.price_per_unit)}
-                      </td>
-                      <td className="px-2 sm:px-6 py-2 sm:py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">
-                        <span className="sm:hidden">
-                          {format(new Date(p.created_at), "dd/MM")}
-                        </span>
-                        <span className="hidden sm:inline">
-                          {format(new Date(p.created_at), "dd MMM yyyy")}
-                        </span>
-                      </td>
-                      <td className="px-2 sm:px-3 py-2 sm:py-3">
-                        <button
-                          onClick={() => openEdit(p)}
-                          className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors"
-                          aria-label="Edit"
-                        >
-                          <Pencil className="w-3.5 h-3.5" />
-                        </button>
-                      </td>
+            <>
+              {/* Mobile card list */}
+              <div className="sm:hidden divide-y divide-[#EDE4CF]">
+                {filtered.map((p) => (
+                  <div key={p.id} className="px-4 py-3 hover:bg-[#F5EFE0] transition-colors flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-[#2C1810] truncate">
+                        {(p.item as any)?.name ?? "—"}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        <span className="text-[10px] text-[#B88D6A]">{(p.item as any)?.unit}</span>
+                        <span className="text-[10px] text-[#B88D6A]">·</span>
+                        <span className="text-[10px] text-[#B88D6A]">{p.quantity} unit</span>
+                        <span className="text-[10px] text-[#B88D6A]">·</span>
+                        <span className="text-[10px] text-[#B88D6A]">{formatCurrency(p.price_per_unit)}/unit</span>
+                      </div>
+                      <p className="text-[10px] text-[#B88D6A] mt-0.5">
+                        {format(new Date(p.created_at), "dd MMM yyyy")}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-[#2C1810] tabular-nums whitespace-nowrap">
+                          {formatCurrency(p.total_price)}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => openEdit(p)}
+                        className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors"
+                        aria-label="Edit"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-[#E5DACA]">
+                      <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Bahan</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Qty</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Total</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">/Unit</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Tanggal</th>
+                      <th className="px-3 py-3" />
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((p) => (
+                      <tr key={p.id} className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors">
+                        <td className="px-6 py-3 font-medium text-[#2C1810]">
+                          <span className="line-clamp-1 text-sm">{(p.item as any)?.name ?? "—"}</span>
+                          <span className="text-[10px] text-[#B88D6A]">{(p.item as any)?.unit}</span>
+                        </td>
+                        <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-sm">{p.quantity}</td>
+                        <td className="px-6 py-3 text-right tabular-nums font-medium text-[#2C1810] text-sm whitespace-nowrap">{formatCurrency(p.total_price)}</td>
+                        <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-xs whitespace-nowrap">{formatCurrency(p.price_per_unit)}</td>
+                        <td className="px-6 py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">{format(new Date(p.created_at), "dd MMM yyyy")}</td>
+                        <td className="px-3 py-3">
+                          <button onClick={() => openEdit(p)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardBody>
       </Card>
@@ -389,6 +400,17 @@ export default function PurchasesPage() {
             onChange={(e) => setTotalPrice(e.target.value)}
             required
           />
+          <div>
+            <label className="block text-sm font-medium text-[#4A3728] mb-1">Tanggal Transaksi</label>
+            <input
+              type="date"
+              className={`${cls} w-full`}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              max={new Date().toISOString().slice(0, 10)}
+              required
+            />
+          </div>
           {pricePerUnit > 0 && (
             <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5">
               <p className="text-xs text-[#5C6B38] font-medium">
