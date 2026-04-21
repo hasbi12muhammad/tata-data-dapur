@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "created_at": "2026-04-20T14:13:02.073Z",
+  "lifetime": {
+    "total_tokens_estimated": 33400,
+    "total_reads": 11,
+    "total_writes": 15,
+    "total_sessions": 3,
+    "anatomy_hits": 6,
+    "anatomy_misses": 5,
+    "repeated_reads_blocked": 0,
+    "estimated_savings_vs_bare_cli": 1200
+  },
+  "sessions": [
+    {
+      "id": "session-2026-04-20-2128",
+      "started": "2026-04-20T14:28:49.940Z",
+      "ended": "2026-04-20T14:39:33.831Z",
+      "reads": [
+        {
+          "file": "/home/hasbi/Pictures/purchas.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Pictures/sales.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Pictures/Screenshot_2026-04-20_21-12-09.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 4560,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 5324,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 717,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 1159,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/supabase/migrations/001_initial_schema.sql",
+          "tokens_estimated": 1686,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/supabase/migrations/004_purchase_created_at.sql",
+          "tokens_estimated": 372,
+          "action": "create"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 208,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 176,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 98,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 119,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 156,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 1343,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 189,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 127,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 127,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 70,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 1740,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 200,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 13446,
+        "output_tokens_estimated": 4925,
+        "reads_count": 8,
+        "writes_count": 13,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 5
+      }
+    },
+    {
+      "id": "session-2026-04-21-2123",
+      "started": "2026-04-21T14:23:59.190Z",
+      "ended": "2026-04-21T14:35:09.150Z",
+      "reads": [
+        {
+          "file": "/home/hasbi/Pictures/laporan.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Downloads/Untitled Design - 1 - Edited.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/reports/page.tsx",
+          "tokens_estimated": 10603,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/reports/page.tsx",
+          "tokens_estimated": 4421,
+          "action": "edit"
+        },
+        {
+          "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/reports/page.tsx",
+          "tokens_estimated": 5,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 10603,
+        "output_tokens_estimated": 4426,
+        "reads_count": 3,
+        "writes_count": 2,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 1
+      }
+    }
+  ],
+  "daemon_usage": [],
+  "waste_flags": [],
+  "optimization_report": {
+    "last_generated": null,
+    "patterns": []
+  }
+}

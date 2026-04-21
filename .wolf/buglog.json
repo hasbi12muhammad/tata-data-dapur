@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-04-20T14:36:26.154Z",
+      "error_message": "CSS fix: sm, hover, last",
+      "file": "src/app/purchases/page.tsx",
+      "root_cause": "sm: px-3 py-2 sm:py-3\"> → block overflow-x-auto\">; hover: text-[#A05035] hover:bg-[#EDE4CF] transition-colors\" → text-[#A05035] hover:bg-[#EDE4CF] transition-colors\" aria-label=\"Edit\">; last: border-0 hover:bg-[#F5EFE0] transition-colors\" → border-0 hover:bg-[#F5EFE0] transition-colors\">",
+      "fix": "Changed sm: px-3 py-2 sm:py-3\"> → block overflow-x-auto\">; hover: text-[#A05035] hover:bg-[#EDE4CF] transition-colors\" → text-[#A05035] hover:bg-[#EDE4CF] transition-colors\" aria-label=\"Edit\">; last: border-0 hover:bg-[#F5EFE0] transition-colors\" → border-0 hover:bg-[#F5EFE0] transition-colors\">",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-04-20T14:37:44.624Z"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-04-21T14:34:23.298Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/app/reports/page.tsx",
+      "root_cause": "4 lines replaced/restructured",
+      "fix": "Rewrote 5→3 lines (4 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-21T14:34:23.298Z"
+    }
+  ]
+}
