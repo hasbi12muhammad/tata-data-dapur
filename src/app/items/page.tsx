@@ -272,7 +272,10 @@ export default function ItemsPage() {
                       className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors"
                     >
                       <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
-                        <span className="line-clamp-1">{item.name}</span>
+                        <span className="break-words">{item.name}</span>
+                        <span className="sm:hidden block text-xs text-[#B88D6A] font-normal mt-0.5">
+                          Stok: {item.stock} {item.unit}
+                        </span>
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3">
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">
