@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-21T14:34:31.676Z
-> Files: 61 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-04-24T03:21:51.535Z
+> Files: 62 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -137,6 +137,7 @@
 - `002_prev_avg_price.sql` — Add prev_avg_price to items (stores avg_price before last purchase update) (~468 tok)
 - `003_update_purchase.sql` — Update an existing purchase: adjusts stock delta and recalculates weighted avg price. (~432 tok)
 - `004_purchase_created_at.sql` — Allow record_purchase to accept optional transaction date (~347 tok)
+- `005_delete_purchase.sql` — Delete a purchase: reduces stock and recalculates weighted avg price from remaining purchases. (~368 tok)
 
 ## supabase/seeds/
 

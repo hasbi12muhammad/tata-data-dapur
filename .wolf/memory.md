@@ -50,3 +50,5 @@
 | 10:10 | Purchases: Trash2 delete button (mobile+desktop) + date range filter (Dari/s.d.) | purchases/page.tsx | done | ~300 |
 | 10:15 | Sales: edit/delete with modal (openEdit/closeModal, read-only recipe in edit mode) | sales/page.tsx | done | ~400 |
 | 10:20 | Reports: remove line-clamp-1 from Top Produk name column | reports/page.tsx | done | ~20 |
+| 10:21 | Created supabase/migrations/005_delete_purchase.sql | — | ~368 |
+| 10:22 | Session end: 1 writes across 1 files (005_delete_purchase.sql) | 4 reads | ~394 tok |
