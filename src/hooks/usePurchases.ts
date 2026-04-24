@@ -94,11 +94,19 @@ export function useDeletePurchase() {
   return useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from("purchases").delete().eq("id", id);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const { error } = await supabase.rpc("delete_purchase", {
+        p_purchase_id: id,
+        p_user_id: user!.id,
+      });
       if (error) throw error;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["purchases"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
       toast.success("Pembelian dihapus");
     },
     onError: (e: Error) => toast.error(e.message),
