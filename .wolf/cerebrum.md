@@ -11,6 +11,10 @@
 ## Key Learnings
 
 - **Project:** tata-data-dapur
+- **HPP badge bug:** `prev_avg_price` di DB bernilai 0 (bukan null) untuk item yang belum pernah diupdate harganya. `??` tidak menangkap 0, jadi kalkulasi prev_hpp menjadi sangat kecil dan persentase kenaikan menjadi misleading. Fix: gunakan `||` agar 0 fallback ke avg_price.
+- **Sales page pattern:** Edit modal reuse create modal — `editing: Sale | null` state sebagai flag, `openEdit()` pre-fill form, `closeModal()` clear editing + close, guard `(editing || selectedRecipe)` untuk profit preview.
+- **useDeletePurchase:** Delete langsung dari tabel `purchases`, TIDAK via RPC. Tidak me-revert perubahan stock/avg_price — user harus sadar ini.
+- **Date filter purchases:** State `filterDateFrom`/`filterDateTo` di-filter di useMemo client-side. Gunakan `setHours(0,0,0,0)` dan `setHours(23,59,59,999)` untuk full-day range.
 - **Description:** This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Do-Not-Repeat

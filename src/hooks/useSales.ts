@@ -147,3 +147,56 @@ export function useCreateSale() {
     onError: (e: Error) => toast.error(e.message),
   });
 }
+
+export function useUpdateSale() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: {
+      id: string;
+      quantity_sold: number;
+      selling_price: number;
+      hpp_at_sale: number;
+      category_id?: string | null;
+      date?: string;
+    }) => {
+      const supabase = createClient();
+      const profit = p.selling_price - p.hpp_at_sale;
+      const { error } = await supabase
+        .from("sales")
+        .update({
+          quantity_sold: p.quantity_sold,
+          selling_price: p.selling_price,
+          profit,
+          category_id: p.category_id ?? null,
+          ...(p.date ? { created_at: new Date(p.date).toISOString() } : {}),
+        })
+        .eq("id", p.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["sales"] });
+      qc.invalidateQueries({ queryKey: ["report-sales"] });
+      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      toast.success("Penjualan diperbarui");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
+export function useDeleteSale() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const supabase = createClient();
+      const { error } = await supabase.from("sales").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["sales"] });
+      qc.invalidateQueries({ queryKey: ["report-sales"] });
+      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      toast.success("Penjualan dihapus");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}

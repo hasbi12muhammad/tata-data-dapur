@@ -34,3 +34,19 @@
 | 21:34 | Edited src/app/reports/page.tsx | CSS: data, object-fit | ~4421 |
 | 21:34 | Edited src/app/reports/page.tsx | inline fix | ~5 |
 | 21:35 | Session end: 2 writes across 1 files (page.tsx) | 3 reads | ~15029 tok |
+
+## Session: 2026-04-23 08:48
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-04-24 09:13
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 10:00 | Fix HPP badge: use \|\| not ?? in calcHPP so prev_avg_price=0 doesn't inflate % | useRecipes.ts | fixed | ~50 |
+| 10:05 | Add useDeletePurchase hook | usePurchases.ts | done | ~80 |
+| 10:06 | Add useUpdateSale + useDeleteSale hooks | useSales.ts | done | ~150 |
+| 10:10 | Purchases: Trash2 delete button (mobile+desktop) + date range filter (Dari/s.d.) | purchases/page.tsx | done | ~300 |
+| 10:15 | Sales: edit/delete with modal (openEdit/closeModal, read-only recipe in edit mode) | sales/page.tsx | done | ~400 |
+| 10:20 | Reports: remove line-clamp-1 from Top Produk name column | reports/page.tsx | done | ~20 |

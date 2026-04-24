@@ -11,6 +11,7 @@ import { Modal } from "@/components/ui/Modal";
 import { useItems } from "@/hooks/useItems";
 import {
   useCreatePurchase,
+  useDeletePurchase,
   usePurchases,
   useUpdatePurchase,
 } from "@/hooks/usePurchases";
@@ -20,7 +21,7 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
 import { useQueryClient } from "@tanstack/react-query";
-import { FileUp, Pencil, Plus, Search, ShoppingCart, X } from "lucide-react";
+import { FileUp, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const cls =
@@ -31,6 +32,7 @@ export default function PurchasesPage() {
   const { data: items } = useItems();
   const createPurchase = useCreatePurchase();
   const updatePurchase = useUpdatePurchase();
+  const deletePurchase = useDeletePurchase();
   const queryClient = useQueryClient();
 
   const [importOpen, setImportOpen] = useState(false);
@@ -103,6 +105,8 @@ export default function PurchasesPage() {
   const [search, setSearch] = useState("");
   const [filterItem, setFilterItem] = useState("");
   const [sortBy, setSortBy] = useState("date_desc");
+  const [filterDateFrom, setFilterDateFrom] = useState("");
+  const [filterDateTo, setFilterDateTo] = useState("");
 
   const pricePerUnit =
     quantity && totalPrice && Number(quantity) > 0
@@ -148,6 +152,16 @@ export default function PurchasesPage() {
     if (filterItem) {
       rows = rows.filter((p) => p.item_id === filterItem);
     }
+    if (filterDateFrom) {
+      const from = new Date(filterDateFrom);
+      from.setHours(0, 0, 0, 0);
+      rows = rows.filter((p) => new Date(p.created_at) >= from);
+    }
+    if (filterDateTo) {
+      const to = new Date(filterDateTo);
+      to.setHours(23, 59, 59, 999);
+      rows = rows.filter((p) => new Date(p.created_at) <= to);
+    }
     return [...rows].sort((a, b) => {
       switch (sortBy) {
         case "date_asc":
@@ -168,7 +182,7 @@ export default function PurchasesPage() {
     });
   }, [purchases, search, filterItem, sortBy]);
 
-  const hasFilters = search || filterItem || sortBy !== "date_desc";
+  const hasFilters = search || filterItem || sortBy !== "date_desc" || filterDateFrom || filterDateTo;
 
   return (
     <AppLayout
@@ -232,6 +246,24 @@ export default function PurchasesPage() {
               ))}
             </select>
           </div>
+          <div className="flex gap-2 items-center">
+            <span className="text-xs text-[#B88D6A] whitespace-nowrap">Dari</span>
+            <input
+              type="date"
+              className={`${cls} flex-1`}
+              value={filterDateFrom}
+              onChange={(e) => setFilterDateFrom(e.target.value)}
+              max={filterDateTo || undefined}
+            />
+            <span className="text-xs text-[#B88D6A] whitespace-nowrap">s/d</span>
+            <input
+              type="date"
+              className={`${cls} flex-1`}
+              value={filterDateTo}
+              onChange={(e) => setFilterDateTo(e.target.value)}
+              min={filterDateFrom || undefined}
+            />
+          </div>
           <div className="flex items-center justify-between text-xs text-[#B88D6A]">
             <span>
               {filtered.length} hasil
@@ -244,6 +276,8 @@ export default function PurchasesPage() {
                   setSearch("");
                   setFilterItem("");
                   setSortBy("date_desc");
+                  setFilterDateFrom("");
+                  setFilterDateTo("");
                 }}
                 className="text-[#A05035] hover:underline font-medium"
               >
@@ -307,6 +341,13 @@ export default function PurchasesPage() {
                       >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
+                      <button
+                        onClick={() => { if (confirm("Hapus pembelian ini?")) deletePurchase.mutate(p.id); }}
+                        className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors"
+                        aria-label="Hapus"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -337,9 +378,14 @@ export default function PurchasesPage() {
                         <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-xs whitespace-nowrap">{formatCurrency(p.price_per_unit)}</td>
                         <td className="px-6 py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">{format(new Date(p.created_at), "dd MMM yyyy")}</td>
                         <td className="px-3 py-3">
-                          <button onClick={() => openEdit(p)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
-                            <Pencil className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button onClick={() => openEdit(p)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                            <button onClick={() => { if (confirm("Hapus pembelian ini?")) deletePurchase.mutate(p.id); }} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors" aria-label="Hapus">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}

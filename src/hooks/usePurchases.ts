@@ -88,3 +88,19 @@ export function useCreatePurchase() {
     onError: (e: Error) => toast.error(e.message),
   });
 }
+
+export function useDeletePurchase() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const supabase = createClient();
+      const { error } = await supabase.from("purchases").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["purchases"] });
+      toast.success("Pembelian dihapus");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}

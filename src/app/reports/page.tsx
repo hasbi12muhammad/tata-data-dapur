@@ -963,7 +963,7 @@ export default function ReportsPage() {
                             <span className="w-5 h-5 rounded-full bg-[#E9DFC6] text-[#7C563D] text-[10px] font-bold flex items-center justify-center flex-shrink-0">
                               {i + 1}
                             </span>
-                            <span className="font-medium text-[#2C1810] text-xs sm:text-sm line-clamp-1">
+                            <span className="font-medium text-[#2C1810] text-xs sm:text-sm">
                               {r.name}
                             </span>
                           </div>

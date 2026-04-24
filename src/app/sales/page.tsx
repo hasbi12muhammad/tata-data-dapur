@@ -12,12 +12,15 @@ import { useRecipes } from "@/hooks/useRecipes";
 import {
   useCreateSale,
   useCreateSaleCategory,
+  useDeleteSale,
   useSaleCategories,
   useSales,
+  useUpdateSale,
 } from "@/hooks/useSales";
+import { Sale } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Plus, Search, TrendingUp, X } from "lucide-react";
+import { Pencil, Plus, Search, TrendingUp, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const cls =
@@ -28,9 +31,12 @@ export default function SalesPage() {
   const { data: recipes } = useRecipes();
   const { data: categories } = useSaleCategories();
   const createSale = useCreateSale();
+  const updateSale = useUpdateSale();
+  const deleteSale = useDeleteSale();
   const createCategory = useCreateSaleCategory();
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<Sale | null>(null);
   const [recipeId, setRecipeId] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [sellingPrice, setSellingPrice] = useState("");
@@ -45,7 +51,7 @@ export default function SalesPage() {
   const [sortBy, setSortBy] = useState("date_desc");
 
   const selectedRecipe = recipes?.find((r) => r.id === recipeId);
-  const hpp = selectedRecipe?.hpp ?? 0;
+  const hpp = editing ? editing.hpp_at_sale : (selectedRecipe?.hpp ?? 0);
   const totalRevenue = Number(sellingPrice) * Number(quantity);
   const totalProfit = (Number(sellingPrice) - hpp) * Number(quantity);
   const margin =
@@ -61,28 +67,8 @@ export default function SalesPage() {
     setAddingCat(false);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!recipeId || !sellingPrice) return;
-    await createSale.mutateAsync({
-      recipe_id: recipeId,
-      quantity_sold: Number(quantity),
-      selling_price: Number(sellingPrice),
-      hpp_at_sale: hpp,
-      category_id: categoryId || null,
-      date,
-    });
-    setModalOpen(false);
-    setRecipeId("");
-    setQuantity("1");
-    setSellingPrice("");
-    setCategoryId("");
-    setNewCatName("");
-    setAddingCat(false);
-    setDate(new Date().toISOString().slice(0, 10));
-  }
-
   function openCreate() {
+    setEditing(null);
     setRecipeId("");
     setQuantity("1");
     setSellingPrice("");
@@ -91,6 +77,55 @@ export default function SalesPage() {
     setAddingCat(false);
     setDate(new Date().toISOString().slice(0, 10));
     setModalOpen(true);
+  }
+
+  function openEdit(s: Sale) {
+    setEditing(s);
+    setQuantity(String(s.quantity_sold));
+    setSellingPrice(String(s.selling_price));
+    setCategoryId(s.category_id ?? "");
+    setNewCatName("");
+    setAddingCat(false);
+    setDate(new Date(s.created_at).toISOString().slice(0, 10));
+    setModalOpen(true);
+  }
+
+  function closeModal() {
+    setModalOpen(false);
+    setEditing(null);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!sellingPrice) return;
+    if (editing) {
+      await updateSale.mutateAsync({
+        id: editing.id,
+        quantity_sold: Number(quantity),
+        selling_price: Number(sellingPrice),
+        hpp_at_sale: editing.hpp_at_sale,
+        category_id: categoryId || null,
+        date,
+      });
+    } else {
+      if (!recipeId) return;
+      await createSale.mutateAsync({
+        recipe_id: recipeId,
+        quantity_sold: Number(quantity),
+        selling_price: Number(sellingPrice),
+        hpp_at_sale: hpp,
+        category_id: categoryId || null,
+        date,
+      });
+    }
+    closeModal();
+    setRecipeId("");
+    setQuantity("1");
+    setSellingPrice("");
+    setCategoryId("");
+    setNewCatName("");
+    setAddingCat(false);
+    setDate(new Date().toISOString().slice(0, 10));
   }
 
   const filtered = useMemo(() => {
@@ -268,13 +303,21 @@ export default function SalesPage() {
                             <span className="text-[10px] text-[#B88D6A]">{format(new Date(s.created_at), "dd MMM yyyy")}</span>
                           </div>
                         </div>
-                        <div className="text-right shrink-0">
-                          <p className={`text-sm font-semibold tabular-nums whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
-                            {formatCurrency(s.profit * s.quantity_sold)}
-                          </p>
-                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded tabular-nums ${saleMargin >= 30 ? "text-[#5C6B38]" : saleMargin >= 15 ? "text-[#7C563D]" : "text-red-600"}`}>
-                            {saleMargin.toFixed(1)}%
-                          </span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <div className="text-right mr-1">
+                            <p className={`text-sm font-semibold tabular-nums whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
+                              {formatCurrency(s.profit * s.quantity_sold)}
+                            </p>
+                            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded tabular-nums ${saleMargin >= 30 ? "text-[#5C6B38]" : saleMargin >= 15 ? "text-[#7C563D]" : "text-red-600"}`}>
+                              {saleMargin.toFixed(1)}%
+                            </span>
+                          </div>
+                          <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button onClick={() => { if (confirm("Hapus penjualan ini?")) deleteSale.mutate(s.id); }} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors" aria-label="Hapus">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 mt-1 text-[10px] text-[#B88D6A] tabular-nums flex-wrap">
@@ -300,6 +343,7 @@ export default function SalesPage() {
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Laba</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Margin</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Tanggal</th>
+                      <th className="px-3 py-3" />
                     </tr>
                   </thead>
                   <tbody>
@@ -330,6 +374,16 @@ export default function SalesPage() {
                           <td className="px-6 py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">
                             {format(new Date(s.created_at), "dd MMM yyyy")}
                           </td>
+                          <td className="px-3 py-3">
+                            <div className="flex items-center gap-1">
+                              <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                              <button onClick={() => { if (confirm("Hapus penjualan ini?")) deleteSale.mutate(s.id); }} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors" aria-label="Hapus">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       );
                     })}
@@ -343,24 +397,33 @@ export default function SalesPage() {
 
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Catat Penjualan"
+        onClose={closeModal}
+        title={editing ? "Edit Penjualan" : "Catat Penjualan"}
         size="sm"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Select
-            label="Produk"
-            value={recipeId}
-            onChange={(e) => setRecipeId(e.target.value)}
-            required
-          >
-            <option value="">Pilih produk...</option>
-            {recipes?.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name} — HPP {formatCurrency(r.hpp)}
-              </option>
-            ))}
-          </Select>
+          {editing ? (
+            <div className="rounded-lg bg-[#F5EFE0] border border-[#D9CCAF] px-4 py-2.5">
+              <p className="text-xs text-[#7C6352]">Produk</p>
+              <p className="text-sm font-medium text-[#2C1810]">
+                {(editing.recipe as any)?.name ?? "—"}
+              </p>
+            </div>
+          ) : (
+            <Select
+              label="Produk"
+              value={recipeId}
+              onChange={(e) => setRecipeId(e.target.value)}
+              required
+            >
+              <option value="">Pilih produk...</option>
+              {recipes?.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name} — HPP {formatCurrency(r.hpp)}
+                </option>
+              ))}
+            </Select>
+          )}
 
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -445,7 +508,7 @@ export default function SalesPage() {
               required
             />
           </div>
-          {selectedRecipe && Number(sellingPrice) > 0 && (
+          {(editing || selectedRecipe) && Number(sellingPrice) > 0 && (
             <div
               className={`rounded-lg px-4 py-3 border text-xs space-y-1 ${totalProfit >= 0 ? "bg-[#737B4C]/10 border-[#737B4C]/20" : "bg-red-50 border-red-100"}`}
             >
@@ -475,17 +538,17 @@ export default function SalesPage() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setModalOpen(false)}
+              onClick={closeModal}
               className="flex-1"
             >
               Batal
             </Button>
             <Button
               type="submit"
-              loading={createSale.isPending}
+              loading={createSale.isPending || updateSale.isPending}
               className="flex-1"
             >
-              Simpan
+              {editing ? "Simpan" : "Catat"}
             </Button>
           </div>
         </form>
