@@ -2,6 +2,8 @@
 
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const TUTORIALS = [
   {
@@ -22,8 +24,17 @@ const TUTORIALS = [
 ];
 
 export default function TutorialPage() {
+  const router = useRouter();
+
   return (
     <AppLayout title="Tutorial">
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-1.5 text-sm text-[#7C563D] font-medium hover:text-[#5C3D24] mb-5 transition-colors cursor-pointer"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Kembali
+      </button>
       <div className="space-y-6">
         {TUTORIALS.map(({ step, title, src }) => (
           <Card key={step}>

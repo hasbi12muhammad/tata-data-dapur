@@ -5,34 +5,29 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 const DISMISSED_KEY = "tutorial_banner_dismissed";
+const DISMISS_EVENT = "tutorial-banner-dismissed";
 
-export function TutorialBanner() {
+function useDismissed() {
   const [dismissed, setDismissed] = useState<boolean | null>(null);
 
   useEffect(() => {
     setDismissed(localStorage.getItem(DISMISSED_KEY) === "1");
+    const handler = () => setDismissed(true);
+    window.addEventListener(DISMISS_EVENT, handler);
+    return () => window.removeEventListener(DISMISS_EVENT, handler);
   }, []);
 
-  const dismiss = () => {
-    localStorage.setItem(DISMISSED_KEY, "1");
-    setDismissed(true);
-  };
+  return dismissed;
+}
 
-  // null = belum tahu (hydration guard, hindari flicker)
-  if (dismissed === null) return null;
+function dismissBanner() {
+  localStorage.setItem(DISMISSED_KEY, "1");
+  window.dispatchEvent(new CustomEvent(DISMISS_EVENT));
+}
 
-  if (dismissed) {
-    return (
-      <div className="flex mb-5">
-        <Link
-          href="/tutorial"
-          className="flex items-center gap-1.5 bg-[#F5EFE0] border border-[#C4956A] text-[#7C563D] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-[#EDE4CF] transition-colors"
-        >
-          📹 Tutorial
-        </Link>
-      </div>
-    );
-  }
+export function TutorialBanner() {
+  const dismissed = useDismissed();
+  if (dismissed === null || dismissed) return null;
 
   return (
     <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-[#7C563D] to-[#A05035] text-white rounded-xl px-4 py-3 mb-5">
@@ -50,7 +45,7 @@ export function TutorialBanner() {
           Lihat Tutorial →
         </Link>
         <button
-          onClick={dismiss}
+          onClick={dismissBanner}
           aria-label="Tutup banner tutorial"
           className="bg-white/20 hover:bg-white/30 rounded-lg p-1.5 transition-colors cursor-pointer"
         >
@@ -58,5 +53,19 @@ export function TutorialBanner() {
         </button>
       </div>
     </div>
+  );
+}
+
+export function TutorialButton() {
+  const dismissed = useDismissed();
+  if (!dismissed) return null;
+
+  return (
+    <Link
+      href="/tutorial"
+      className="flex items-center gap-1.5 bg-[#F5EFE0] border border-[#C4956A] text-[#7C563D] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-[#EDE4CF] transition-colors whitespace-nowrap"
+    >
+      📹 Tutorial
+    </Link>
   );
 }
