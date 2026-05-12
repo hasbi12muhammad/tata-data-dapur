@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
+import { TutorialBanner } from "@/components/ui/TutorialBanner";
 import { useExpensesByDate } from "@/hooks/useExpenses";
 import { usePurchasesByDate, useSalesByDate } from "@/hooks/useDailyData";
 import { formatCurrency } from "@/lib/utils";
@@ -147,6 +148,8 @@ export default function DashboardPage() {
           className="h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent"
         />
       </div>
+
+      <TutorialBanner />
 
       {/* Summary grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
