@@ -34,7 +34,7 @@ export default function TutorialPage() {
               <h3 className="text-sm font-semibold text-[#2C1810]">{title}</h3>
             </CardHeader>
             <CardBody>
-              <video src={src} controls className="w-full rounded-lg" />
+              <video src={src} controls preload="metadata" className="w-full rounded-lg" />
             </CardBody>
           </Card>
         ))}
