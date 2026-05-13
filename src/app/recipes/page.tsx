@@ -376,17 +376,17 @@ export default function RecipesPage() {
               </button>
             </div>
             <div className="space-y-2">
-              {rows.map((row, i) => {
+              {(() => {
                 const subRecipeOptions = (recipes ?? []).filter(
                   (r) =>
                     r.is_ingredient &&
                     r.id !== editing?.id &&
                     !(r.recipe_items ?? []).some(
-                      (ri) => ri.sub_recipe_id === editing?.id || ri.item_id === editing?.id
+                      (ri) => ri.sub_recipe_id === editing?.id
                     )
                 );
 
-                return (
+                return rows.map((row, i) => (
                   <div key={i} className="flex gap-2 items-start">
                     <div className="flex-1">
                       <Select
@@ -445,8 +445,8 @@ export default function RecipesPage() {
                       </button>
                     )}
                   </div>
-                );
-              })}
+                ));
+              })()}
             </div>
           </div>
 
