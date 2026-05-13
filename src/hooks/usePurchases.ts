@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { Purchase } from "@/types";
+import { Purchase, Production } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -114,9 +114,9 @@ export function useDeletePurchase() {
 }
 
 export function useProductions() {
-  return useQuery({
+  return useQuery<Production[]>({
     queryKey: ["productions"],
-    queryFn: async () => {
+    queryFn: async (): Promise<Production[]> => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("productions")

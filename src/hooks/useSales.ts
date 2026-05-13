@@ -145,11 +145,12 @@ export function useCreateSale() {
 
       if (sub_recipe_deductions?.length) {
         for (const d of sub_recipe_deductions) {
-          await supabase.rpc("deduct_sub_recipe_stock", {
+          const { error: deductError } = await supabase.rpc("deduct_sub_recipe_stock", {
             p_user_id: user!.id,
             p_recipe_id: d.sub_recipe_id,
             p_quantity: d.quantity,
           });
+          if (deductError) throw deductError;
         }
       }
     },
