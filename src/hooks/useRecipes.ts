@@ -29,12 +29,12 @@ export function useRecipes() {
         .from("recipes")
         .select(
           `*,
-          recipe_items(
+          recipe_items!recipe_id(
             *,
             item:items(name, unit, avg_price, prev_avg_price),
-            sub_recipe:recipes(
+            sub_recipe:recipes!sub_recipe_id(
               id, name, unit, stock, avg_price, is_ingredient,
-              recipe_items(
+              recipe_items!recipe_id(
                 quantity_used, item_id,
                 item:items(name, unit, avg_price, prev_avg_price)
               )
