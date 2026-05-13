@@ -33,7 +33,8 @@ import toast from "react-hot-toast";
 import { Recipe } from "@/types";
 
 interface BomRow {
-  item_id: string | null | undefined;
+  item_id: string;        // filled if regular item; "" if sub-recipe
+  sub_recipe_id: string;  // filled if sub-recipe; "" if regular item
   quantity_used: string;
 }
 
@@ -107,22 +108,29 @@ export default function RecipesPage() {
   const [editing, setEditing] = useState<Recipe | null>(null);
   const [name, setName] = useState("");
   const [rows, setRows] = useState<BomRow[]>([
-    { item_id: "", quantity_used: "" },
+    { item_id: "", sub_recipe_id: "", quantity_used: "" },
   ]);
+  const [isIngredient, setIsIngredient] = useState(false);
+  const [unit, setUnit] = useState<Recipe["unit"]>("pcs");
 
   function openCreate() {
     setEditing(null);
     setName("");
-    setRows([{ item_id: "", quantity_used: "" }]);
+    setIsIngredient(false);
+    setUnit("pcs");
+    setRows([{ item_id: "", sub_recipe_id: "", quantity_used: "" }]);
     setModalOpen(true);
   }
 
   function openEdit(recipe: Recipe) {
     setEditing(recipe);
     setName(recipe.name);
+    setIsIngredient(recipe.is_ingredient ?? false);
+    setUnit(recipe.unit ?? "pcs");
     setRows(
       (recipe.recipe_items ?? []).map((ri) => ({
-        item_id: ri.item_id,
+        item_id: ri.item_id ?? "",
+        sub_recipe_id: ri.sub_recipe_id ?? "",
         quantity_used: String(ri.quantity_used),
       })),
     );
@@ -130,21 +138,30 @@ export default function RecipesPage() {
   }
 
   function addRow() {
-    setRows((r) => [...r, { item_id: "", quantity_used: "" }]);
+    setRows((r) => [...r, { item_id: "", sub_recipe_id: "", quantity_used: "" }]);
   }
   function removeRow(i: number) {
     setRows((r) => r.filter((_, idx) => idx !== i));
   }
   function updateRow(i: number, field: keyof BomRow, val: string) {
     setRows((r) =>
-      r.map((row, idx) => (idx === i ? { ...row, [field]: val } : row)),
+      r.map((row, idx) => {
+        if (idx !== i) return row;
+        if (field === "item_id") return { ...row, item_id: val, sub_recipe_id: "" };
+        if (field === "sub_recipe_id") return { ...row, sub_recipe_id: val, item_id: "" };
+        return { ...row, [field]: val };
+      }),
     );
   }
 
   function calcPreviewHPP(): number {
     return rows.reduce((sum, row) => {
-      const item = items?.find((i) => i.id === row.item_id);
       const qty = Number(row.quantity_used);
+      if (row.sub_recipe_id) {
+        const sr = recipes?.find((r) => r.id === row.sub_recipe_id);
+        return sum + (sr?.hpp ?? 0) * qty;
+      }
+      const item = items?.find((i) => i.id === row.item_id);
       return sum + (item?.avg_price ?? 0) * qty;
     }, 0);
   }
@@ -152,26 +169,34 @@ export default function RecipesPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const validRows = rows.filter(
-      (r): r is BomRow & { item_id: string } => !!r.item_id && Number(r.quantity_used) > 0,
+      (r) => (r.item_id || r.sub_recipe_id) && Number(r.quantity_used) > 0,
     );
     if (!name.trim() || validRows.length === 0) return;
-    const items = validRows.map((r) => ({
-      item_id: r.item_id,
+    const bomItems = validRows.map((r) => ({
+      item_id: r.item_id || null,
+      sub_recipe_id: r.sub_recipe_id || null,
       quantity_used: Number(r.quantity_used),
     }));
     if (editing) {
       await updateRecipe.mutateAsync({
         id: editing.id,
         name: name.trim(),
-        items,
+        is_ingredient: isIngredient,
+        unit: isIngredient ? unit : null,
+        items: bomItems,
       });
     } else {
-      await createRecipe.mutateAsync({ name: name.trim(), items });
+      await createRecipe.mutateAsync({
+        name: name.trim(),
+        is_ingredient: isIngredient,
+        unit: isIngredient ? unit : null,
+        items: bomItems,
+      });
     }
     setModalOpen(false);
     setEditing(null);
     setName("");
-    setRows([{ item_id: "", quantity_used: "" }]);
+    setRows([{ item_id: "", sub_recipe_id: "", quantity_used: "" }]);
   }
 
   return (
@@ -215,6 +240,11 @@ export default function RecipesPage() {
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-semibold text-[#2C1810] text-sm">
                     {recipe.name}
+                    {recipe.is_ingredient && (
+                      <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-700">
+                        Setengah Jadi
+                      </span>
+                    )}
                   </h3>
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <button
@@ -307,6 +337,31 @@ export default function RecipesPage() {
             placeholder="mis. Nasi Goreng"
           />
 
+          {/* is_ingredient checkbox + unit selector */}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isIngredient}
+              onChange={(e) => setIsIngredient(e.target.checked)}
+              className="w-4 h-4 rounded accent-[#A05035]"
+            />
+            <span className="text-sm font-medium text-[#4A3728]">
+              Jadikan Bahan Setengah Jadi
+            </span>
+          </label>
+          {isIngredient && (
+            <Select
+              label="Satuan"
+              value={unit ?? "pcs"}
+              onChange={(e) => setUnit(e.target.value as Recipe["unit"])}
+              required
+            >
+              {(["gr", "ml", "pcs", "kg", "liter"] as const).map((u) => (
+                <option key={u} value={u}>{u}</option>
+              ))}
+            </Select>
+          )}
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-[#4A3728]">
@@ -321,45 +376,77 @@ export default function RecipesPage() {
               </button>
             </div>
             <div className="space-y-2">
-              {rows.map((row, i) => (
-                <div key={i} className="flex gap-2 items-start">
-                  <div className="flex-1">
-                    <Select
-                      value={row.item_id ?? ""}
-                      onChange={(e) => updateRow(i, "item_id", e.target.value)}
-                    >
-                      <option value="">Pilih bahan...</option>
-                      {items?.map((it) => (
-                        <option key={it.id} value={it.id}>
-                          {it.name} ({it.unit})
-                        </option>
-                      ))}
-                    </Select>
+              {rows.map((row, i) => {
+                const subRecipeOptions = (recipes ?? []).filter(
+                  (r) =>
+                    r.is_ingredient &&
+                    r.id !== editing?.id &&
+                    !(r.recipe_items ?? []).some(
+                      (ri) => ri.sub_recipe_id === editing?.id || ri.item_id === editing?.id
+                    )
+                );
+
+                return (
+                  <div key={i} className="flex gap-2 items-start">
+                    <div className="flex-1">
+                      <Select
+                        value={row.sub_recipe_id ? `sr:${row.sub_recipe_id}` : row.item_id}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val.startsWith("sr:")) {
+                            updateRow(i, "sub_recipe_id", val.slice(3));
+                          } else {
+                            updateRow(i, "item_id", val);
+                          }
+                        }}
+                        required
+                      >
+                        <option value="">Pilih bahan...</option>
+                        {(items ?? []).length > 0 && (
+                          <optgroup label="── Bahan Baku ──">
+                            {(items ?? []).map((it) => (
+                              <option key={it.id} value={it.id}>
+                                {it.name} ({it.unit})
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                        {subRecipeOptions.length > 0 && (
+                          <optgroup label="── Produk Setengah Jadi ──">
+                            {subRecipeOptions.map((r) => (
+                              <option key={r.id} value={`sr:${r.id}`}>
+                                {r.name} ({r.unit})
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                      </Select>
+                    </div>
+                    <div className="w-28">
+                      <Input
+                        type="number"
+                        min="0.001"
+                        step="0.001"
+                        placeholder="Qty"
+                        value={row.quantity_used}
+                        onChange={(e) =>
+                          updateRow(i, "quantity_used", e.target.value)
+                        }
+                      />
+                    </div>
+                    {rows.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeRow(i)}
+                        className="mt-1 p-2 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer"
+                        aria-label="Hapus baris"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
-                  <div className="w-28">
-                    <Input
-                      type="number"
-                      min="0.001"
-                      step="0.001"
-                      placeholder="Qty"
-                      value={row.quantity_used}
-                      onChange={(e) =>
-                        updateRow(i, "quantity_used", e.target.value)
-                      }
-                    />
-                  </div>
-                  {rows.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeRow(i)}
-                      className="mt-1 p-2 rounded text-[#D9CCAF] hover:text-red-500 cursor-pointer"
-                      aria-label="Hapus baris"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
