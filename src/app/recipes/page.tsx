@@ -33,7 +33,7 @@ import toast from "react-hot-toast";
 import { Recipe } from "@/types";
 
 interface BomRow {
-  item_id: string;
+  item_id: string | null | undefined;
   quantity_used: string;
 }
 
@@ -152,7 +152,7 @@ export default function RecipesPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const validRows = rows.filter(
-      (r) => r.item_id && Number(r.quantity_used) > 0,
+      (r): r is BomRow & { item_id: string } => !!r.item_id && Number(r.quantity_used) > 0,
     );
     if (!name.trim() || validRows.length === 0) return;
     const items = validRows.map((r) => ({
@@ -325,7 +325,7 @@ export default function RecipesPage() {
                 <div key={i} className="flex gap-2 items-start">
                   <div className="flex-1">
                     <Select
-                      value={row.item_id}
+                      value={row.item_id ?? ""}
                       onChange={(e) => updateRow(i, "item_id", e.target.value)}
                     >
                       <option value="">Pilih bahan...</option>
