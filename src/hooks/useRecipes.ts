@@ -8,11 +8,11 @@ import toast from "react-hot-toast";
 export function calcHPP(items: RecipeItem[], usePrev: boolean): number {
   return items.reduce((sum, ri) => {
     if (ri.sub_recipe_id && ri.sub_recipe) {
-      const subItems = (ri.sub_recipe as any).recipe_items ?? [];
+      const subItems = ri.sub_recipe.recipe_items ?? [];
       const subHPP = calcHPP(subItems, usePrev);
       return sum + subHPP * ri.quantity_used;
     }
-    const item = ri.item as any;
+    const item = ri.item;
     const price = usePrev
       ? (item?.prev_avg_price || item?.avg_price || 0)
       : (item?.avg_price ?? 0);
