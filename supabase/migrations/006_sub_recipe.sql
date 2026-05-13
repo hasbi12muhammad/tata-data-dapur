@@ -7,6 +7,20 @@ ALTER TABLE public.recipes
   ADD COLUMN IF NOT EXISTS stock         numeric(15,4) NOT NULL DEFAULT 0,
   ADD COLUMN IF NOT EXISTS avg_price     numeric(15,4) NOT NULL DEFAULT 0;
 
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conname = 'unit_required_for_ingredient'
+       AND conrelid = 'public.recipes'::regclass
+  ) THEN
+    ALTER TABLE public.recipes
+      ADD CONSTRAINT unit_required_for_ingredient
+        CHECK (NOT is_ingredient OR unit IS NOT NULL);
+  END IF;
+END;
+$$;
+
 -- ── 2. Extend recipe_items ────────────────────────────────────────────────
 ALTER TABLE public.recipe_items
   ADD COLUMN IF NOT EXISTS sub_recipe_id uuid REFERENCES public.recipes(id) ON DELETE RESTRICT;
@@ -15,18 +29,42 @@ ALTER TABLE public.recipe_items
   ALTER COLUMN item_id DROP NOT NULL;
 
 -- Tepat salah satu dari item_id atau sub_recipe_id harus terisi
-ALTER TABLE public.recipe_items
-  ADD CONSTRAINT one_ingredient_source
-    CHECK ((item_id IS NOT NULL) != (sub_recipe_id IS NOT NULL));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conname = 'one_ingredient_source'
+       AND conrelid = 'public.recipe_items'::regclass
+  ) THEN
+    ALTER TABLE public.recipe_items
+      ADD CONSTRAINT one_ingredient_source
+        CHECK ((item_id IS NOT NULL) != (sub_recipe_id IS NOT NULL));
+  END IF;
+END;
+$$;
 
 -- Tidak boleh menunjuk ke resep itu sendiri
-ALTER TABLE public.recipe_items
-  ADD CONSTRAINT no_self_reference
-    CHECK (sub_recipe_id IS DISTINCT FROM recipe_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conname = 'no_self_reference'
+       AND conrelid = 'public.recipe_items'::regclass
+  ) THEN
+    ALTER TABLE public.recipe_items
+      ADD CONSTRAINT no_self_reference
+        CHECK (sub_recipe_id IS DISTINCT FROM recipe_id);
+  END IF;
+END;
+$$;
 
 -- Unique: satu sub-resep tidak bisa muncul dua kali dalam resep yang sama
 CREATE UNIQUE INDEX IF NOT EXISTS recipe_items_unique_sub_recipe
   ON public.recipe_items (recipe_id, sub_recipe_id)
+  WHERE sub_recipe_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS recipe_items_sub_recipe_idx
+  ON public.recipe_items (sub_recipe_id)
   WHERE sub_recipe_id IS NOT NULL;
 
 -- ── 3. Tabel productions ──────────────────────────────────────────────────
@@ -59,6 +97,7 @@ CREATE OR REPLACE FUNCTION public.produce_sub_recipe(
 ) RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 DECLARE
   v_current_stock numeric;
@@ -113,6 +152,7 @@ CREATE OR REPLACE FUNCTION public.deduct_sub_recipe_stock(
 ) RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 BEGIN
   UPDATE public.recipes
