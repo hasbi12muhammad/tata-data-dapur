@@ -14,7 +14,10 @@ import {
   useDeletePurchase,
   usePurchases,
   useUpdatePurchase,
+  useProduceSubRecipe,
+  useProductions,
 } from "@/hooks/usePurchases";
+import { useRecipes } from "@/hooks/useRecipes";
 import { Purchase } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
@@ -34,6 +37,9 @@ export default function PurchasesPage() {
   const updatePurchase = useUpdatePurchase();
   const deletePurchase = useDeletePurchase();
   const queryClient = useQueryClient();
+  const { data: subRecipes } = useRecipes();
+  const produceSubRecipe = useProduceSubRecipe();
+  const { data: productions } = useProductions();
 
   const [importOpen, setImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -84,6 +90,8 @@ export default function PurchasesPage() {
   const [quantity, setQuantity] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [isProduction, setIsProduction] = useState(false);
+  const [subRecipeId, setSubRecipeId] = useState("");
 
   function openEdit(p: Purchase) {
     setEditing(p);
@@ -99,6 +107,8 @@ export default function PurchasesPage() {
     setQuantity("");
     setTotalPrice("");
     setDate(new Date().toISOString().slice(0, 10));
+    setIsProduction(false);
+    setSubRecipeId("");
     setModalOpen(true);
   }
 
@@ -118,12 +128,23 @@ export default function PurchasesPage() {
     if (!quantity || !totalPrice) return;
     if (Number(quantity) <= 0) return;
     if (Number(totalPrice) < 0) return;
+
     if (editing) {
       await updatePurchase.mutateAsync({
         id: editing.id,
         quantity: Number(quantity),
         total_price: Number(totalPrice),
       });
+    } else if (isProduction) {
+      if (!subRecipeId) return;
+      await produceSubRecipe.mutateAsync({
+        recipe_id: subRecipeId,
+        batches: Number(quantity),
+        total_cost: Number(totalPrice),
+        date,
+      });
+      setSubRecipeId("");
+      setIsProduction(false);
     } else {
       if (!itemId) return;
       await createPurchase.mutateAsync({
@@ -397,6 +418,38 @@ export default function PurchasesPage() {
         </CardBody>
       </Card>
 
+      {(productions ?? []).length > 0 && (
+        <Card className="mt-4">
+          <div className="px-4 py-3 border-b border-[#E5DACA]">
+            <h3 className="text-sm font-semibold text-[#2C1810]">Log Produksi</h3>
+          </div>
+          <CardBody className="p-0">
+            <div className="divide-y divide-[#EDE4CF]">
+              {(productions ?? []).map((prod: any) => (
+                <div key={prod.id} className="flex justify-between items-center px-4 py-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-[#2C1810]">
+                        {prod.recipe?.name ?? "—"}
+                      </span>
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-700">
+                        Produksi
+                      </span>
+                    </div>
+                    <span className="text-xs text-[#B88D6A]">
+                      {prod.batches} {prod.recipe?.unit} · {format(new Date(prod.created_at), "dd MMM yyyy")}
+                    </span>
+                  </div>
+                  <span className="text-sm font-semibold text-amber-700 tabular-nums">
+                    {formatCurrency(prod.total_cost)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -415,22 +468,68 @@ export default function PurchasesPage() {
               </p>
             </div>
           ) : (
-            <Select
-              label="Bahan"
-              value={itemId}
-              onChange={(e) => setItemId(e.target.value)}
-              required
-            >
-              <option value="">Pilih bahan...</option>
-              {items?.map((i) => (
-                <option key={i.id} value={i.id}>
-                  {i.name} ({i.unit})
-                </option>
-              ))}
-            </Select>
+            <>
+              {/* Toggle purchase vs produksi */}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setIsProduction(false); setSubRecipeId(""); setItemId(""); }}
+                  className={`flex-1 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                    !isProduction
+                      ? "bg-[#A05035] text-white border-[#A05035]"
+                      : "bg-[#FBF8F2] text-[#7C6352] border-[#D9CCAF]"
+                  }`}
+                >
+                  Pembelian
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setIsProduction(true); setItemId(""); }}
+                  className={`flex-1 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                    isProduction
+                      ? "bg-amber-600 text-white border-amber-600"
+                      : "bg-[#FBF8F2] text-[#7C6352] border-[#D9CCAF]"
+                  }`}
+                >
+                  Produksi
+                </button>
+              </div>
+
+              {!isProduction ? (
+                <Select
+                  label="Bahan"
+                  value={itemId}
+                  onChange={(e) => setItemId(e.target.value)}
+                  required
+                >
+                  <option value="">Pilih bahan...</option>
+                  {items?.map((i) => (
+                    <option key={i.id} value={i.id}>
+                      {i.name} ({i.unit})
+                    </option>
+                  ))}
+                </Select>
+              ) : (
+                <Select
+                  label="Produk Setengah Jadi"
+                  value={subRecipeId}
+                  onChange={(e) => setSubRecipeId(e.target.value)}
+                  required
+                >
+                  <option value="">Pilih produk...</option>
+                  {(subRecipes ?? [])
+                    .filter((r) => r.is_ingredient)
+                    .map((r) => (
+                      <option key={r.id} value={r.id}>
+                        {r.name} ({r.unit})
+                      </option>
+                    ))}
+                </Select>
+              )}
+            </>
           )}
           <Input
-            label="Jumlah"
+            label={isProduction ? "Jumlah Batch Diproduksi" : "Jumlah"}
             type="number"
             min="0.01"
             step="0.01"
@@ -439,7 +538,7 @@ export default function PurchasesPage() {
             required
           />
           <Input
-            label="Total Harga (Rp)"
+            label={isProduction ? "Total Biaya Produksi (Rp)" : "Total Harga (Rp)"}
             type="number"
             min="0"
             value={totalPrice}
@@ -457,7 +556,23 @@ export default function PurchasesPage() {
               required
             />
           </div>
-          {pricePerUnit > 0 && (
+          {isProduction && subRecipeId && (() => {
+            const sr = (subRecipes ?? []).find((r) => r.id === subRecipeId);
+            if (!sr) return null;
+            const hppPerUnit = sr.hpp;
+            const suggestedCost = hppPerUnit * (Number(quantity) || 1);
+            return (
+              <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2.5">
+                <p className="text-xs text-amber-700 font-medium">
+                  HPP per {sr.unit}: <span className="font-bold">{formatCurrency(hppPerUnit)}</span>
+                  {quantity && (
+                    <> · Estimasi biaya: <span className="font-bold">{formatCurrency(suggestedCost)}</span></>
+                  )}
+                </p>
+              </div>
+            );
+          })()}
+          {!isProduction && pricePerUnit > 0 && (
             <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5">
               <p className="text-xs text-[#5C6B38] font-medium">
                 Harga per unit:{" "}
