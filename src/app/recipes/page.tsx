@@ -238,14 +238,21 @@ export default function RecipesPage() {
             <Card key={recipe.id}>
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold text-[#2C1810] text-sm">
-                    {recipe.name}
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-[#2C1810] text-sm">
+                      {recipe.name}
+                      {recipe.is_ingredient && (
+                        <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-700">
+                          Setengah Jadi
+                        </span>
+                      )}
+                    </h3>
                     {recipe.is_ingredient && (
-                      <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-700">
-                        Setengah Jadi
-                      </span>
+                      <p className="text-xs text-amber-700 mt-0.5">
+                        Stok: <span className="font-semibold">{recipe.stock} {recipe.unit}</span>
+                      </p>
                     )}
-                  </h3>
+                  </div>
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <button
                       onClick={() => openEdit(recipe)}
@@ -274,9 +281,9 @@ export default function RecipesPage() {
                       key={ri.id}
                       className="flex justify-between text-xs text-[#5C4535]"
                     >
-                      <span>{(ri.item as any)?.name ?? "—"}</span>
+                      <span>{ri.item?.name ?? ri.sub_recipe?.name ?? "—"}</span>
                       <span className="tabular-nums text-[#B88D6A]">
-                        {ri.quantity_used} {(ri.item as any)?.unit}
+                        {ri.quantity_used} {ri.item?.unit ?? ri.sub_recipe?.unit}
                       </span>
                     </div>
                   ))}
