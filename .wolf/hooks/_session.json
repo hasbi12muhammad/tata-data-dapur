@@ -1,43 +1,12 @@
 {
-  "session_id": "session-2026-04-21-2123",
-  "started": "2026-04-21T14:23:59.190Z",
-  "files_read": {
-    "/home/hasbi/Pictures/laporan.png": {
-      "count": 1,
-      "tokens": 0,
-      "first_read": "2026-04-21T14:28:14.219Z"
-    },
-    "/home/hasbi/Downloads/Untitled Design - 1 - Edited.png": {
-      "count": 1,
-      "tokens": 0,
-      "first_read": "2026-04-21T14:28:14.468Z"
-    },
-    "/home/hasbi/Proyek/TataData-Dapur/src/app/reports/page.tsx": {
-      "count": 1,
-      "tokens": 10603,
-      "first_read": "2026-04-21T14:28:30.597Z"
-    }
-  },
-  "files_written": [
-    {
-      "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/reports/page.tsx",
-      "action": "edit",
-      "tokens": 4421,
-      "at": "2026-04-21T14:34:23.281Z"
-    },
-    {
-      "file": "/home/hasbi/Proyek/TataData-Dapur/src/app/reports/page.tsx",
-      "action": "edit",
-      "tokens": 5,
-      "at": "2026-04-21T14:34:31.717Z"
-    }
-  ],
-  "edit_counts": {
-    "src/app/reports/page.tsx": 2
-  },
-  "anatomy_hits": 1,
-  "anatomy_misses": 2,
+  "session_id": "session-2026-04-30-2016",
+  "started": "2026-04-30T13:16:20.633Z",
+  "files_read": {},
+  "files_written": [],
+  "edit_counts": {},
+  "anatomy_hits": 0,
+  "anatomy_misses": 0,
   "repeated_reads_warned": 0,
   "cerebrum_warnings": 0,
-  "stop_count": 2
+  "stop_count": 0
 }

@@ -108,10 +108,18 @@ export default function PurchasesPage() {
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [filterDateTo, setFilterDateTo] = useState("");
 
+  const selectedItem = editing
+    ? items?.find((i) => i.id === editing.item_id)
+    : items?.find((i) => i.id === itemId);
+
   const pricePerUnit =
     quantity && totalPrice && Number(quantity) > 0
       ? Number(totalPrice) / Number(quantity)
       : 0;
+
+  const avgPrice = selectedItem?.avg_price ?? 0;
+  const priceDiff = pricePerUnit > 0 && avgPrice > 0 ? pricePerUnit - avgPrice : null;
+  const pricePct = priceDiff !== null ? (priceDiff / avgPrice) * 100 : null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -458,13 +466,19 @@ export default function PurchasesPage() {
             />
           </div>
           {pricePerUnit > 0 && (
-            <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5">
+            <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5 space-y-1">
               <p className="text-xs text-[#5C6B38] font-medium">
                 Harga per unit:{" "}
                 <span className="font-bold">
                   {formatCurrency(pricePerUnit)}
                 </span>
               </p>
+              {priceDiff !== null && pricePct !== null && (
+                <p className={`text-xs font-medium ${priceDiff > 0 ? "text-red-600" : "text-green-700"}`}>
+                  {priceDiff > 0 ? "▲" : "▼"}{" "}
+                  {formatCurrency(Math.abs(priceDiff))} ({pricePct > 0 ? "+" : ""}{pricePct.toFixed(1)}%) vs harga rata-rata
+                </p>
+              )}
             </div>
           )}
           <div className="flex gap-2 pt-1">
