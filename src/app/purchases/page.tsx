@@ -132,6 +132,13 @@ export default function PurchasesPage() {
   const [pendingDateFrom, setPendingDateFrom] = useState("");
   const [pendingDateTo, setPendingDateTo] = useState("");
 
+  const [prodSearch, setProdSearch] = useState("");
+  const [prodFilterDateFrom, setProdFilterDateFrom] = useState("");
+  const [prodFilterDateTo, setProdFilterDateTo] = useState("");
+  const [prodFilterSheetOpen, setProdFilterSheetOpen] = useState(false);
+  const [pendingProdDateFrom, setPendingProdDateFrom] = useState("");
+  const [pendingProdDateTo, setPendingProdDateTo] = useState("");
+
   const selectedItem = editing
     ? items?.find((i) => i.id === editing.item_id)
     : items?.find((i) => i.id === itemId);
@@ -226,6 +233,29 @@ export default function PurchasesPage() {
   }, [purchases, search, filterItem, sortBy]);
 
   const hasFilters = search || filterItem || sortBy !== "date_desc" || filterDateFrom || filterDateTo;
+
+  const filteredProductions = useMemo(() => {
+    let rows = productions ?? [];
+    if (prodSearch) {
+      const q = prodSearch.toLowerCase();
+      rows = rows.filter((p: any) => (p.recipe?.name ?? "").toLowerCase().includes(q));
+    }
+    if (prodFilterDateFrom) {
+      const from = new Date(prodFilterDateFrom);
+      from.setHours(0, 0, 0, 0);
+      rows = rows.filter((p: any) => new Date(p.created_at) >= from);
+    }
+    if (prodFilterDateTo) {
+      const to = new Date(prodFilterDateTo);
+      to.setHours(23, 59, 59, 999);
+      rows = rows.filter((p: any) => new Date(p.created_at) <= to);
+    }
+    return [...rows].sort((a: any, b: any) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  }, [productions, prodSearch, prodFilterDateFrom, prodFilterDateTo]);
+
+  const hasProdFilters = prodSearch || prodFilterDateFrom || prodFilterDateTo;
 
   return (
     <AppLayout
@@ -543,6 +573,61 @@ export default function PurchasesPage() {
         </>)}
 
         {activeTab === "productions" && (
+          <>
+          {/* Production filter bottom sheet */}
+          {prodFilterSheetOpen && (
+            <>
+              <div className="fixed inset-0 z-40 bg-black/40" onClick={() => setProdFilterSheetOpen(false)} />
+              <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#FBF8F2] rounded-t-2xl shadow-xl p-5 space-y-4 max-h-[80vh] overflow-y-auto">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-[#2C1810]">Filter Produksi</span>
+                  <button onClick={() => setProdFilterSheetOpen(false)} className="text-[#B88D6A] hover:text-[#7C6352]">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-[#7C6352] mb-1 block">Dari tanggal</label>
+                    <input
+                      type="date"
+                      className={`${cls} w-full`}
+                      value={pendingProdDateFrom}
+                      onChange={(e) => setPendingProdDateFrom(e.target.value)}
+                      max={pendingProdDateTo || undefined}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[#7C6352] mb-1 block">Sampai tanggal</label>
+                    <input
+                      type="date"
+                      className={`${cls} w-full`}
+                      value={pendingProdDateTo}
+                      onChange={(e) => setPendingProdDateTo(e.target.value)}
+                      min={pendingProdDateFrom || undefined}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <button
+                    onClick={() => { setPendingProdDateFrom(""); setPendingProdDateTo(""); }}
+                    className="flex-1 h-9 rounded-lg border border-[#D9CCAF] text-sm text-[#7C6352] font-medium hover:bg-[#EDE4CF] transition-colors"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={() => {
+                      setProdFilterDateFrom(pendingProdDateFrom);
+                      setProdFilterDateTo(pendingProdDateTo);
+                      setProdFilterSheetOpen(false);
+                    }}
+                    className="flex-1 h-9 rounded-lg bg-[#A05035] text-sm text-white font-medium hover:bg-[#8B4530] transition-colors"
+                  >
+                    Terapkan
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
           <CardBody className="p-0">
             {!(productions ?? []).length ? (
               <EmptyState
@@ -556,8 +641,56 @@ export default function PurchasesPage() {
                 }
               />
             ) : (
+              <>
+              <div className="px-4 py-3 border-b border-[#E5DACA] space-y-2">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
+                    <input
+                      className={`${cls} w-full pl-8`}
+                      placeholder="Cari produk..."
+                      value={prodSearch}
+                      onChange={(e) => setProdSearch(e.target.value)}
+                    />
+                    {prodSearch && (
+                      <button onClick={() => setProdSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#B88D6A] hover:text-[#7C6352]">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => { setPendingProdDateFrom(prodFilterDateFrom); setPendingProdDateTo(prodFilterDateTo); setProdFilterSheetOpen(true); }}
+                    className={`relative h-9 px-3 rounded-lg border text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                      (prodFilterDateFrom || prodFilterDateTo)
+                        ? "border-[#A05035] bg-[#A05035]/10 text-[#A05035]"
+                        : "border-[#D9CCAF] bg-[#FBF8F2] text-[#7C6352] hover:bg-[#EDE4CF]"
+                    }`}
+                  >
+                    <Filter className="w-3.5 h-3.5" />
+                    Filter
+                    {(prodFilterDateFrom || prodFilterDateTo) && (
+                      <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#A05035] text-white text-[10px] flex items-center justify-center font-bold">
+                        {[prodFilterDateFrom, prodFilterDateTo].filter(Boolean).length}
+                      </span>
+                    )}
+                  </button>
+                </div>
+                <div className="flex items-center justify-between text-xs text-[#B88D6A]">
+                  <span>{filteredProductions.length} hasil{(productions?.length ?? 0) > filteredProductions.length && ` dari ${productions?.length}`}</span>
+                  {hasProdFilters && (
+                    <button
+                      onClick={() => { setProdSearch(""); setProdFilterDateFrom(""); setProdFilterDateTo(""); setPendingProdDateFrom(""); setPendingProdDateTo(""); }}
+                      className="text-[#A05035] hover:underline font-medium"
+                    >
+                      Reset semua
+                    </button>
+                  )}
+                </div>
+              </div>
               <div className="divide-y divide-[#EDE4CF]">
-                {(productions ?? []).map((prod: any) => (
+                {filteredProductions.length === 0 ? (
+                  <div className="py-10 text-center text-sm text-[#B88D6A]">Tidak ada hasil untuk filter ini</div>
+                ) : filteredProductions.map((prod: any) => (
                   <div key={prod.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#F5EFE0] transition-colors gap-2">
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-[#2C1810]">{prod.recipe?.name ?? "—"}</p>
@@ -587,8 +720,10 @@ export default function PurchasesPage() {
                   </div>
                 ))}
               </div>
+              </>
             )}
           </CardBody>
+          </>
         )}
       </Card>
 
