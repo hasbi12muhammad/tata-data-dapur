@@ -16,9 +16,11 @@ import {
   useUpdatePurchase,
   useProduceSubRecipe,
   useProductions,
+  useDeleteProduction,
+  useUpdateProduction,
 } from "@/hooks/usePurchases";
 import { useRecipes } from "@/hooks/useRecipes";
-import { Purchase } from "@/types";
+import { Purchase, Production } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -40,6 +42,12 @@ export default function PurchasesPage() {
   const { data: subRecipes } = useRecipes();
   const produceSubRecipe = useProduceSubRecipe();
   const { data: productions } = useProductions();
+  const deleteProduction = useDeleteProduction();
+  const updateProduction = useUpdateProduction();
+
+  const [editingProduction, setEditingProduction] = useState<Production | null>(null);
+  const [prodBatches, setProdBatches] = useState("");
+  const [prodTotalCost, setProdTotalCost] = useState("");
 
   const [importOpen, setImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -460,16 +468,32 @@ export default function PurchasesPage() {
             ) : (
               <div className="divide-y divide-[#EDE4CF]">
                 {(productions ?? []).map((prod: any) => (
-                  <div key={prod.id} className="flex justify-between items-center px-4 py-3 hover:bg-[#F5EFE0] transition-colors">
-                    <div>
+                  <div key={prod.id} className="flex items-center justify-between px-4 py-3 hover:bg-[#F5EFE0] transition-colors gap-2">
+                    <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-[#2C1810]">{prod.recipe?.name ?? "—"}</p>
                       <span className="text-xs text-[#B88D6A]">
                         {prod.batches} {prod.recipe?.unit} · {format(new Date(prod.created_at), "dd MMM yyyy")}
                       </span>
                     </div>
-                    <span className="text-sm font-semibold text-amber-700 tabular-nums">
-                      {formatCurrency(prod.total_cost)}
-                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-sm font-semibold text-amber-700 tabular-nums">
+                        {formatCurrency(prod.total_cost)}
+                      </span>
+                      <button
+                        onClick={() => { setEditingProduction(prod); setProdBatches(String(prod.batches)); setProdTotalCost(String(prod.total_cost)); }}
+                        className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors"
+                        aria-label="Edit"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => { if (confirm("Hapus produksi ini?")) deleteProduction.mutate(prod.id); }}
+                        className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors"
+                        aria-label="Hapus"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -625,6 +649,60 @@ export default function PurchasesPage() {
               className="flex-1"
             >
               {editing ? "Simpan" : "Catat"}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        open={!!editingProduction}
+        onClose={() => setEditingProduction(null)}
+        title="Edit Produksi"
+        size="sm"
+      >
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!editingProduction) return;
+            await updateProduction.mutateAsync({
+              id: editingProduction.id,
+              batches: Number(prodBatches),
+              total_cost: Number(prodTotalCost),
+            });
+            setEditingProduction(null);
+          }}
+          className="flex flex-col gap-4"
+        >
+          <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2.5">
+            <p className="text-xs text-amber-700">Produk</p>
+            <p className="text-sm font-medium text-[#2C1810]">
+              {(editingProduction?.recipe as any)?.name ?? "—"}{" "}
+              <span className="text-xs text-[#B88D6A]">({(editingProduction?.recipe as any)?.unit})</span>
+            </p>
+          </div>
+          <Input
+            label="Jumlah Batch"
+            type="number"
+            min="0.01"
+            step="0.01"
+            value={prodBatches}
+            onChange={(e) => setProdBatches(e.target.value)}
+            required
+          />
+          <Input
+            label="Total Biaya (Rp)"
+            type="number"
+            min="0"
+            value={prodTotalCost}
+            onChange={(e) => setProdTotalCost(e.target.value)}
+            required
+          />
+          <div className="flex gap-2 pt-1">
+            <Button type="button" variant="ghost" onClick={() => setEditingProduction(null)} className="flex-1">
+              Batal
+            </Button>
+            <Button type="submit" loading={updateProduction.isPending} className="flex-1">
+              Simpan
             </Button>
           </div>
         </form>

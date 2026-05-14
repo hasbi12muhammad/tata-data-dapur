@@ -113,6 +113,52 @@ export function useDeletePurchase() {
   });
 }
 
+export function useDeleteProduction() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase.rpc("delete_production", {
+        p_production_id: id,
+        p_user_id: user!.id,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["productions"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+      toast.success("Produksi dihapus");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
+export function useUpdateProduction() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { id: string; batches: number; total_cost: number }) => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase.rpc("update_production", {
+        p_production_id: p.id,
+        p_user_id: user!.id,
+        p_batches: p.batches,
+        p_total_cost: p.total_cost,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["productions"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+      toast.success("Produksi diperbarui");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
 export function useProductions() {
   return useQuery<Production[]>({
     queryKey: ["productions"],
