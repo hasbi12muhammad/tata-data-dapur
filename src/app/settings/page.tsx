@@ -38,6 +38,28 @@ function EmailConfirmHandler() {
 export default function SettingsPage() {
   const supabase = createClient();
 
+  const [storeName, setStoreName] = useState("");
+  const [storeNameLoading, setStoreNameLoading] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user?.user_metadata?.store_name) {
+        setStoreName(user.user_metadata.store_name);
+      }
+    });
+  }, []);
+
+  async function handleStoreNameUpdate(e: React.FormEvent) {
+    e.preventDefault();
+    setStoreNameLoading(true);
+    const { error } = await supabase.auth.updateUser({
+      data: { store_name: storeName.trim() },
+    });
+    setStoreNameLoading(false);
+    if (error) toast.error(error.message);
+    else toast.success("Nama toko berhasil disimpan");
+  }
+
   const [email, setEmail] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -89,6 +111,28 @@ export default function SettingsPage() {
         <EmailConfirmHandler />
       </Suspense>
       <div className="max-w-lg mx-auto flex flex-col gap-6">
+        {/* Store Name Section */}
+        <div className="bg-[#FBF8F2] rounded-2xl border border-[#D9CCAF] shadow-sm p-6">
+          <h2 className="text-base font-semibold text-[#2C1810] mb-1">
+            Nama Toko
+          </h2>
+          <p className="text-sm text-[#7C6352] mb-5">
+            Ditampilkan di sidebar sebagai identitas toko Anda.
+          </p>
+          <form onSubmit={handleStoreNameUpdate} className="flex flex-col gap-4">
+            <Input
+              label="Nama toko"
+              type="text"
+              value={storeName}
+              onChange={(e) => setStoreName(e.target.value)}
+              placeholder="Dapur Ibu Sari"
+            />
+            <Button type="submit" loading={storeNameLoading} className="self-start">
+              Simpan
+            </Button>
+          </form>
+        </div>
+
         {/* Email Section */}
         <div className="bg-[#FBF8F2] rounded-2xl border border-[#D9CCAF] shadow-sm p-6">
           <h2 className="text-base font-semibold text-[#2C1810] mb-1">
