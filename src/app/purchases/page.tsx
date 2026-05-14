@@ -112,6 +112,7 @@ export default function PurchasesPage() {
     setModalOpen(true);
   }
 
+  const [activeTab, setActiveTab] = useState<"purchases" | "productions">("purchases");
   const [search, setSearch] = useState("");
   const [filterItem, setFilterItem] = useState("");
   const [sortBy, setSortBy] = useState("date_desc");
@@ -224,6 +225,31 @@ export default function PurchasesPage() {
       }
     >
       <Card>
+        {/* Tab switcher */}
+        <div className="flex border-b border-[#E5DACA]">
+          <button
+            onClick={() => setActiveTab("purchases")}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
+              activeTab === "purchases"
+                ? "text-[#A05035] border-b-2 border-[#A05035]"
+                : "text-[#7C6352] hover:text-[#2C1810]"
+            }`}
+          >
+            Pembelian {purchases?.length ? `(${purchases.length})` : ""}
+          </button>
+          <button
+            onClick={() => setActiveTab("productions")}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
+              activeTab === "productions"
+                ? "text-amber-600 border-b-2 border-amber-600"
+                : "text-[#7C6352] hover:text-[#2C1810]"
+            }`}
+          >
+            Produksi {productions?.length ? `(${productions.length})` : ""}
+          </button>
+        </div>
+
+        {activeTab === "purchases" && (<>
         <div className="px-4 py-3 border-b border-[#E5DACA] space-y-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#B88D6A]" />
@@ -416,39 +442,41 @@ export default function PurchasesPage() {
             </>
           )}
         </CardBody>
-      </Card>
+        </>)}
 
-      {(productions ?? []).length > 0 && (
-        <Card className="mt-4">
-          <div className="px-4 py-3 border-b border-[#E5DACA]">
-            <h3 className="text-sm font-semibold text-[#2C1810]">Log Produksi</h3>
-          </div>
+        {activeTab === "productions" && (
           <CardBody className="p-0">
-            <div className="divide-y divide-[#EDE4CF]">
-              {(productions ?? []).map((prod: any) => (
-                <div key={prod.id} className="flex justify-between items-center px-4 py-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-[#2C1810]">
-                        {prod.recipe?.name ?? "—"}
-                      </span>
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-700">
-                        Produksi
+            {!(productions ?? []).length ? (
+              <EmptyState
+                icon={ShoppingCart}
+                title="Belum ada produksi"
+                description="Catat produksi bahan setengah jadi di sini."
+                action={
+                  <Button size="sm" onClick={() => { setIsProduction(true); setModalOpen(true); }}>
+                    <Plus className="w-4 h-4" /> Catat Produksi
+                  </Button>
+                }
+              />
+            ) : (
+              <div className="divide-y divide-[#EDE4CF]">
+                {(productions ?? []).map((prod: any) => (
+                  <div key={prod.id} className="flex justify-between items-center px-4 py-3 hover:bg-[#F5EFE0] transition-colors">
+                    <div>
+                      <p className="text-sm font-medium text-[#2C1810]">{prod.recipe?.name ?? "—"}</p>
+                      <span className="text-xs text-[#B88D6A]">
+                        {prod.batches} {prod.recipe?.unit} · {format(new Date(prod.created_at), "dd MMM yyyy")}
                       </span>
                     </div>
-                    <span className="text-xs text-[#B88D6A]">
-                      {prod.batches} {prod.recipe?.unit} · {format(new Date(prod.created_at), "dd MMM yyyy")}
+                    <span className="text-sm font-semibold text-amber-700 tabular-nums">
+                      {formatCurrency(prod.total_cost)}
                     </span>
                   </div>
-                  <span className="text-sm font-semibold text-amber-700 tabular-nums">
-                    {formatCurrency(prod.total_cost)}
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardBody>
-        </Card>
-      )}
+        )}
+      </Card>
 
       <Modal
         open={modalOpen}
