@@ -267,10 +267,12 @@ export default function PurchasesPage() {
             variant="secondary"
             onClick={() => setImportOpen(true)}
           >
-            <FileUp className="w-4 h-4" /> Impor
+            <FileUp className="w-4 h-4" />
+            <span className="hidden sm:inline">Impor</span>
           </Button>
           <Button size="sm" onClick={openCreate}>
-            <Plus className="w-4 h-4" /> Tambah
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Tambah</span>
           </Button>
         </div>
       }
