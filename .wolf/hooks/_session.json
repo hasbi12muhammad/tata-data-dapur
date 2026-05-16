@@ -1,10 +1,16 @@
 {
-  "session_id": "session-2026-05-16-1836",
-  "started": "2026-05-16T18:36:33.546Z",
-  "files_read": {},
+  "session_id": "session-2026-05-16-1845",
+  "started": "2026-05-16T18:45:21.618Z",
+  "files_read": {
+    "/home/user/tata-data-dapur/.claude/settings.json": {
+      "count": 1,
+      "tokens": 441,
+      "first_read": "2026-05-16T18:45:32.423Z"
+    }
+  },
   "files_written": [],
   "edit_counts": {},
-  "anatomy_hits": 0,
+  "anatomy_hits": 1,
   "anatomy_misses": 0,
   "repeated_reads_warned": 0,
   "cerebrum_warnings": 0,
