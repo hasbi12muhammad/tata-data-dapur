@@ -32,6 +32,30 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-21T14:34:23.298Z"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-05-16T00:00:00.000Z",
+      "error_message": "SECURITY DEFINER RPCs accept caller-supplied p_user_id without validating against auth.uid() — privilege escalation vulnerability",
+      "file": "supabase/migrations/008_security_fix_rpc_auth.sql",
+      "root_cause": "All 7 SECURITY DEFINER functions bypassed RLS and trusted caller-supplied p_user_id without comparing to auth.uid(): record_purchase, update_purchase, delete_purchase, produce_sub_recipe, deduct_sub_recipe_stock, delete_production, update_production",
+      "fix": "Added 'IF p_user_id IS DISTINCT FROM auth.uid() THEN RAISE EXCEPTION Unauthorized' guard at the top of each function. Also added SET search_path = public to all. No client-side changes needed.",
+      "tags": ["security", "rpc", "privilege-escalation", "security-definer", "supabase"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-16T00:00:00.000Z"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-05-16T00:00:00.000Z",
+      "error_message": "user_profiles table referenced in middleware but has no migration file — RLS status unknown",
+      "file": "supabase/migrations/008_security_fix_rpc_auth.sql",
+      "root_cause": "Table was created manually in Supabase dashboard without being tracked in migrations. No RLS policy was confirmed to exist.",
+      "fix": "Added CREATE TABLE IF NOT EXISTS + ENABLE ROW LEVEL SECURITY + SELECT policy + trigger for auto-creating profile on new user signup in migration 008.",
+      "tags": ["security", "rls", "supabase", "user_profiles", "missing-migration"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-16T00:00:00.000Z"
     }
   ]
 }
