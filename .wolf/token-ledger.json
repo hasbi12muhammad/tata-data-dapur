@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-20T14:13:02.073Z",
   "lifetime": {
-    "total_tokens_estimated": 49682,
-    "total_reads": 43,
-    "total_writes": 19,
-    "total_sessions": 6,
-    "anatomy_hits": 32,
-    "anatomy_misses": 11,
+    "total_tokens_estimated": 65531,
+    "total_reads": 67,
+    "total_writes": 20,
+    "total_sessions": 7,
+    "anatomy_hits": 53,
+    "anatomy_misses": 14,
     "repeated_reads_blocked": 0,
-    "estimated_savings_vs_bare_cli": 6400
+    "estimated_savings_vs_bare_cli": 10600
   },
   "sessions": [
     {
@@ -497,6 +497,172 @@
         "writes_count": 0,
         "repeated_reads_blocked": 0,
         "anatomy_lookups": 13
+      }
+    },
+    {
+      "id": "session-2026-05-16-1814",
+      "started": "2026-05-16T18:14:49.189Z",
+      "ended": "2026-05-16T18:29:13.324Z",
+      "reads": [
+        {
+          "file": "/home/user/tata-data-dapur/src/middleware.ts",
+          "tokens_estimated": 831,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/lib/supabase/client.ts",
+          "tokens_estimated": 62,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/lib/supabase/server.ts",
+          "tokens_estimated": 176,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/001_initial_schema.sql",
+          "tokens_estimated": 1686,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/hooks/useAuth.ts",
+          "tokens_estimated": 343,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/next.config.ts",
+          "tokens_estimated": 40,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/login/page.tsx",
+          "tokens_estimated": 771,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/public/sw.js",
+          "tokens_estimated": 338,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/wrangler.toml",
+          "tokens_estimated": 134,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/package.json",
+          "tokens_estimated": 287,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/003_update_purchase.sql",
+          "tokens_estimated": 432,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/005_delete_purchase.sql",
+          "tokens_estimated": 368,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/components/ui/ImportExcelModal.tsx",
+          "tokens_estimated": 1803,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/002_fix_record_purchase_generated_col.sql",
+          "tokens_estimated": 429,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/002_prev_avg_price.sql",
+          "tokens_estimated": 468,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/004_purchase_created_at.sql",
+          "tokens_estimated": 347,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/types/index.ts",
+          "tokens_estimated": 447,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/005_fix_price_per_unit_generated_col.sql",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/006_sub_recipe.sql",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/007_production_crud.sql",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 1196,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/hooks/useItems.ts",
+          "tokens_estimated": 658,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/hooks/useRecipes.ts",
+          "tokens_estimated": 986,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/user/tata-data-dapur/supabase/migrations/008_security_fix_rpc_auth.sql",
+          "tokens_estimated": 3316,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 12533,
+        "output_tokens_estimated": 3316,
+        "reads_count": 24,
+        "writes_count": 1,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 21
       }
     }
   ],
