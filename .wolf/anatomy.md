@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-24T03:21:51.535Z
-> Files: 62 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-16T18:27:39.405Z
+> Files: 63 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -138,6 +138,10 @@
 - `003_update_purchase.sql` — Update an existing purchase: adjusts stock delta and recalculates weighted avg price. (~432 tok)
 - `004_purchase_created_at.sql` — Allow record_purchase to accept optional transaction date (~347 tok)
 - `005_delete_purchase.sql` — Delete a purchase: reduces stock and recalculates weighted avg price from remaining purchases. (~368 tok)
+- `005_fix_price_per_unit_generated_col.sql` — Fix: migration 004 re-introduced generated column bug; record_purchase omits price_per_unit from INSERT. (~247 tok)
+- `006_sub_recipe.sql` — Extends recipes (is_ingredient/unit/stock/avg_price), recipe_items (sub_recipe_id), creates productions table+RLS, RPCs: produce_sub_recipe + deduct_sub_recipe_stock (~1363 tok)
+- `007_production_crud.sql` — RPCs: delete_production + update_production, both SECURITY DEFINER, reverse/adjust stock on recipes and items (~788 tok)
+- `008_security_fix_rpc_auth.sql` — Security fix: adds auth.uid() guard to all 7 SECURITY DEFINER RPCs; creates user_profiles table with RLS + signup trigger (~3095 tok)
 
 ## supabase/seeds/
 
