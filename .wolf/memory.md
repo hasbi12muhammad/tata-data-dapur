@@ -62,3 +62,4 @@
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
+| 18:27 | Created supabase/migrations/008_security_fix_rpc_auth.sql | — | ~3095 |
