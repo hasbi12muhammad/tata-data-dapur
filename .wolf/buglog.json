@@ -84,6 +84,22 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-17T01:37:06.005Z"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-05-17T02:38:28.977Z",
+      "error_message": "Incorrect value in code",
+      "file": "package.json",
+      "root_cause": "Had \"@tanstack/react-query-devtools\"",
+      "fix": "Changed to \"clsx\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-17T02:38:28.977Z"
     }
   ]
 }
