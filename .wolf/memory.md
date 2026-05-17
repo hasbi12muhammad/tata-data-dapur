@@ -84,3 +84,6 @@
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
+| 01:37 | Edited next.config.ts | modified headers() | ~304 |
+| 01:37 | Created public/_headers | — | ~128 |
+| 01:37 | Session end: 2 writes across 2 files (next.config.ts, _headers) | 0 reads | ~441 tok |

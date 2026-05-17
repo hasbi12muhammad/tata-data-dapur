@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-16T18:27:39.405Z
-> Files: 63 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-17T01:37:11.819Z
+> Files: 67 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -10,7 +10,7 @@
 - `CLAUDE.md` — OpenWolf (~60 tok)
 - `eslint.config.mjs` — ESLint flat configuration (~109 tok)
 - `next-env.d.ts` — / <reference types="next" /> (~71 tok)
-- `next.config.ts` — Next.js configuration (~40 tok)
+- `next.config.ts` — Declares CSP (~304 tok)
 - `package-lock.json` — npm lock file (~118084 tok)
 - `package.json` — Node.js package manifest (~287 tok)
 - `postcss.config.mjs` — Declares config (~26 tok)
@@ -30,6 +30,7 @@
 
 ## public/
 
+- `_headers` (~128 tok)
 - `manifest.json` (~183 tok)
 - `sw.js` — Declares CACHE (~338 tok)
 

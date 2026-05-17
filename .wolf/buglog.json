@@ -40,7 +40,13 @@
       "file": "supabase/migrations/008_security_fix_rpc_auth.sql",
       "root_cause": "All 7 SECURITY DEFINER functions bypassed RLS and trusted caller-supplied p_user_id without comparing to auth.uid(): record_purchase, update_purchase, delete_purchase, produce_sub_recipe, deduct_sub_recipe_stock, delete_production, update_production",
       "fix": "Added 'IF p_user_id IS DISTINCT FROM auth.uid() THEN RAISE EXCEPTION Unauthorized' guard at the top of each function. Also added SET search_path = public to all. No client-side changes needed.",
-      "tags": ["security", "rpc", "privilege-escalation", "security-definer", "supabase"],
+      "tags": [
+        "security",
+        "rpc",
+        "privilege-escalation",
+        "security-definer",
+        "supabase"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-16T00:00:00.000Z"
@@ -52,10 +58,32 @@
       "file": "supabase/migrations/008_security_fix_rpc_auth.sql",
       "root_cause": "Table was created manually in Supabase dashboard without being tracked in migrations. No RLS policy was confirmed to exist.",
       "fix": "Added CREATE TABLE IF NOT EXISTS + ENABLE ROW LEVEL SECURITY + SELECT policy + trigger for auto-creating profile on new user signup in migration 008.",
-      "tags": ["security", "rls", "supabase", "user_profiles", "missing-migration"],
+      "tags": [
+        "security",
+        "rls",
+        "supabase",
+        "user_profiles",
+        "missing-migration"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-16T00:00:00.000Z"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-05-17T01:37:06.005Z",
+      "error_message": "Function not marked async",
+      "file": "next.config.ts",
+      "root_cause": "Function uses await but wasn't declared async",
+      "fix": "Added async modifier",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-17T01:37:06.005Z"
     }
   ]
 }
