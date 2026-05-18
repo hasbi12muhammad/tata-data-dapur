@@ -70,6 +70,7 @@ CREATE OR REPLACE FUNCTION public.record_purchase(
 ) RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 DECLARE
   v_current_stock     numeric;
@@ -77,6 +78,10 @@ DECLARE
   v_new_avg_price     numeric;
   v_new_stock         numeric;
 BEGIN
+  IF p_user_id IS DISTINCT FROM auth.uid() THEN
+    RAISE EXCEPTION 'Unauthorized';
+  END IF;
+
   SELECT stock, avg_price
     INTO v_current_stock, v_current_avg_price
     FROM public.items
@@ -124,6 +129,7 @@ CREATE OR REPLACE FUNCTION public.update_purchase(
 ) RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 DECLARE
   v_item_id       uuid;
@@ -131,6 +137,10 @@ DECLARE
   v_old_avg       numeric;
   v_new_avg       numeric;
 BEGIN
+  IF p_user_id IS DISTINCT FROM auth.uid() THEN
+    RAISE EXCEPTION 'Unauthorized';
+  END IF;
+
   SELECT item_id, quantity INTO v_item_id, v_old_quantity
     FROM public.purchases
    WHERE id = p_purchase_id AND user_id = p_user_id;
