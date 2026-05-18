@@ -109,6 +109,8 @@ export default function PurchasesPage() {
   const [sizePerPkg, setSizePerPkg] = useState("");
   const [addingPkgType, setAddingPkgType] = useState(false);
   const [newPkgTypeName, setNewPkgTypeName] = useState("");
+  const [pkgPriceMode, setPkgPriceMode] = useState<"per_unit" | "per_pkg">("per_unit");
+  const [pricePerPkg, setPricePerPkg] = useState("");
 
   function openEdit(p: Purchase) {
     setEditing(p);
@@ -168,28 +170,37 @@ export default function PurchasesPage() {
   const effectiveQty = usePkg
     ? pkgQty && sizePerPkg ? Number(pkgQty) * Number(sizePerPkg) : 0
     : Number(quantity) || 0;
-  const computedTotal = effectiveQty > 0 && pricePerUnit ? effectiveQty * Number(pricePerUnit) : 0;
+
+  const resolvedPricePerUnit = usePkg && pkgPriceMode === "per_pkg" && sizePerPkg && Number(sizePerPkg) > 0
+    ? (pricePerPkg ? Number(pricePerPkg) / Number(sizePerPkg) : 0)
+    : Number(pricePerUnit) || 0;
+
+  const computedTotal = usePkg && pkgPriceMode === "per_pkg"
+    ? (pkgQty && pricePerPkg ? Number(pkgQty) * Number(pricePerPkg) : 0)
+    : (effectiveQty > 0 && pricePerUnit ? effectiveQty * Number(pricePerUnit) : 0);
 
   const avgPrice = selectedItem?.avg_price ?? 0;
-  const priceDiff = Number(pricePerUnit) > 0 && avgPrice > 0 ? Number(pricePerUnit) - avgPrice : null;
+  const priceDiff = resolvedPricePerUnit > 0 && avgPrice > 0 ? resolvedPricePerUnit - avgPrice : null;
   const pricePct = priceDiff !== null ? (priceDiff / avgPrice) * 100 : null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     if (editing) {
-      if (!pricePerUnit || Number(pricePerUnit) <= 0) return;
       if (usePkg) {
         if (!pkgTypeId || !pkgQty || !sizePerPkg) return;
         if (Number(pkgQty) <= 0 || Number(sizePerPkg) <= 0) return;
+        if (pkgPriceMode === "per_pkg" && (!pricePerPkg || Number(pricePerPkg) <= 0)) return;
+        if (pkgPriceMode === "per_unit" && (!pricePerUnit || Number(pricePerUnit) <= 0)) return;
       } else {
         if (!quantity || Number(quantity) <= 0) return;
+        if (!pricePerUnit || Number(pricePerUnit) <= 0) return;
       }
       const finalQtyEdit = usePkg ? Number(pkgQty) * Number(sizePerPkg) : Number(quantity);
       await updatePurchase.mutateAsync({
         id: editing.id,
         quantity: finalQtyEdit,
-        price_per_unit: Number(pricePerUnit),
+        price_per_unit: resolvedPricePerUnit,
         pkg_type_id: usePkg ? pkgTypeId || null : null,
         pkg_qty: usePkg ? Number(pkgQty) : null,
         size_per_pkg: usePkg ? Number(sizePerPkg) : null,
@@ -207,18 +218,20 @@ export default function PurchasesPage() {
       setIsProduction(false);
     } else {
       if (!itemId) return;
-      if (!pricePerUnit || Number(pricePerUnit) <= 0) return;
       if (usePkg) {
         if (!pkgTypeId || !pkgQty || !sizePerPkg) return;
         if (Number(pkgQty) <= 0 || Number(sizePerPkg) <= 0) return;
+        if (pkgPriceMode === "per_pkg" && (!pricePerPkg || Number(pricePerPkg) <= 0)) return;
+        if (pkgPriceMode === "per_unit" && (!pricePerUnit || Number(pricePerUnit) <= 0)) return;
       } else {
         if (!quantity || Number(quantity) <= 0) return;
+        if (!pricePerUnit || Number(pricePerUnit) <= 0) return;
       }
       const finalQty = usePkg ? Number(pkgQty) * Number(sizePerPkg) : Number(quantity);
       await createPurchase.mutateAsync({
         item_id: itemId,
         quantity: finalQty,
-        price_per_unit: Number(pricePerUnit),
+        price_per_unit: resolvedPricePerUnit,
         date,
         pkg_type_id: usePkg ? pkgTypeId || null : null,
         pkg_qty: usePkg ? Number(pkgQty) : null,
@@ -234,6 +247,8 @@ export default function PurchasesPage() {
     setPkgTypeId("");
     setPkgQty("");
     setSizePerPkg("");
+    setPkgPriceMode("per_unit");
+    setPricePerPkg("");
     setDate(new Date().toISOString().slice(0, 10));
   }
 
@@ -915,10 +930,10 @@ export default function PurchasesPage() {
                             setAddingPkgType(false);
                           }}
                           disabled={!newPkgTypeName.trim() || createPkgType.isPending}
-                          className="px-3 h-9 rounded-lg bg-[#A05035] text-white text-sm disabled:opacity-50"
+                          className="px-3 h-9 rounded-lg bg-[#A05035] text-white text-sm disabled:opacity-50 hover:bg-[#8B4530] transition-colors"
                         >Tambah</button>
                         <button type="button" onClick={() => { setAddingPkgType(false); setNewPkgTypeName(""); }}
-                          className="px-3 h-9 rounded-lg border border-[#D9CCAF] text-sm text-[#7C6352]">Batal</button>
+                          className="px-3 h-9 rounded-lg border border-[#D9CCAF] text-sm text-[#7C6352] hover:bg-[#EDE4CF] transition-colors">Batal</button>
                       </div>
                     ) : (
                       <div className="flex gap-2">
@@ -970,17 +985,49 @@ export default function PurchasesPage() {
                 />
               )}
 
-              <Input
-                label={`Harga per ${selectedItem?.unit ?? "unit"}`}
-                type="number" min="0" step="1"
-                value={pricePerUnit} onChange={(e) => setPricePerUnit(e.target.value)} required
-              />
+              {usePkg && (
+                <div className="flex gap-1 rounded-lg border border-[#D9CCAF] bg-[#F5EFE0] p-1">
+                  <button
+                    type="button"
+                    onClick={() => { setPkgPriceMode("per_unit"); setPricePerPkg(""); }}
+                    className={`flex-1 py-1 rounded-md text-xs font-medium transition-colors ${pkgPriceMode === "per_unit" ? "bg-white text-[#2C1810] shadow-sm" : "text-[#7C6352] hover:text-[#2C1810]"}`}
+                  >
+                    Harga per {selectedItem?.unit ?? "unit"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setPkgPriceMode("per_pkg"); setPricePerUnit(""); }}
+                    className={`flex-1 py-1 rounded-md text-xs font-medium transition-colors ${pkgPriceMode === "per_pkg" ? "bg-white text-[#2C1810] shadow-sm" : "text-[#7C6352] hover:text-[#2C1810]"}`}
+                  >
+                    Harga per kemasan
+                  </button>
+                </div>
+              )}
+
+              {usePkg && pkgPriceMode === "per_pkg" ? (
+                <Input
+                  label="Harga per kemasan (Rp)"
+                  type="number" min="0" step="1"
+                  value={pricePerPkg} onChange={(e) => setPricePerPkg(e.target.value)} required
+                />
+              ) : (
+                <Input
+                  label={`Harga per ${selectedItem?.unit ?? "unit"}`}
+                  type="number" min="0" step="1"
+                  value={pricePerUnit} onChange={(e) => setPricePerUnit(e.target.value)} required
+                />
+              )}
 
               {computedTotal > 0 && (
                 <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5 space-y-1">
                   <p className="text-xs text-[#5C6B38] font-medium">
                     Total: <span className="font-bold">{formatCurrency(computedTotal)}</span>
                   </p>
+                  {usePkg && pkgPriceMode === "per_pkg" && resolvedPricePerUnit > 0 && (
+                    <p className="text-xs text-[#5C6B38]">
+                      = <span className="font-semibold">{formatCurrency(resolvedPricePerUnit)}</span> per {selectedItem?.unit ?? "unit"}
+                    </p>
+                  )}
                   {priceDiff !== null && pricePct !== null && (
                     <p className={`text-xs font-medium ${priceDiff > 0 ? "text-red-600" : "text-green-700"}`}>
                       {priceDiff > 0 ? "▲" : "▼"}{" "}
