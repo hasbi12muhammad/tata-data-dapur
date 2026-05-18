@@ -12,7 +12,7 @@ export function usePurchases() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("purchases")
-        .select("*, item:items(name, unit)")
+        .select("*, item:items(name, unit), pkg_type:packaging_types(name)")
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -28,18 +28,25 @@ export function useUpdatePurchase() {
     mutationFn: async (p: {
       id: string;
       quantity: number;
-      total_price: number;
+      price_per_unit: number;
+      pkg_type_id?: string | null;
+      pkg_qty?: number | null;
+      size_per_pkg?: number | null;
     }) => {
       const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      const total_price = p.quantity * p.price_per_unit;
 
       const { error } = await supabase.rpc("update_purchase", {
         p_purchase_id: p.id,
         p_user_id: user!.id,
         p_quantity: p.quantity,
-        p_total_price: p.total_price,
+        p_total_price: total_price,
+        p_pkg_type_id: p.pkg_type_id ?? null,
+        p_pkg_qty: p.pkg_qty ?? null,
+        p_size_per_pkg: p.size_per_pkg ?? null,
       });
       if (error) throw error;
     },
@@ -60,21 +67,27 @@ export function useCreatePurchase() {
     mutationFn: async (p: {
       item_id: string;
       quantity: number;
-      total_price: number;
+      price_per_unit: number;
       date?: string;
+      pkg_type_id?: string | null;
+      pkg_qty?: number | null;
+      size_per_pkg?: number | null;
     }) => {
       const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      const price_per_unit = p.total_price / p.quantity;
+      const total_price = p.quantity * p.price_per_unit;
 
       const { error } = await supabase.rpc("record_purchase", {
         p_user_id: user!.id,
         p_item_id: p.item_id,
         p_quantity: p.quantity,
-        p_total_price: p.total_price,
-        p_price_per_unit: price_per_unit,
+        p_total_price: total_price,
+        p_price_per_unit: p.price_per_unit,
+        p_pkg_type_id: p.pkg_type_id ?? null,
+        p_pkg_qty: p.pkg_qty ?? null,
+        p_size_per_pkg: p.size_per_pkg ?? null,
         ...(p.date ? { p_created_at: new Date(p.date).toISOString() } : {}),
       });
       if (error) throw error;
