@@ -6,7 +6,8 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { Input, Select } from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
+import { UnitSelect, HARDCODED_UNITS } from "@/components/ui/UnitSelect";
 import { Modal } from "@/components/ui/Modal";
 import {
   useCreateItem,
@@ -14,6 +15,7 @@ import {
   useItems,
   useUpdateItem,
 } from "@/hooks/useItems";
+import { useCustomUnits } from "@/hooks/useUnits";
 import { Item } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
@@ -21,8 +23,6 @@ import { FileUp, Filter, Package, Pencil, Plus, Search, Trash2, X } from "lucide
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-
-const UNITS: Item["unit"][] = ["gr", "ml", "pcs", "kg", "liter"];
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -33,6 +33,7 @@ export default function ItemsPage() {
   const updateItem = useUpdateItem();
   const deleteItem = useDeleteItem();
   const queryClient = useQueryClient();
+  const { data: customUnits = [] } = useCustomUnits();
 
   const [importOpen, setImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -49,11 +50,10 @@ export default function ItemsPage() {
           .trim()
           .toLowerCase(),
       }))
-      .filter(
-        (r) =>
-          r.name &&
-          (["gr", "ml", "pcs", "kg", "liter"] as string[]).includes(r.unit),
-      );
+      .filter((r) => {
+        const allUnits = [...HARDCODED_UNITS, ...(customUnits?.map(u => u.name.toLowerCase()) ?? [])];
+        return r.name && allUnits.includes(r.unit);
+      });
     if (!valid.length) {
       toast.error("Tidak ada baris valid. Cek kolom nama & unit.");
       return;
@@ -76,7 +76,7 @@ export default function ItemsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Item | null>(null);
   const [name, setName] = useState("");
-  const [unit, setUnit] = useState<Item["unit"]>("gr");
+  const [unit, setUnit] = useState<string>("gr");
 
   const [search, setSearch] = useState("");
   const [filterUnit, setFilterUnit] = useState("");
@@ -203,7 +203,7 @@ export default function ItemsPage() {
                     onChange={(e) => setPendingFilterUnit(e.target.value)}
                   >
                     <option value="">Semua satuan</option>
-                    {UNITS.map((u) => (
+                    {[...HARDCODED_UNITS, ...customUnits.map(u => u.name)].map((u) => (
                       <option key={u} value={u}>{u}</option>
                     ))}
                   </select>
@@ -401,18 +401,7 @@ export default function ItemsPage() {
             required
             placeholder="mis. Tepung Terigu"
           />
-          <Select
-            label="Satuan"
-            value={unit}
-            onChange={(e) => setUnit(e.target.value as Item["unit"])}
-            required
-          >
-            {UNITS.map((u) => (
-              <option key={u} value={u}>
-                {u}
-              </option>
-            ))}
-          </Select>
+          <UnitSelect label="Unit" value={unit} onChange={setUnit} required />
           <div className="flex gap-2 pt-1">
             <Button
               type="button"

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
+import { UnitSelect } from "@/components/ui/UnitSelect";
 import { Modal } from "@/components/ui/Modal";
 import { useItems } from "@/hooks/useItems";
 import {
@@ -111,7 +112,7 @@ export default function RecipesPage() {
     { item_id: "", sub_recipe_id: "", quantity_used: "" },
   ]);
   const [isIngredient, setIsIngredient] = useState(false);
-  const [unit, setUnit] = useState<Recipe["unit"]>("pcs");
+  const [unit, setUnit] = useState<string>("pcs");
 
   function openCreate() {
     setEditing(null);
@@ -359,16 +360,7 @@ export default function RecipesPage() {
             </span>
           </label>
           {isIngredient && (
-            <Select
-              label="Satuan"
-              value={unit ?? "pcs"}
-              onChange={(e) => setUnit(e.target.value as Recipe["unit"])}
-              required
-            >
-              {(["gr", "ml", "pcs", "kg", "liter"] as const).map((u) => (
-                <option key={u} value={u}>{u}</option>
-              ))}
-            </Select>
+            <UnitSelect value={unit ?? "pcs"} onChange={setUnit} required={isIngredient} />
           )}
 
           <div>
