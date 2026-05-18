@@ -902,10 +902,10 @@ export default function PurchasesPage() {
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-medium text-[#7C6352]">Jenis kemasan</label>
                     {addingPkgType ? (
-                      <div className="flex gap-2">
+                      <div className="flex flex-col gap-2">
                         <input
                           autoFocus
-                          className="h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] flex-1 focus:outline-none focus:ring-2 focus:ring-[#A05035]"
+                          className="h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] w-full focus:outline-none focus:ring-2 focus:ring-[#A05035]"
                           placeholder="Nama kemasan baru..."
                           value={newPkgTypeName}
                           onChange={(e) => setNewPkgTypeName(e.target.value)}
@@ -921,19 +921,21 @@ export default function PurchasesPage() {
                             if (e.key === "Escape") { setAddingPkgType(false); setNewPkgTypeName(""); }
                           }}
                         />
-                        <button type="button"
-                          onClick={async () => {
-                            if (!newPkgTypeName.trim()) return;
-                            const newId = await createPkgType.mutateAsync(newPkgTypeName.trim());
-                            setPkgTypeId(newId);
-                            setNewPkgTypeName("");
-                            setAddingPkgType(false);
-                          }}
-                          disabled={!newPkgTypeName.trim() || createPkgType.isPending}
-                          className="px-3 h-9 rounded-lg bg-[#A05035] text-white text-sm disabled:opacity-50 hover:bg-[#8B4530] transition-colors"
-                        >Tambah</button>
-                        <button type="button" onClick={() => { setAddingPkgType(false); setNewPkgTypeName(""); }}
-                          className="px-3 h-9 rounded-lg border border-[#D9CCAF] text-sm text-[#7C6352] hover:bg-[#EDE4CF] transition-colors">Batal</button>
+                        <div className="flex gap-2">
+                          <button type="button"
+                            onClick={async () => {
+                              if (!newPkgTypeName.trim()) return;
+                              const newId = await createPkgType.mutateAsync(newPkgTypeName.trim());
+                              setPkgTypeId(newId);
+                              setNewPkgTypeName("");
+                              setAddingPkgType(false);
+                            }}
+                            disabled={!newPkgTypeName.trim() || createPkgType.isPending}
+                            className="flex-1 h-9 rounded-lg bg-[#A05035] text-white text-sm disabled:opacity-50 hover:bg-[#8B4530] transition-colors"
+                          >Tambah</button>
+                          <button type="button" onClick={() => { setAddingPkgType(false); setNewPkgTypeName(""); }}
+                            className="flex-1 h-9 rounded-lg border border-[#D9CCAF] text-sm text-[#7C6352] hover:bg-[#EDE4CF] transition-colors">Batal</button>
+                        </div>
                       </div>
                     ) : (
                       <div className="flex gap-2">
