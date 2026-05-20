@@ -796,14 +796,27 @@ export default function SalesPage() {
             onChange={(e) => setQuantity(e.target.value)}
             required
           />
-          <Input
-            label="Harga Jual per Unit (Rp)"
-            type="number"
-            min="0"
-            value={sellingPrice}
-            onChange={(e) => setSellingPrice(e.target.value)}
-            required
-          />
+          {(() => {
+            const hppPerUnit = hpp + (Number(quantity) > 0 ? addonTotal / Number(quantity) : 0);
+            return (
+              <div>
+                <Input
+                  label="Harga Jual per Unit (Rp)"
+                  type="number"
+                  min="0"
+                  value={sellingPrice}
+                  onChange={(e) => setSellingPrice(e.target.value)}
+                  required
+                  placeholder={hppPerUnit > 0 ? String(Math.ceil(hppPerUnit)) : undefined}
+                />
+                {hppPerUnit > 0 && (
+                  <p className="text-xs text-[#B88D6A] mt-1">
+                    HPP Akhir/unit: <span className="font-medium tabular-nums">{formatCurrency(hppPerUnit)}</span>
+                  </p>
+                )}
+              </div>
+            );
+          })()}
           <div>
             <label className="block text-sm font-medium text-[#4A3728] mb-1">Tanggal Transaksi</label>
             <input
