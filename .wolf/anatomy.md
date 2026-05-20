@@ -1,7 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-16T18:27:39.405Z
-> Files: 63 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-20T13:39:12.372Z
+> Files: 68 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../.claude/plans/
+
+- `oke-sekarang-aku-mau-curious-creek.md` — Feature: Add-On pada Penjualan (~2558 tok)
 
 ## ./
 
@@ -49,11 +53,11 @@
 
 ## src/app/expenses/
 
-- `page.tsx` — dynamic — renders table — uses useState, useMemo (~4980 tok)
+- `page.tsx` — dynamic — renders table (~6085 tok)
 
 ## src/app/items/
 
-- `page.tsx` — dynamic — renders form, table, modal — uses useState, useMemo (~3815 tok)
+- `page.tsx` — dynamic — renders table (~5036 tok)
 
 ## src/app/login/
 
@@ -65,11 +69,11 @@
 
 ## src/app/purchases/
 
-- `page.tsx` — dynamic — renders table (~5048 tok)
+- `page.tsx` — dynamic (~11771 tok)
 
 ## src/app/recipes/
 
-- `page.tsx` — dynamic — renders form, modal — uses useState (~4125 tok)
+- `page.tsx` — dynamic — renders modal (~5514 tok)
 
 ## src/app/reports/
 
@@ -77,11 +81,11 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic — renders table (~5656 tok)
+- `page.tsx` — dynamic (~10976 tok)
 
 ## src/app/settings/
 
-- `page.tsx` — dynamic — renders form — uses useRouter, useSearchParams, useEffect, useState (~1508 tok)
+- `page.tsx` — dynamic — renders form (~1942 tok)
 
 ## src/app/unauthorized/
 
@@ -94,7 +98,7 @@
 ## src/components/layout/
 
 - `AppLayout.tsx` — AppLayout — uses useState (~477 tok)
-- `Sidebar.tsx` — ALL_NAV — renders chart (~1083 tok)
+- `Sidebar.tsx` — ALL_NAV (~1209 tok)
 
 ## src/components/ui/
 
@@ -111,10 +115,10 @@
 - `useAuth.ts` — Exports useCurrentUser, useAuth (~343 tok)
 - `useDailyData.ts` — Exports useSalesByDate, usePurchasesByDate (~396 tok)
 - `useExpenses.ts` — Exports useExpenses, useExpensesByDate, useExpenseCategories, useReportExpenses + 4 more (~1368 tok)
-- `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useDeleteItem (~658 tok)
+- `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem (~766 tok)
 - `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase (~731 tok)
-- `useRecipes.ts` — Exports useRecipes, useCreateRecipe, useUpdateRecipe, useDeleteRecipe (~986 tok)
-- `useSales.ts` — All sales (no limit) for reports — includes created_at for date filtering (~1196 tok)
+- `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 2 more (~1625 tok)
+- `useSales.ts` — All sales (no limit) for reports — includes created_at for date filtering (~2939 tok)
 
 ## src/lib/
 
@@ -128,7 +132,7 @@
 
 ## src/types/
 
-- `index.ts` — Exports Item, Purchase, Recipe, RecipeItem + 5 more (~447 tok)
+- `index.ts` — Exports CustomUnit, PackagingType, Item, Purchase + 9 more (~743 tok)
 
 ## supabase/migrations/
 
@@ -142,6 +146,7 @@
 - `006_sub_recipe.sql` — Extends recipes (is_ingredient/unit/stock/avg_price), recipe_items (sub_recipe_id), creates productions table+RLS, RPCs: produce_sub_recipe + deduct_sub_recipe_stock (~1363 tok)
 - `007_production_crud.sql` — RPCs: delete_production + update_production, both SECURITY DEFINER, reverse/adjust stock on recipes and items (~788 tok)
 - `008_security_fix_rpc_auth.sql` — Security fix: adds auth.uid() guard to all 7 SECURITY DEFINER RPCs; creates user_profiles table with RLS + signup trigger (~3095 tok)
+- `010_sale_addons.sql` — Sale Add-On: is_addon flag on items+recipes, sale_addons table, hpp_addons_at_sale on sales, RPCs: adjust_item_stock + restore_sub_recipe_stock (~623 tok)
 
 ## supabase/seeds/
 

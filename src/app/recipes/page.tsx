@@ -112,12 +112,14 @@ export default function RecipesPage() {
     { item_id: "", sub_recipe_id: "", quantity_used: "" },
   ]);
   const [isIngredient, setIsIngredient] = useState(false);
+  const [isAddon, setIsAddon] = useState(false);
   const [unit, setUnit] = useState<string>("pcs");
 
   function openCreate() {
     setEditing(null);
     setName("");
     setIsIngredient(false);
+    setIsAddon(false);
     setUnit("pcs");
     setRows([{ item_id: "", sub_recipe_id: "", quantity_used: "" }]);
     setModalOpen(true);
@@ -127,6 +129,7 @@ export default function RecipesPage() {
     setEditing(recipe);
     setName(recipe.name);
     setIsIngredient(recipe.is_ingredient ?? false);
+    setIsAddon(recipe.is_addon ?? false);
     setUnit(recipe.unit ?? "pcs");
     setRows(
       (recipe.recipe_items ?? []).map((ri) => ({
@@ -183,6 +186,7 @@ export default function RecipesPage() {
         id: editing.id,
         name: name.trim(),
         is_ingredient: isIngredient,
+        is_addon: isIngredient ? isAddon : false,
         unit: isIngredient ? unit : null,
         items: bomItems,
       });
@@ -190,6 +194,7 @@ export default function RecipesPage() {
       await createRecipe.mutateAsync({
         name: name.trim(),
         is_ingredient: isIngredient,
+        is_addon: isIngredient ? isAddon : false,
         unit: isIngredient ? unit : null,
         items: bomItems,
       });
@@ -352,7 +357,10 @@ export default function RecipesPage() {
             <input
               type="checkbox"
               checked={isIngredient}
-              onChange={(e) => setIsIngredient(e.target.checked)}
+              onChange={(e) => {
+                setIsIngredient(e.target.checked);
+                if (!e.target.checked) setIsAddon(false);
+              }}
               className="w-4 h-4 rounded accent-[#A05035]"
             />
             <span className="text-sm font-medium text-[#4A3728]">
@@ -360,7 +368,18 @@ export default function RecipesPage() {
             </span>
           </label>
           {isIngredient && (
-            <UnitSelect value={unit ?? "pcs"} onChange={setUnit} required={isIngredient} />
+            <>
+              <UnitSelect value={unit ?? "pcs"} onChange={setUnit} required={isIngredient} />
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isAddon}
+                  onChange={(e) => setIsAddon(e.target.checked)}
+                  className="w-4 h-4 rounded accent-[#A05035]"
+                />
+                <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
+              </label>
+            </>
           )}
 
           <div>

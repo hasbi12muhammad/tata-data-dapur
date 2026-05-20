@@ -77,6 +77,7 @@ export default function ItemsPage() {
   const [editing, setEditing] = useState<Item | null>(null);
   const [name, setName] = useState("");
   const [unit, setUnit] = useState<string>("gr");
+  const [isAddon, setIsAddon] = useState(false);
 
   const [search, setSearch] = useState("");
   const [filterUnit, setFilterUnit] = useState("");
@@ -89,6 +90,7 @@ export default function ItemsPage() {
     setEditing(null);
     setName("");
     setUnit("gr");
+    setIsAddon(false);
     setModalOpen(true);
   }
 
@@ -96,6 +98,7 @@ export default function ItemsPage() {
     setEditing(item);
     setName(item.name);
     setUnit(item.unit);
+    setIsAddon(item.is_addon ?? false);
     setModalOpen(true);
   }
 
@@ -103,9 +106,9 @@ export default function ItemsPage() {
     e.preventDefault();
     if (!name.trim()) return;
     if (editing) {
-      await updateItem.mutateAsync({ id: editing.id, name: name.trim(), unit });
+      await updateItem.mutateAsync({ id: editing.id, name: name.trim(), unit, is_addon: isAddon });
     } else {
-      await createItem.mutateAsync({ name: name.trim(), unit });
+      await createItem.mutateAsync({ name: name.trim(), unit, is_addon: isAddon });
     }
     setModalOpen(false);
   }
@@ -402,6 +405,15 @@ export default function ItemsPage() {
             placeholder="mis. Tepung Terigu"
           />
           <UnitSelect label="Unit" value={unit} onChange={setUnit} required />
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isAddon}
+              onChange={(e) => setIsAddon(e.target.checked)}
+              className="w-4 h-4 rounded accent-[#A05035]"
+            />
+            <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
+          </label>
           <div className="flex gap-2 pt-1">
             <Button
               type="button"

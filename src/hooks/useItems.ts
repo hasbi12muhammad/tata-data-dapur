@@ -72,6 +72,22 @@ export function useUpdateItem() {
   });
 }
 
+export function useAddonItems() {
+  return useQuery<Item[]>({
+    queryKey: ["items", "addon"],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("items")
+        .select("*")
+        .eq("is_addon", true)
+        .order("name");
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
 export function useDeleteItem() {
   const qc = useQueryClient();
 

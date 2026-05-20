@@ -9,6 +9,8 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { useRecipes } from "@/hooks/useRecipes";
+import { useAddonItems } from "@/hooks/useItems";
+import { useAddonSubRecipes } from "@/hooks/useRecipes";
 import {
   useCreateSale,
   useCreateSaleCategory,
@@ -20,16 +22,25 @@ import {
 import { Sale } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Filter, Pencil, Plus, Search, TrendingUp, Trash2, X } from "lucide-react";
+import { Filter, Minus, Pencil, Plus, Search, TrendingUp, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
 
+interface AddonRow {
+  sourceKey: string; // "item:uuid" or "sr:uuid"
+  quantity: string;
+  name: string;
+  pricePerUnit: number;
+}
+
 export default function SalesPage() {
   const { data: sales, isLoading } = useSales();
   const { data: recipes } = useRecipes();
   const { data: categories } = useSaleCategories();
+  const { data: addonItems } = useAddonItems();
+  const { data: addonSubRecipes } = useAddonSubRecipes();
   const createSale = useCreateSale();
   const updateSale = useUpdateSale();
   const deleteSale = useDeleteSale();
@@ -44,6 +55,8 @@ export default function SalesPage() {
   const [newCatName, setNewCatName] = useState("");
   const [addingCat, setAddingCat] = useState(false);
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [addonRows, setAddonRows] = useState<AddonRow[]>([]);
+  const [expandedSaleId, setExpandedSaleId] = useState<string | null>(null);
 
   const [search, setSearch] = useState("");
   const [filterRecipe, setFilterRecipe] = useState("");
@@ -56,12 +69,51 @@ export default function SalesPage() {
 
   const selectedRecipe = recipes?.find((r) => r.id === recipeId);
   const hpp = editing ? editing.hpp_at_sale : (selectedRecipe?.hpp ?? 0);
+
+  const addonTotal = addonRows.reduce((sum, r) => {
+    if (!r.sourceKey || !r.quantity) return sum;
+    return sum + r.pricePerUnit * Number(r.quantity);
+  }, 0);
+
   const totalRevenue = Number(sellingPrice) * Number(quantity);
-  const totalProfit = (Number(sellingPrice) - hpp) * Number(quantity);
-  const margin =
-    Number(sellingPrice) > 0
-      ? ((Number(sellingPrice) - hpp) / Number(sellingPrice)) * 100
-      : 0;
+  const hppProductTotal = hpp * Number(quantity);
+  const hppAkhirTotal = hppProductTotal + addonTotal;
+  const totalProfit = totalRevenue - hppAkhirTotal;
+  const margin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+
+  function addAddonRow() {
+    setAddonRows((r) => [...r, { sourceKey: "", quantity: "1", name: "", pricePerUnit: 0 }]);
+  }
+
+  function removeAddonRow(i: number) {
+    setAddonRows((r) => r.filter((_, idx) => idx !== i));
+  }
+
+  function selectAddonSource(i: number, sourceKey: string) {
+    const [type, id] = sourceKey.split(":");
+    let name = "";
+    let pricePerUnit = 0;
+    if (type === "item") {
+      const item = addonItems?.find((x) => x.id === id);
+      name = item?.name ?? "";
+      pricePerUnit = item?.avg_price ?? 0;
+    } else if (type === "sr") {
+      const sr = addonSubRecipes?.find((x) => x.id === id);
+      name = sr?.name ?? "";
+      pricePerUnit = sr?.avg_price ?? 0;
+    }
+    setAddonRows((rows) =>
+      rows.map((row, idx) =>
+        idx === i ? { ...row, sourceKey, name, pricePerUnit } : row,
+      ),
+    );
+  }
+
+  function updateAddonQty(i: number, qty: string) {
+    setAddonRows((rows) =>
+      rows.map((row, idx) => (idx === i ? { ...row, quantity: qty } : row)),
+    );
+  }
 
   async function handleAddCategory() {
     if (!newCatName.trim()) return;
@@ -80,6 +132,7 @@ export default function SalesPage() {
     setNewCatName("");
     setAddingCat(false);
     setDate(new Date().toISOString().slice(0, 10));
+    setAddonRows([]);
     setModalOpen(true);
   }
 
@@ -91,6 +144,14 @@ export default function SalesPage() {
     setNewCatName("");
     setAddingCat(false);
     setDate(new Date(s.created_at).toISOString().slice(0, 10));
+    setAddonRows(
+      (s.sale_addons ?? []).map((a) => ({
+        sourceKey: a.item_id ? `item:${a.item_id}` : `sr:${a.sub_recipe_id}`,
+        quantity: String(a.quantity),
+        name: a.name_at_sale,
+        pricePerUnit: a.price_per_unit_at_sale,
+      })),
+    );
     setModalOpen(true);
   }
 
@@ -102,6 +163,20 @@ export default function SalesPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!sellingPrice) return;
+
+    const validAddons = addonRows
+      .filter((r) => r.sourceKey && Number(r.quantity) > 0)
+      .map((r) => {
+        const [type, id] = r.sourceKey.split(":");
+        return {
+          item_id: type === "item" ? id : null,
+          sub_recipe_id: type === "sr" ? id : null,
+          quantity: Number(r.quantity),
+          price_per_unit_at_sale: r.pricePerUnit,
+          name_at_sale: r.name,
+        };
+      });
+
     if (editing) {
       await updateSale.mutateAsync({
         id: editing.id,
@@ -110,6 +185,7 @@ export default function SalesPage() {
         hpp_at_sale: editing.hpp_at_sale,
         category_id: categoryId || null,
         date,
+        addons: validAddons,
       });
     } else {
       if (!recipeId) return;
@@ -127,6 +203,7 @@ export default function SalesPage() {
         category_id: categoryId || null,
         date,
         sub_recipe_deductions,
+        addons: validAddons,
       });
     }
     closeModal();
@@ -137,6 +214,7 @@ export default function SalesPage() {
     setNewCatName("");
     setAddingCat(false);
     setDate(new Date().toISOString().slice(0, 10));
+    setAddonRows([]);
   }
 
   const filtered = useMemo(() => {
@@ -154,15 +232,13 @@ export default function SalesPage() {
       rows = rows.filter((s) => s.category_id === filterCategory);
     }
     return [...rows].sort((a, b) => {
-      const profitA = a.profit * a.quantity_sold;
-      const profitB = b.profit * b.quantity_sold;
+      const profitA = (a.selling_price * a.quantity_sold) - (a.hpp_at_sale * a.quantity_sold + (a.hpp_addons_at_sale ?? 0));
+      const profitB = (b.selling_price * b.quantity_sold) - (b.hpp_at_sale * b.quantity_sold + (b.hpp_addons_at_sale ?? 0));
       const revenueA = a.selling_price * a.quantity_sold;
       const revenueB = b.selling_price * b.quantity_sold;
       switch (sortBy) {
         case "date_asc":
-          return (
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-          );
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
         case "profit_desc":
           return profitB - profitA;
         case "profit_asc":
@@ -172,9 +248,7 @@ export default function SalesPage() {
         case "qty_desc":
           return b.quantity_sold - a.quantity_sold;
         default:
-          return (
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-          );
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       }
     });
   }, [sales, search, filterRecipe, filterCategory, sortBy]);
@@ -368,7 +442,13 @@ export default function SalesPage() {
               {/* Mobile card list */}
               <div className="sm:hidden divide-y divide-[#EDE4CF]">
                 {filtered.map((s) => {
-                  const saleMargin = s.selling_price > 0 ? (s.profit / s.selling_price) * 100 : 0;
+                  const revenue = s.selling_price * s.quantity_sold;
+                  const hppTotal = s.hpp_at_sale * s.quantity_sold + (s.hpp_addons_at_sale ?? 0);
+                  const saleProfit = revenue - hppTotal;
+                  const saleMargin = revenue > 0 ? (saleProfit / revenue) * 100 : 0;
+                  const hasAddons = (s.hpp_addons_at_sale ?? 0) > 0;
+                  const isExpanded = expandedSaleId === s.id;
+
                   return (
                     <div key={s.id} className="px-4 py-3 hover:bg-[#F5EFE0] transition-colors">
                       <div className="flex items-start justify-between gap-2">
@@ -387,8 +467,8 @@ export default function SalesPage() {
                         </div>
                         <div className="flex items-center gap-1 shrink-0">
                           <div className="text-right mr-1">
-                            <p className={`text-sm font-semibold tabular-nums whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
-                              {formatCurrency(s.profit * s.quantity_sold)}
+                            <p className={`text-sm font-semibold tabular-nums whitespace-nowrap ${saleProfit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
+                              {formatCurrency(saleProfit)}
                             </p>
                             <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded tabular-nums ${saleMargin >= 30 ? "text-[#5C6B38]" : saleMargin >= 15 ? "text-[#7C563D]" : "text-red-600"}`}>
                               {saleMargin.toFixed(1)}%
@@ -406,8 +486,32 @@ export default function SalesPage() {
                         <span>{s.quantity_sold}×</span>
                         <span>{formatCurrency(s.selling_price)}/unit</span>
                         <span>·</span>
-                        <span>HPP {formatCurrency(s.hpp_at_sale * s.quantity_sold)}</span>
+                        <button
+                          onClick={() => setExpandedSaleId(isExpanded ? null : s.id)}
+                          className={`${hasAddons ? "text-[#A05035] font-medium" : ""} hover:underline`}
+                        >
+                          HPP Akhir {formatCurrency(hppTotal)}
+                          {hasAddons && " ▾"}
+                        </button>
                       </div>
+                      {isExpanded && hasAddons && (
+                        <div className="mt-2 rounded-lg bg-[#F5EFE0] border border-[#E5DACA] px-3 py-2 text-[10px] space-y-1">
+                          <div className="flex justify-between text-[#7C6352]">
+                            <span>HPP Produk</span>
+                            <span className="tabular-nums">{formatCurrency(s.hpp_at_sale * s.quantity_sold)}</span>
+                          </div>
+                          {(s.sale_addons ?? []).map((a) => (
+                            <div key={a.id} className="flex justify-between text-[#7C6352]">
+                              <span>+ {a.name_at_sale} ({a.quantity}×)</span>
+                              <span className="tabular-nums">{formatCurrency(a.quantity * a.price_per_unit_at_sale)}</span>
+                            </div>
+                          ))}
+                          <div className="flex justify-between font-semibold text-[#2C1810] border-t border-[#D9CCAF] pt-1">
+                            <span>HPP Akhir</span>
+                            <span className="tabular-nums">{formatCurrency(hppTotal)}</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -422,6 +526,7 @@ export default function SalesPage() {
                       <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Kategori</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Qty</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Harga Jual</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">HPP Akhir</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Laba</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Margin</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Tanggal</th>
@@ -430,43 +535,83 @@ export default function SalesPage() {
                   </thead>
                   <tbody>
                     {filtered.map((s) => {
-                      const saleMargin = s.selling_price > 0 ? (s.profit / s.selling_price) * 100 : 0;
+                      const revenue = s.selling_price * s.quantity_sold;
+                      const hppTotal = s.hpp_at_sale * s.quantity_sold + (s.hpp_addons_at_sale ?? 0);
+                      const saleProfit = revenue - hppTotal;
+                      const saleMargin = revenue > 0 ? (saleProfit / revenue) * 100 : 0;
+                      const hasAddons = (s.hpp_addons_at_sale ?? 0) > 0;
+                      const isExpanded = expandedSaleId === s.id;
+
                       return (
-                        <tr key={s.id} className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors">
-                          <td className="px-6 py-3 font-medium text-[#2C1810]">
-                            <span className="line-clamp-1 text-sm">{(s.recipe as any)?.name ?? "—"}</span>
-                          </td>
-                          <td className="px-6 py-3">
-                            {(s as any).category ? (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">{(s as any).category.name}</span>
-                            ) : (
-                              <span className="text-xs text-[#D9CCAF]">—</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-sm">{s.quantity_sold}</td>
-                          <td className="px-6 py-3 text-right tabular-nums text-[#4A3728] text-xs whitespace-nowrap">{formatCurrency(s.selling_price)}</td>
-                          <td className={`px-6 py-3 text-right tabular-nums font-semibold text-sm whitespace-nowrap ${s.profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
-                            {formatCurrency(s.profit * s.quantity_sold)}
-                          </td>
-                          <td className="px-6 py-3 text-right">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${saleMargin >= 30 ? "bg-[#737B4C]/10 text-[#5C6B38]" : saleMargin >= 15 ? "bg-[#B88D6A]/10 text-[#7C563D]" : "bg-red-50 text-red-700"}`}>
-                              {saleMargin.toFixed(1)}%
-                            </span>
-                          </td>
-                          <td className="px-6 py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">
-                            {format(new Date(s.created_at), "dd MMM yyyy")}
-                          </td>
-                          <td className="px-3 py-3">
-                            <div className="flex items-center gap-1">
-                              <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
-                                <Pencil className="w-3.5 h-3.5" />
-                              </button>
-                              <button onClick={() => { if (confirm("Hapus penjualan ini?")) deleteSale.mutate(s.id); }} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors" aria-label="Hapus">
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
+                        <>
+                          <tr key={s.id} className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors">
+                            <td className="px-6 py-3 font-medium text-[#2C1810]">
+                              <span className="line-clamp-1 text-sm">{(s.recipe as any)?.name ?? "—"}</span>
+                            </td>
+                            <td className="px-6 py-3">
+                              {(s as any).category ? (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">{(s as any).category.name}</span>
+                              ) : (
+                                <span className="text-xs text-[#D9CCAF]">—</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-sm">{s.quantity_sold}</td>
+                            <td className="px-6 py-3 text-right tabular-nums text-[#4A3728] text-xs whitespace-nowrap">{formatCurrency(s.selling_price)}</td>
+                            <td className="px-6 py-3 text-right tabular-nums text-[#4A3728] text-xs whitespace-nowrap">
+                              {hasAddons ? (
+                                <button
+                                  onClick={() => setExpandedSaleId(isExpanded ? null : s.id)}
+                                  className="text-[#A05035] hover:underline tabular-nums"
+                                  title="Klik untuk lihat breakdown"
+                                >
+                                  {formatCurrency(hppTotal)} ▾
+                                </button>
+                              ) : (
+                                formatCurrency(hppTotal)
+                              )}
+                            </td>
+                            <td className={`px-6 py-3 text-right tabular-nums font-semibold text-sm whitespace-nowrap ${saleProfit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}>
+                              {formatCurrency(saleProfit)}
+                            </td>
+                            <td className="px-6 py-3 text-right">
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${saleMargin >= 30 ? "bg-[#737B4C]/10 text-[#5C6B38]" : saleMargin >= 15 ? "bg-[#B88D6A]/10 text-[#7C563D]" : "bg-red-50 text-red-700"}`}>
+                                {saleMargin.toFixed(1)}%
+                              </span>
+                            </td>
+                            <td className="px-6 py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">
+                              {format(new Date(s.created_at), "dd MMM yyyy")}
+                            </td>
+                            <td className="px-3 py-3">
+                              <div className="flex items-center gap-1">
+                                <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </button>
+                                <button onClick={() => { if (confirm("Hapus penjualan ini?")) deleteSale.mutate(s.id); }} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-red-500 hover:bg-red-50 transition-colors" aria-label="Hapus">
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                          {isExpanded && hasAddons && (
+                            <tr className="bg-[#F5EFE0] border-b border-[#E5DACA]">
+                              <td colSpan={9} className="px-6 py-2">
+                                <div className="text-xs text-[#7C6352] space-y-1">
+                                  <div className="flex gap-8">
+                                    <span>HPP Produk: <span className="font-medium tabular-nums">{formatCurrency(s.hpp_at_sale * s.quantity_sold)}</span></span>
+                                    {(s.sale_addons ?? []).map((a) => (
+                                      <span key={a.id}>
+                                        + {a.name_at_sale} ({a.quantity}×): <span className="font-medium tabular-nums">{formatCurrency(a.quantity * a.price_per_unit_at_sale)}</span>
+                                      </span>
+                                    ))}
+                                    <span className="font-semibold text-[#2C1810]">
+                                      HPP Akhir: <span className="tabular-nums">{formatCurrency(hppTotal)}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </>
                       );
                     })}
                   </tbody>
@@ -506,6 +651,86 @@ export default function SalesPage() {
               ))}
             </Select>
           )}
+
+          {/* Add-On section */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-[#4A3728]">Add-On</label>
+              <button
+                type="button"
+                onClick={addAddonRow}
+                className="text-xs text-[#A05035] hover:underline font-medium flex items-center gap-1"
+              >
+                <Plus className="w-3 h-3" /> Tambah Add-On
+              </button>
+            </div>
+            {addonRows.length > 0 && (
+              <div className="space-y-2">
+                {addonRows.map((row, i) => (
+                  <div key={i} className="flex gap-2 items-center">
+                    <div className="flex-1">
+                      <select
+                        className={`${cls} w-full`}
+                        value={row.sourceKey}
+                        onChange={(e) => selectAddonSource(i, e.target.value)}
+                        required
+                      >
+                        <option value="">Pilih add-on...</option>
+                        {(addonItems ?? []).length > 0 && (
+                          <optgroup label="── Bahan Baku ──">
+                            {(addonItems ?? []).map((it) => (
+                              <option key={it.id} value={`item:${it.id}`}>
+                                {it.name} ({formatCurrency(it.avg_price)}/{it.unit})
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                        {(addonSubRecipes ?? []).length > 0 && (
+                          <optgroup label="── Setengah Jadi ──">
+                            {(addonSubRecipes ?? []).map((sr) => (
+                              <option key={sr.id} value={`sr:${sr.id}`}>
+                                {sr.name} ({formatCurrency(sr.avg_price)}/{sr.unit})
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                      </select>
+                    </div>
+                    <div className="w-20">
+                      <input
+                        type="number"
+                        min="0.001"
+                        step="0.001"
+                        placeholder="Qty"
+                        value={row.quantity}
+                        onChange={(e) => updateAddonQty(i, e.target.value)}
+                        className={`${cls} w-full`}
+                        required
+                      />
+                    </div>
+                    {row.sourceKey && Number(row.quantity) > 0 && (
+                      <span className="text-xs text-[#7C6352] whitespace-nowrap tabular-nums">
+                        {formatCurrency(row.pricePerUnit * Number(row.quantity))}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeAddonRow(i)}
+                      className="p-1.5 rounded text-[#D9CCAF] hover:text-red-500 flex-shrink-0"
+                      aria-label="Hapus add-on"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                {addonTotal > 0 && (
+                  <div className="text-xs text-[#7C6352] text-right">
+                    Total add-on: <span className="font-semibold tabular-nums">{formatCurrency(addonTotal)}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -596,15 +821,21 @@ export default function SalesPage() {
             >
               <div className="flex justify-between">
                 <span className="text-[#5C4535]">Pendapatan</span>
-                <span className="font-semibold tabular-nums">
-                  {formatCurrency(totalRevenue)}
-                </span>
+                <span className="font-semibold tabular-nums">{formatCurrency(totalRevenue)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#5C4535]">HPP (total)</span>
-                <span className="tabular-nums">
-                  {formatCurrency(hpp * Number(quantity))}
-                </span>
+                <span className="text-[#5C4535]">HPP Produk</span>
+                <span className="tabular-nums">{formatCurrency(hppProductTotal)}</span>
+              </div>
+              {addonTotal > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-[#5C4535]">Add-On</span>
+                  <span className="tabular-nums">{formatCurrency(addonTotal)}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-[#5C4535] font-medium">HPP Akhir</span>
+                <span className="font-medium tabular-nums">{formatCurrency(hppAkhirTotal)}</span>
               </div>
               <div
                 className={`flex justify-between font-bold border-t pt-1 ${totalProfit >= 0 ? "border-[#737B4C]/30 text-[#5C6B38]" : "border-red-200 text-red-700"}`}

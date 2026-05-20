@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { Sale, SaleCategory } from "@/types";
+import { Sale, SaleAddon, SaleCategory } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -12,11 +12,16 @@ export function useSales() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("sales")
-        .select("*, recipe:recipes(name), category:sale_categories(id, name)")
+        .select(`
+          *,
+          recipe:recipes(name),
+          category:sale_categories(id, name),
+          sale_addons(id, item_id, sub_recipe_id, quantity, price_per_unit_at_sale, name_at_sale, created_at)
+        `)
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []) as Sale[];
     },
   });
 }
@@ -83,7 +88,7 @@ export function useDashboardStats() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("sales")
-        .select("selling_price, hpp_at_sale, profit, quantity_sold");
+        .select("selling_price, hpp_at_sale, hpp_addons_at_sale, profit, quantity_sold");
       if (error) throw error;
 
       const rows = data ?? [];
@@ -92,13 +97,10 @@ export function useDashboardStats() {
         0,
       );
       const total_hpp = rows.reduce(
-        (s, r) => s + r.hpp_at_sale * r.quantity_sold,
+        (s, r) => s + r.hpp_at_sale * r.quantity_sold + (r.hpp_addons_at_sale ?? 0),
         0,
       );
-      const total_profit = rows.reduce(
-        (s, r) => s + r.profit * r.quantity_sold,
-        0,
-      );
+      const total_profit = total_revenue - total_hpp;
       const profit_margin =
         total_revenue > 0 ? (total_profit / total_revenue) * 100 : 0;
 
@@ -111,6 +113,62 @@ export function useDashboardStats() {
       };
     },
   });
+}
+
+type AddonInput = {
+  item_id?: string | null;
+  sub_recipe_id?: string | null;
+  quantity: number;
+  price_per_unit_at_sale: number;
+  name_at_sale: string;
+};
+
+async function deductAddonStock(
+  supabase: ReturnType<typeof createClient>,
+  userId: string,
+  addons: AddonInput[],
+) {
+  for (const a of addons) {
+    if (a.item_id) {
+      const { error } = await supabase.rpc("adjust_item_stock", {
+        p_user_id: userId,
+        p_item_id: a.item_id,
+        p_delta: -a.quantity,
+      });
+      if (error) throw error;
+    } else if (a.sub_recipe_id) {
+      const { error } = await supabase.rpc("deduct_sub_recipe_stock", {
+        p_user_id: userId,
+        p_recipe_id: a.sub_recipe_id,
+        p_quantity: a.quantity,
+      });
+      if (error) throw error;
+    }
+  }
+}
+
+async function restoreAddonStock(
+  supabase: ReturnType<typeof createClient>,
+  userId: string,
+  addons: SaleAddon[],
+) {
+  for (const a of addons) {
+    if (a.item_id) {
+      const { error } = await supabase.rpc("adjust_item_stock", {
+        p_user_id: userId,
+        p_item_id: a.item_id,
+        p_delta: a.quantity,
+      });
+      if (error) throw error;
+    } else if (a.sub_recipe_id) {
+      const { error } = await supabase.rpc("restore_sub_recipe_stock", {
+        p_user_id: userId,
+        p_recipe_id: a.sub_recipe_id,
+        p_quantity: a.quantity,
+      });
+      if (error) throw error;
+    }
+  }
 }
 
 export function useCreateSale() {
@@ -128,20 +186,34 @@ export function useCreateSale() {
         sub_recipe_id: string;
         quantity: number;
       }>;
+      addons?: AddonInput[];
     }) => {
       const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
+
+      const { date, sub_recipe_deductions, addons, ...rest } = p;
+      const hpp_addons_at_sale = (addons ?? []).reduce(
+        (sum, a) => sum + a.quantity * a.price_per_unit_at_sale,
+        0,
+      );
       const profit = p.selling_price - p.hpp_at_sale;
-      const { date, sub_recipe_deductions, ...rest } = p;
-      const { error } = await supabase.from("sales").insert({
-        ...rest,
-        profit,
-        user_id: user!.id,
-        ...(date ? { created_at: new Date(date).toISOString() } : {}),
-      });
+
+      const { data: saleData, error } = await supabase
+        .from("sales")
+        .insert({
+          ...rest,
+          profit,
+          hpp_addons_at_sale,
+          user_id: user!.id,
+          ...(date ? { created_at: new Date(date).toISOString() } : {}),
+        })
+        .select("id")
+        .single();
       if (error) throw error;
+
+      const saleId = saleData.id;
 
       if (sub_recipe_deductions?.length) {
         for (const d of sub_recipe_deductions) {
@@ -153,11 +225,28 @@ export function useCreateSale() {
           if (deductError) throw deductError;
         }
       }
+
+      if (addons?.length) {
+        const { error: addonError } = await supabase.from("sale_addons").insert(
+          addons.map((a) => ({
+            sale_id: saleId,
+            item_id: a.item_id ?? null,
+            sub_recipe_id: a.sub_recipe_id ?? null,
+            quantity: a.quantity,
+            price_per_unit_at_sale: a.price_per_unit_at_sale,
+            name_at_sale: a.name_at_sale,
+          })),
+        );
+        if (addonError) throw addonError;
+
+        await deductAddonStock(supabase, user!.id, addons);
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["sales"] });
       qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
       qc.invalidateQueries({ queryKey: ["recipes"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
       toast.success("Penjualan dicatat");
     },
     onError: (e: Error) => toast.error(e.message),
@@ -174,25 +263,68 @@ export function useUpdateSale() {
       hpp_at_sale: number;
       category_id?: string | null;
       date?: string;
+      addons?: AddonInput[];
     }) => {
       const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const hpp_addons_at_sale = (p.addons ?? []).reduce(
+        (sum, a) => sum + a.quantity * a.price_per_unit_at_sale,
+        0,
+      );
       const profit = p.selling_price - p.hpp_at_sale;
-      const { error } = await supabase
+
+      const { error: updateError } = await supabase
         .from("sales")
         .update({
           quantity_sold: p.quantity_sold,
           selling_price: p.selling_price,
           profit,
+          hpp_addons_at_sale,
           category_id: p.category_id ?? null,
           ...(p.date ? { created_at: new Date(p.date).toISOString() } : {}),
         })
         .eq("id", p.id);
-      if (error) throw error;
+      if (updateError) throw updateError;
+
+      // Fetch old addons to restore stock
+      const { data: oldAddons } = await supabase
+        .from("sale_addons")
+        .select("*")
+        .eq("sale_id", p.id);
+
+      if (oldAddons?.length) {
+        await restoreAddonStock(supabase, user!.id, oldAddons as SaleAddon[]);
+      }
+
+      // Delete all old addons
+      await supabase.from("sale_addons").delete().eq("sale_id", p.id);
+
+      // Insert new addons and deduct stock
+      if (p.addons?.length) {
+        const { error: addonError } = await supabase.from("sale_addons").insert(
+          p.addons.map((a) => ({
+            sale_id: p.id,
+            item_id: a.item_id ?? null,
+            sub_recipe_id: a.sub_recipe_id ?? null,
+            quantity: a.quantity,
+            price_per_unit_at_sale: a.price_per_unit_at_sale,
+            name_at_sale: a.name_at_sale,
+          })),
+        );
+        if (addonError) throw addonError;
+
+        await deductAddonStock(supabase, user!.id, p.addons);
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["sales"] });
       qc.invalidateQueries({ queryKey: ["report-sales"] });
       qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
       toast.success("Penjualan diperbarui");
     },
     onError: (e: Error) => toast.error(e.message),

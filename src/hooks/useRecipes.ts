@@ -62,6 +62,7 @@ export function useCreateRecipe() {
     mutationFn: async (payload: {
       name: string;
       is_ingredient?: boolean;
+      is_addon?: boolean;
       unit?: string | null;
       items: Array<{
         item_id?: string | null;
@@ -79,6 +80,7 @@ export function useCreateRecipe() {
           name: payload.name,
           user_id: user!.id,
           is_ingredient: payload.is_ingredient ?? false,
+          is_addon: payload.is_addon ?? false,
           unit: payload.unit ?? null,
         })
         .select()
@@ -111,6 +113,7 @@ export function useUpdateRecipe() {
       id: string;
       name: string;
       is_ingredient?: boolean;
+      is_addon?: boolean;
       unit?: string | null;
       items: Array<{
         item_id?: string | null;
@@ -124,6 +127,7 @@ export function useUpdateRecipe() {
         .update({
           name: payload.name,
           is_ingredient: payload.is_ingredient ?? false,
+          is_addon: payload.is_addon ?? false,
           unit: payload.unit ?? null,
         })
         .eq("id", payload.id);
@@ -150,6 +154,31 @@ export function useUpdateRecipe() {
       toast.success("Recipe updated");
     },
     onError: (e: Error) => toast.error(e.message),
+  });
+}
+
+export function useAddonSubRecipes() {
+  return useQuery<Recipe[]>({
+    queryKey: ["recipes", "addon"],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("recipes")
+        .select("*")
+        .eq("is_ingredient", true)
+        .eq("is_addon", true)
+        .order("name");
+      if (error) throw error;
+      return (data ?? []).map((r) => ({
+        ...r,
+        is_ingredient: r.is_ingredient ?? false,
+        is_addon: r.is_addon ?? false,
+        stock: r.stock ?? 0,
+        avg_price: r.avg_price ?? 0,
+        hpp: 0,
+        prev_hpp: 0,
+      }));
+    },
   });
 }
 

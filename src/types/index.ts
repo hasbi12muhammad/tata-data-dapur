@@ -20,6 +20,7 @@ export interface Item {
   avg_price: number;
   prev_avg_price: number;
   stock: number;
+  is_addon: boolean;
   created_at: string;
 }
 
@@ -45,6 +46,7 @@ export interface Recipe {
   hpp: number;           // computed client-side by calcHPP
   prev_hpp: number;      // computed client-side by calcHPP(usePrev=true)
   is_ingredient: boolean;
+  is_addon: boolean;
   unit?: string;
   stock: number;
   avg_price: number;
@@ -79,6 +81,17 @@ export interface SaleCategory {
   created_at: string;
 }
 
+export interface SaleAddon {
+  id: string;
+  sale_id: string;
+  item_id?: string | null;
+  sub_recipe_id?: string | null;
+  quantity: number;
+  price_per_unit_at_sale: number;
+  name_at_sale: string;
+  created_at: string;
+}
+
 export interface Sale {
   id: string;
   user_id: string;
@@ -87,10 +100,12 @@ export interface Sale {
   quantity_sold: number;
   selling_price: number;
   hpp_at_sale: number;
+  hpp_addons_at_sale: number;
   profit: number;
   created_at: string;
   recipe?: Recipe;
   category?: SaleCategory;
+  sale_addons?: SaleAddon[];
 }
 
 export interface ExpenseCategory {
