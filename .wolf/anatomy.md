@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-20T13:39:12.372Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T14:49:36.200Z
 > Files: 68 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/plans/
@@ -73,7 +73,7 @@
 
 ## src/app/recipes/
 
-- `page.tsx` — dynamic — renders modal (~5514 tok)
+- `page.tsx` — dynamic (~5560 tok)
 
 ## src/app/reports/
 
@@ -81,7 +81,7 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~10976 tok)
+- `page.tsx` — dynamic (~11335 tok)
 
 ## src/app/settings/
 
@@ -117,7 +117,7 @@
 - `useExpenses.ts` — Exports useExpenses, useExpensesByDate, useExpenseCategories, useReportExpenses + 4 more (~1368 tok)
 - `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem (~766 tok)
 - `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase (~731 tok)
-- `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 2 more (~1625 tok)
+- `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 3 more (~1806 tok)
 - `useSales.ts` — All sales (no limit) for reports — includes created_at for date filtering (~2939 tok)
 
 ## src/lib/

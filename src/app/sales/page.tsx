@@ -10,7 +10,7 @@ import { Input, Select } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useAddonItems } from "@/hooks/useItems";
-import { useAddonSubRecipes } from "@/hooks/useRecipes";
+import { useAddonSubRecipes, useAddonFinishedRecipes } from "@/hooks/useRecipes";
 import {
   useCreateSale,
   useCreateSaleCategory,
@@ -41,6 +41,7 @@ export default function SalesPage() {
   const { data: categories } = useSaleCategories();
   const { data: addonItems } = useAddonItems();
   const { data: addonSubRecipes } = useAddonSubRecipes();
+  const { data: addonFinishedRecipes } = useAddonFinishedRecipes();
   const createSale = useCreateSale();
   const updateSale = useUpdateSale();
   const deleteSale = useDeleteSale();
@@ -98,7 +99,7 @@ export default function SalesPage() {
       name = item?.name ?? "";
       pricePerUnit = item?.avg_price ?? 0;
     } else if (type === "sr") {
-      const sr = addonSubRecipes?.find((x) => x.id === id);
+      const sr = addonSubRecipes?.find((x) => x.id === id) ?? addonFinishedRecipes?.find((x) => x.id === id);
       name = sr?.name ?? "";
       pricePerUnit = sr?.avg_price ?? 0;
     }
@@ -690,6 +691,15 @@ export default function SalesPage() {
                             {(addonSubRecipes ?? []).map((sr) => (
                               <option key={sr.id} value={`sr:${sr.id}`}>
                                 {sr.name} ({formatCurrency(sr.avg_price)}/{sr.unit})
+                              </option>
+                            ))}
+                          </optgroup>
+                        )}
+                        {(addonFinishedRecipes ?? []).length > 0 && (
+                          <optgroup label="── Produk Jadi ──">
+                            {(addonFinishedRecipes ?? []).map((fr) => (
+                              <option key={fr.id} value={`sr:${fr.id}`}>
+                                {fr.name} ({formatCurrency(fr.avg_price)}/{fr.unit ?? "pcs"})
                               </option>
                             ))}
                           </optgroup>

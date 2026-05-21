@@ -182,6 +182,31 @@ export function useAddonSubRecipes() {
   });
 }
 
+export function useAddonFinishedRecipes() {
+  return useQuery<Recipe[]>({
+    queryKey: ["recipes", "addon-finished"],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("recipes")
+        .select("*")
+        .eq("is_ingredient", false)
+        .eq("is_addon", true)
+        .order("name");
+      if (error) throw error;
+      return (data ?? []).map((r) => ({
+        ...r,
+        is_ingredient: false,
+        is_addon: true,
+        stock: r.stock ?? 0,
+        avg_price: r.avg_price ?? 0,
+        hpp: 0,
+        prev_hpp: 0,
+      }));
+    },
+  });
+}
+
 export function useDeleteRecipe() {
   const qc = useQueryClient();
 

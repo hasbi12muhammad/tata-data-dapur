@@ -396,3 +396,23 @@
 | 20:44 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
 | 20:46 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
 | 20:47 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
+| 20:48 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
+| 20:55 | Edited src/app/sales/page.tsx | CSS: unit | ~241 |
+| 20:55 | Session end: 21 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 16 reads | ~59089 tok |
+| 20:57 | Session end: 21 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 16 reads | ~59089 tok |
+
+## Session: 2026-05-21 21:34
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 21:48 | Edited src/hooks/useRecipes.ts | added nullish coalescing | ~192 |
+| 21:48 | Edited src/app/recipes/page.tsx | modified if() | ~139 |
+| 21:48 | Edited src/app/recipes/page.tsx | 14→12 lines | ~155 |
+| 21:48 | Edited src/app/recipes/page.tsx | 4→1 lines | ~19 |
+| 21:48 | Edited src/app/recipes/page.tsx | 13→18 lines | ~292 |
+| 21:49 | Edited src/app/sales/page.tsx | inline fix | ~24 |
+| 21:49 | Edited src/app/sales/page.tsx | 1→2 lines | ~36 |
+| 21:49 | Edited src/app/sales/page.tsx | modified if() | ~62 |
+| 21:49 | Edited src/app/sales/page.tsx | expanded (+9 lines) | ~295 |
+| $(date +%H:%M) | Produk jadi bisa jadi add-on: hook useAddonFinishedRecipes, is_addon/unit exposed di recipes form, optgroup Produk Jadi di dropdown add-on sales | useRecipes.ts, recipes/page.tsx, sales/page.tsx | done | ~1200 |
+| 21:50 | Session end: 9 writes across 2 files (useRecipes.ts, page.tsx) | 3 reads | ~19543 tok |

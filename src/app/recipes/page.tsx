@@ -186,16 +186,16 @@ export default function RecipesPage() {
         id: editing.id,
         name: name.trim(),
         is_ingredient: isIngredient,
-        is_addon: isIngredient ? isAddon : false,
-        unit: isIngredient ? unit : null,
+        is_addon: isAddon,
+        unit: (isIngredient || isAddon) ? unit : null,
         items: bomItems,
       });
     } else {
       await createRecipe.mutateAsync({
         name: name.trim(),
         is_ingredient: isIngredient,
-        is_addon: isIngredient ? isAddon : false,
-        unit: isIngredient ? unit : null,
+        is_addon: isAddon,
+        unit: (isIngredient || isAddon) ? unit : null,
         items: bomItems,
       });
     }
@@ -254,9 +254,14 @@ export default function RecipesPage() {
                           Setengah Jadi
                         </span>
                       )}
+                      {!recipe.is_ingredient && recipe.is_addon && (
+                        <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#EDE4CF] text-[#7C563D]">
+                          Add-On
+                        </span>
+                      )}
                     </h3>
-                    {recipe.is_ingredient && (
-                      <p className="text-xs text-amber-700 mt-0.5">
+                    {(recipe.is_ingredient || recipe.is_addon) && (
+                      <p className="text-xs text-[#7C6352] mt-0.5">
                         Stok: <span className="font-semibold">{recipe.stock} {recipe.unit}</span>
                       </p>
                     )}
@@ -357,29 +362,24 @@ export default function RecipesPage() {
             <input
               type="checkbox"
               checked={isIngredient}
-              onChange={(e) => {
-                setIsIngredient(e.target.checked);
-                if (!e.target.checked) setIsAddon(false);
-              }}
+              onChange={(e) => setIsIngredient(e.target.checked)}
               className="w-4 h-4 rounded accent-[#A05035]"
             />
             <span className="text-sm font-medium text-[#4A3728]">
               Jadikan Bahan Setengah Jadi
             </span>
           </label>
-          {isIngredient && (
-            <>
-              <UnitSelect value={unit ?? "pcs"} onChange={setUnit} required={isIngredient} />
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isAddon}
-                  onChange={(e) => setIsAddon(e.target.checked)}
-                  className="w-4 h-4 rounded accent-[#A05035]"
-                />
-                <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
-              </label>
-            </>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isAddon}
+              onChange={(e) => setIsAddon(e.target.checked)}
+              className="w-4 h-4 rounded accent-[#A05035]"
+            />
+            <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
+          </label>
+          {(isIngredient || isAddon) && (
+            <UnitSelect value={unit ?? "pcs"} onChange={setUnit} required={isIngredient} />
           )}
 
           <div>
