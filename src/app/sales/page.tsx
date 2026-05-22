@@ -1369,13 +1369,14 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                       src="/td-logo.png"
                       alt="Logo"
                       style={{
+                        display: "block",
+                        margin: "0 auto 8px",
                         width: 52,
                         height: 52,
                         borderRadius: 12,
                         objectFit: "contain",
                         backgroundColor: "#A05035",
                         padding: 4,
-                        marginBottom: 8,
                       }}
                     />
                     <p
@@ -1388,17 +1389,13 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                     >
                       {storeName}
                     </p>
-                    <p style={{ fontSize: 10, color: "#B88D6A", marginBottom: 4 }}>
+                    <p style={{ fontSize: 10, color: "#B88D6A", marginBottom: 6 }}>
                       Tata Data Dapur
                     </p>
-                    <p style={{ fontSize: 11, color: "#7C6352" }}>
-                      {format(new Date(receipt.date), "dd MMM yyyy")}
+                    <p style={{ fontSize: 10, color: "#7C6352", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "0 6px" }}>
+                      <span>{format(new Date(receipt.date), "dd MMM yyyy")}</span>
+                      {receipt.categoryName && <><span style={{ color: "#D9CCAF" }}>·</span><span>{receipt.categoryName}</span></>}
                     </p>
-                    {receipt.categoryName && (
-                      <p style={{ fontSize: 10, color: "#B88D6A", marginTop: 2 }}>
-                        {receipt.categoryName}
-                      </p>
-                    )}
                   </div>
                   <div style={{ backgroundColor: "#fff", padding: "16px 20px" }}>
                     {receipt.items.map((item, i) => (
@@ -1557,13 +1554,14 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                       src="/td-logo.png"
                       alt="Logo"
                       style={{
+                        display: "block",
+                        margin: "0 auto 8px",
                         width: 52,
                         height: 52,
                         borderRadius: 12,
                         objectFit: "contain",
                         backgroundColor: "#A05035",
                         padding: 4,
-                        marginBottom: 8,
                       }}
                     />
                     <p
@@ -1576,26 +1574,14 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                     >
                       {storeName}
                     </p>
-                    <p style={{ fontSize: 10, color: "#B88D6A", marginBottom: 4 }}>
+                    <p style={{ fontSize: 10, color: "#B88D6A", marginBottom: 6 }}>
                       Tata Data Dapur
                     </p>
-                    <p style={{ fontSize: 11, color: "#7C6352" }}>
-                      {format(new Date(invoiceSale.created_at), "dd MMM yyyy")}
-                    </p>
-                    {(invoiceSale as any).category?.name && (
-                      <p style={{ fontSize: 10, color: "#B88D6A", marginTop: 2 }}>
-                        {(invoiceSale as any).category.name}
-                      </p>
-                    )}
-                    <p
-                      style={{
-                        fontSize: 9,
-                        color: "#B88D6A",
-                        fontFamily: "monospace",
-                        marginTop: 4,
-                      }}
-                    >
-                      #{invoiceSale.id.slice(0, 8).toUpperCase()}
+                    <p style={{ fontSize: 10, color: "#7C6352", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "0 6px" }}>
+                      <span>{format(new Date(invoiceSale.created_at), "dd MMM yyyy")}</span>
+                      {(invoiceSale as any).category?.name && <><span style={{ color: "#D9CCAF" }}>·</span><span>{(invoiceSale as any).category.name}</span></>}
+                      <span style={{ color: "#D9CCAF" }}>·</span>
+                      <span style={{ fontFamily: "monospace", color: "#B88D6A" }}>#{invoiceSale.id.slice(0, 8).toUpperCase()}</span>
                     </p>
                   </div>
                   <div style={{ backgroundColor: "#fff", padding: "16px 20px" }}>
