@@ -21,12 +21,23 @@ import {
 } from "@/hooks/useSales";
 import { Sale } from "@/types";
 import { formatCurrency } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 import { format } from "date-fns";
-import { Filter, Minus, Pencil, Plus, Search, TrendingUp, Trash2, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { CheckCircle2, FileText, Filter, Minus, Pencil, Plus, Printer, Search, Share2, TrendingUp, Trash2, X } from "lucide-react";
+import { useMemo, useEffect, useRef, useState } from "react";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
+
+interface ReceiptSnapshot {
+  id: string;
+  date: string;
+  recipeName: string;
+  categoryName: string;
+  quantity: number;
+  sellingPrice: number;
+  addons: Array<{ name: string; qty: number; pricePerUnit: number }>;
+}
 
 interface AddonRow {
   sourceKey: string; // "item:uuid" or "sr:uuid"
@@ -58,6 +69,18 @@ export default function SalesPage() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [addonRows, setAddonRows] = useState<AddonRow[]>([]);
   const [expandedSaleId, setExpandedSaleId] = useState<string | null>(null);
+  const [receipt, setReceipt] = useState<ReceiptSnapshot | null>(null);
+  const [invoiceSale, setInvoiceSale] = useState<Sale | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [storeName, setStoreName] = useState("Toko Anda");
+  const receiptRef = useRef<HTMLDivElement>(null);
+  const invoiceRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data: { user } }) => {
+      if (user?.user_metadata?.store_name) setStoreName(user.user_metadata.store_name);
+    });
+  }, []);
 
   const [search, setSearch] = useState("");
   const [filterRecipe, setFilterRecipe] = useState("");
@@ -196,7 +219,7 @@ export default function SalesPage() {
           sub_recipe_id: ri.sub_recipe_id!,
           quantity: ri.quantity_used * Number(quantity),
         }));
-      await createSale.mutateAsync({
+      const saleId = await createSale.mutateAsync({
         recipe_id: recipeId,
         quantity_sold: Number(quantity),
         selling_price: Number(sellingPrice),
@@ -206,6 +229,21 @@ export default function SalesPage() {
         sub_recipe_deductions,
         addons: validAddons,
       });
+      if (saleId) {
+        setReceipt({
+          id: saleId,
+          date,
+          recipeName: selectedRecipe?.name ?? "—",
+          categoryName: categories?.find((c) => c.id === categoryId)?.name ?? "",
+          quantity: Number(quantity),
+          sellingPrice: Number(sellingPrice),
+          addons: validAddons.map((a) => ({
+            name: a.name_at_sale,
+            qty: a.quantity,
+            pricePerUnit: a.price_per_unit_at_sale,
+          })),
+        });
+      }
     }
     closeModal();
     setRecipeId("");
@@ -216,6 +254,106 @@ export default function SalesPage() {
     setAddingCat(false);
     setDate(new Date().toISOString().slice(0, 10));
     setAddonRows([]);
+  }
+
+  // ─── Print / Share helpers ────────────────────────────────────────────────────
+  function buildAddonRows(addons: Array<{ name: string; qty: number; pricePerUnit: number }>) {
+    return addons.map((a) =>
+      `<tr><td style="padding:3px 0 3px 20px;font-size:10pt;color:#7C6352">+ ${a.name} (${a.qty}×)<br><span style="font-size:9pt;color:#B88D6A">@ ${formatCurrency(a.pricePerUnit)}</span></td><td style="text-align:right;font-size:10pt;color:#7C6352;white-space:nowrap;vertical-align:top;padding:3px 0">${formatCurrency(a.qty * a.pricePerUnit)}</td></tr>`
+    ).join("");
+  }
+
+  function buildAddonRowsThermal(addons: Array<{ name: string; qty: number; pricePerUnit: number }>) {
+    return addons.map((a) =>
+      `<tr><td style="font-size:8pt;padding:1mm 0 1mm 6mm;opacity:.8">+ ${a.name} (${a.qty}×)<br><span style="font-size:7.5pt">@ ${formatCurrency(a.pricePerUnit)}</span></td><td style="text-align:right;font-size:8pt;white-space:nowrap;vertical-align:top;opacity:.8">${formatCurrency(a.qty * a.pricePerUnit)}</td></tr>`
+    ).join("");
+  }
+
+  function openPrintWindow(html: string) {
+    const win = window.open("", "_blank");
+    if (!win) return;
+    win.document.write(html);
+    win.document.close();
+  }
+
+  function buildStrokHtml(opts: { subtitle: string; date: string; txId?: string; mainRow: string; addonRows: string; total: number }) {
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Struk - ${storeName}</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;background:#fdf6ee;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px}.card{background:#fff;border-radius:16px;max-width:400px;width:100%;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.15)}.hdr{background:#fdf6ee;padding:20px 20px 16px;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}.store-name{font-size:18pt;font-weight:700;color:#2C1810;margin-bottom:3px}.brand{font-size:9pt;color:#B88D6A;margin-bottom:2px}.sub{font-size:9pt;color:#92400e;margin-bottom:2px}.txid{font-size:7pt;color:#b45309;font-family:monospace;margin-top:4px}.body{padding:20px}table{width:100%;border-collapse:collapse;margin-bottom:4px}tr{border-bottom:1px solid #fef3c7}tr:last-child{border-bottom:none}td{padding:7px 0;font-size:10pt;vertical-align:top;color:#78350f}td.r{text-align:right;white-space:nowrap;color:#92400e}.div{border:none;border-top:2px dashed #fde68a;margin:12px 0}.total{display:flex;justify-content:space-between;align-items:center;margin-top:4px}.total-label{font-size:12pt;font-weight:700;color:#b45309}.total-amt{font-size:20pt;font-weight:700;color:#78350f;font-variant-numeric:tabular-nums}@media print{body{background:#fff;padding:0}.card{box-shadow:none;border-radius:0}.hdr{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>
+<div class="card"><div class="hdr">
+<p class="store-name">${opts.subtitle !== storeName ? opts.subtitle : storeName}</p>
+<p class="brand">Tata Data Dapur</p>
+<p class="sub">${opts.date}</p>${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
+</div><div class="body"><table>${opts.mainRow}${opts.addonRows}</table>
+<hr class="div"><div class="total"><span class="total-label">Total</span><span class="total-amt">${formatCurrency(opts.total)}</span></div>
+</div></div><script>window.onload=function(){window.print()}<\/script></body></html>`;
+  }
+
+  function buildThermalHtml(opts: { subtitle: string; date: string; txId?: string; mainRow: string; addonRows: string; total: number }) {
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kasir - ${storeName}</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}@page{size:58mm auto;margin:4mm 3mm}body{font-family:"Courier New",Courier,monospace;font-size:9pt;color:#000;width:52mm}h1{font-size:12pt;font-weight:700;text-align:center;margin-bottom:0.5mm}h2{font-size:8pt;font-weight:400;text-align:center;margin-bottom:1mm;opacity:.6}.sub{font-size:8pt;text-align:center;margin-bottom:0.5mm}.txid{font-size:7pt;text-align:center;margin-bottom:3mm;opacity:.7}.div-solid{border-top:1px solid #000;margin:2mm 0}.div-dash{border-top:1px dashed #000;margin:2mm 0}table{width:100%;border-collapse:collapse}td{font-size:8.5pt;padding:1.5mm 0;vertical-align:top}td.r{text-align:right;white-space:nowrap}.total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:1mm}.total-label{font-size:9pt;font-weight:700}.total-amt{font-size:13pt;font-weight:700}.footer{text-align:center;font-size:7pt;margin-top:4mm;opacity:.6}@media print{body{width:auto}}</style></head><body>
+<h1>${storeName}</h1><h2>Tata Data Dapur</h2>
+<p class="sub">${opts.date}</p>${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
+<div class="div-solid"></div><table>${opts.mainRow}${opts.addonRows}</table>
+<div class="div-dash"></div><div class="total-row"><span class="total-label">TOTAL</span><span class="total-amt">${formatCurrency(opts.total)}</span></div>
+<div class="div-solid"></div><p class="footer">Terima kasih</p>
+<script>window.onload=function(){window.print()}<\/script></body></html>`;
+  }
+
+  function printReceipt(r: ReceiptSnapshot, thermal: boolean) {
+    const mainRow = `<tr><td style="font-size:11pt;color:#2C1810;padding:7px 0"><strong>${r.quantity}×</strong> ${r.recipeName}</td><td style="text-align:right;font-size:11pt;color:#2C1810;white-space:nowrap;vertical-align:top;padding:7px 0">${formatCurrency(r.sellingPrice * r.quantity)}</td></tr>`;
+    const mainRowT = `<tr><td style="font-size:8.5pt;padding:1.5mm 0"><strong>${r.quantity}×</strong> ${r.recipeName}</td><td class="r" style="font-size:8.5pt;padding:1.5mm 0">${formatCurrency(r.sellingPrice * r.quantity)}</td></tr>`;
+    const aRows = buildAddonRows(r.addons);
+    const aRowsT = buildAddonRowsThermal(r.addons);
+    const total = r.sellingPrice * r.quantity;
+    const opts = { subtitle: storeName, date: format(new Date(r.date), "dd MMM yyyy"), txId: r.id.slice(0, 8).toUpperCase(), total };
+    openPrintWindow(thermal ? buildThermalHtml({ ...opts, mainRow: mainRowT, addonRows: aRowsT }) : buildStrokHtml({ ...opts, mainRow, addonRows: aRows }));
+  }
+
+  function printInvoice(s: Sale, thermal: boolean) {
+    const recipeName = (s.recipe as any)?.name ?? "—";
+    const total = s.selling_price * s.quantity_sold;
+    const addons = (s.sale_addons ?? []).map((a) => ({ name: a.name_at_sale, qty: a.quantity, pricePerUnit: a.price_per_unit_at_sale }));
+    const mainRow = `<tr><td style="font-size:11pt;color:#2C1810;padding:7px 0"><strong>${s.quantity_sold}×</strong> ${recipeName}</td><td style="text-align:right;font-size:11pt;color:#2C1810;white-space:nowrap;vertical-align:top;padding:7px 0">${formatCurrency(total)}</td></tr>`;
+    const mainRowT = `<tr><td style="font-size:8.5pt;padding:1.5mm 0"><strong>${s.quantity_sold}×</strong> ${recipeName}</td><td class="r" style="font-size:8.5pt;padding:1.5mm 0">${formatCurrency(total)}</td></tr>`;
+    const aRows = buildAddonRows(addons);
+    const aRowsT = buildAddonRowsThermal(addons);
+    const opts = { subtitle: storeName, date: format(new Date(s.created_at), "dd MMM yyyy"), txId: s.id.slice(0, 8).toUpperCase(), total };
+    openPrintWindow(thermal ? buildThermalHtml({ ...opts, mainRow: mainRowT, addonRows: aRowsT }) : buildStrokHtml({ ...opts, mainRow, addonRows: aRows }));
+  }
+
+  async function captureAndShare(ref: React.RefObject<HTMLDivElement | null>, filename: string, title: string, fallbackFn: () => void) {
+    try {
+      const { toBlob } = await import("html-to-image");
+      const blob = await toBlob(ref.current!, { quality: 0.95, pixelRatio: 3, backgroundColor: "#ffffff" });
+      if (!blob) throw new Error("toBlob failed");
+      const file = new File([blob], filename, { type: "image/jpeg" });
+      if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = filename; a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch {
+      fallbackFn();
+    }
+  }
+
+  async function handleShareReceipt() {
+    if (!receipt) return;
+    setSharing(true);
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r as FrameRequestCallback)));
+    await captureAndShare(receiptRef, `struk-${receipt.id.slice(0, 8)}.jpg`, "Struk Transaksi", () => printReceipt(receipt, false));
+    setSharing(false);
+  }
+
+  async function handleShareInvoice() {
+    if (!invoiceSale) return;
+    setSharing(true);
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r as FrameRequestCallback)));
+    await captureAndShare(invoiceRef, `invoice-${invoiceSale.id.slice(0, 8)}.jpg`, "Invoice Transaksi", () => printInvoice(invoiceSale, false));
+    setSharing(false);
   }
 
   const filtered = useMemo(() => {
@@ -475,6 +613,9 @@ export default function SalesPage() {
                               {saleMargin.toFixed(1)}%
                             </span>
                           </div>
+                          <button onClick={() => setInvoiceSale(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Invoice">
+                            <FileText className="w-3.5 h-3.5" />
+                          </button>
                           <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
@@ -584,6 +725,9 @@ export default function SalesPage() {
                             </td>
                             <td className="px-3 py-3">
                               <div className="flex items-center gap-1">
+                                <button onClick={() => setInvoiceSale(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Invoice">
+                                  <FileText className="w-3.5 h-3.5" />
+                                </button>
                                 <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors" aria-label="Edit">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
@@ -889,6 +1033,122 @@ export default function SalesPage() {
           </div>
         </form>
       </Modal>
+
+      {/* ── Receipt Modal (setelah save) ────────────────────────────────────────── */}
+      {receipt && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setReceipt(null)}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-center pt-3 pb-1 shrink-0"><div className="w-10 h-1 rounded-full bg-[#D9CCAF]" /></div>
+            <div className="flex items-center justify-between px-5 py-3 shrink-0">
+              <div className="flex items-center gap-2 text-emerald-600">
+                <CheckCircle2 size={16} />
+                <span className="text-sm font-semibold">Transaksi Tersimpan</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button onClick={() => printReceipt(receipt, false)} className="flex items-center gap-1.5 text-xs font-medium text-[#7C6352] bg-[#FBF8F2] border border-[#D9CCAF] rounded-lg px-3 py-1.5">
+                  <Printer size={13} /> Struk
+                </button>
+                <button onClick={() => printReceipt(receipt, true)} className="flex items-center gap-1.5 text-xs font-medium text-[#7C6352] bg-[#FBF8F2] border border-[#D9CCAF] rounded-lg px-3 py-1.5">
+                  <Printer size={13} /> Kasir
+                </button>
+                <button onClick={handleShareReceipt} disabled={sharing} className="flex items-center gap-1.5 text-xs font-medium text-[#7C6352] bg-[#FBF8F2] border border-[#D9CCAF] rounded-lg px-3 py-1.5 disabled:opacity-50">
+                  {sharing ? "..." : <><Share2 size={13} /> Kirim</>}
+                </button>
+                <button onClick={() => setReceipt(null)} className="p-1.5 text-[#B88D6A] hover:text-[#7C6352] rounded-lg"><X size={16} /></button>
+              </div>
+            </div>
+            <div className="overflow-y-auto flex-1">
+              <div ref={receiptRef} style={{ padding: "16px 16px 24px", backgroundColor: "#fdf6ee" }}>
+                <div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid #D9CCAF" }}>
+                  <div style={{ backgroundColor: "#FBF8F2", padding: "16px 20px", textAlign: "center" }}>
+                    <p style={{ fontSize: 20, fontWeight: 700, color: "#2C1810", marginBottom: 2 }}>{storeName}</p>
+                    <p style={{ fontSize: 10, color: "#B88D6A", marginBottom: 4 }}>Tata Data Dapur</p>
+                    <p style={{ fontSize: 11, color: "#7C6352" }}>{format(new Date(receipt.date), "dd MMM yyyy")}</p>
+                    {receipt.categoryName && <p style={{ fontSize: 10, color: "#B88D6A", marginTop: 2 }}>{receipt.categoryName}</p>}
+                  </div>
+                  <div style={{ backgroundColor: "#fff", padding: "16px 20px" }}>
+                    <div style={{ paddingBottom: 10, borderBottom: "1px solid #F5EFE0" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                        <span style={{ fontSize: 14, color: "#2C1810", fontWeight: 600 }}>{receipt.quantity}× {receipt.recipeName}</span>
+                        <span style={{ fontSize: 14, color: "#2C1810", fontWeight: 600, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{formatCurrency(receipt.sellingPrice * receipt.quantity)}</span>
+                      </div>
+                      {receipt.addons.map((a, i) => (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", marginTop: 4, paddingLeft: 16 }}>
+                          <span style={{ fontSize: 11, color: "#7C6352" }}>+ {a.name} ({a.qty}×)<br /><span style={{ fontSize: 10, color: "#B88D6A" }}>@ {formatCurrency(a.pricePerUnit)}</span></span>
+                          <span style={{ fontSize: 11, color: "#7C6352", whiteSpace: "nowrap" }}>{formatCurrency(a.qty * a.pricePerUnit)}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ borderTop: "2px dashed #D9CCAF", marginTop: 12, marginBottom: 12 }} />
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "#7C6352" }}>Total</span>
+                      <span style={{ fontSize: 22, fontWeight: 700, color: "#2C1810" }}>{formatCurrency(receipt.sellingPrice * receipt.quantity)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Invoice Modal (dari riwayat) ────────────────────────────────────────── */}
+      {invoiceSale && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setInvoiceSale(null)}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-center pt-3 pb-1 shrink-0"><div className="w-10 h-1 rounded-full bg-[#D9CCAF]" /></div>
+            <div className="flex items-center justify-between px-5 py-3 shrink-0">
+              <p className="text-sm font-semibold text-[#2C1810]">Invoice</p>
+              <div className="flex items-center gap-2">
+                <button onClick={() => printInvoice(invoiceSale, false)} className="flex items-center gap-1.5 text-xs font-medium text-[#7C6352] bg-[#FBF8F2] border border-[#D9CCAF] rounded-lg px-3 py-1.5">
+                  <Printer size={13} /> Struk
+                </button>
+                <button onClick={() => printInvoice(invoiceSale, true)} className="flex items-center gap-1.5 text-xs font-medium text-[#7C6352] bg-[#FBF8F2] border border-[#D9CCAF] rounded-lg px-3 py-1.5">
+                  <Printer size={13} /> Kasir
+                </button>
+                <button onClick={handleShareInvoice} disabled={sharing} className="flex items-center gap-1.5 text-xs font-medium text-[#7C6352] bg-[#FBF8F2] border border-[#D9CCAF] rounded-lg px-3 py-1.5 disabled:opacity-50">
+                  {sharing ? "..." : <><Share2 size={13} /> Kirim</>}
+                </button>
+                <button onClick={() => setInvoiceSale(null)} className="p-1.5 text-[#B88D6A] hover:text-[#7C6352] rounded-lg"><X size={16} /></button>
+              </div>
+            </div>
+            <div className="overflow-y-auto flex-1">
+              <div ref={invoiceRef} style={{ padding: "16px 16px 24px", backgroundColor: "#fdf6ee" }}>
+                <div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid #D9CCAF" }}>
+                  <div style={{ backgroundColor: "#FBF8F2", padding: "16px 20px", textAlign: "center" }}>
+                    <p style={{ fontSize: 20, fontWeight: 700, color: "#2C1810", marginBottom: 2 }}>{storeName}</p>
+                    <p style={{ fontSize: 10, color: "#B88D6A", marginBottom: 4 }}>Tata Data Dapur</p>
+                    <p style={{ fontSize: 11, color: "#7C6352" }}>{format(new Date(invoiceSale.created_at), "dd MMM yyyy")}</p>
+                    {(invoiceSale as any).category?.name && <p style={{ fontSize: 10, color: "#B88D6A", marginTop: 2 }}>{(invoiceSale as any).category.name}</p>}
+                    <p style={{ fontSize: 9, color: "#B88D6A", fontFamily: "monospace", marginTop: 4 }}>#{invoiceSale.id.slice(0, 8).toUpperCase()}</p>
+                  </div>
+                  <div style={{ backgroundColor: "#fff", padding: "16px 20px" }}>
+                    <div style={{ paddingBottom: 10, borderBottom: "1px solid #F5EFE0" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                        <span style={{ fontSize: 14, color: "#2C1810", fontWeight: 600 }}>{invoiceSale.quantity_sold}× {(invoiceSale.recipe as any)?.name ?? "—"}</span>
+                        <span style={{ fontSize: 14, color: "#2C1810", fontWeight: 600, whiteSpace: "nowrap" }}>{formatCurrency(invoiceSale.selling_price * invoiceSale.quantity_sold)}</span>
+                      </div>
+                      {(invoiceSale.sale_addons ?? []).map((a) => (
+                        <div key={a.id} style={{ display: "flex", justifyContent: "space-between", marginTop: 4, paddingLeft: 16 }}>
+                          <span style={{ fontSize: 11, color: "#7C6352" }}>+ {a.name_at_sale} ({a.quantity}×)<br /><span style={{ fontSize: 10, color: "#B88D6A" }}>@ {formatCurrency(a.price_per_unit_at_sale)}</span></span>
+                          <span style={{ fontSize: 11, color: "#7C6352", whiteSpace: "nowrap" }}>{formatCurrency(a.quantity * a.price_per_unit_at_sale)}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ borderTop: "2px dashed #D9CCAF", marginTop: 12, marginBottom: 12 }} />
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "#7C6352" }}>Total</span>
+                      <span style={{ fontSize: 22, fontWeight: 700, color: "#2C1810" }}>{formatCurrency(invoiceSale.selling_price * invoiceSale.quantity_sold)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

@@ -241,6 +241,8 @@ export function useCreateSale() {
 
         await deductAddonStock(supabase, user!.id, addons);
       }
+
+      return saleId as string;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["sales"] });
