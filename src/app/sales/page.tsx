@@ -28,6 +28,7 @@ import {
   Printer, Search, Share2, TrendingUp, Trash2, X,
 } from "lucide-react";
 import { useMemo, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -532,26 +533,29 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
     title: string,
     fallback: () => void,
   ) {
+    if (!ref.current) { fallback(); return; }
     try {
       const { toBlob } = await import("html-to-image");
-      const blob = await toBlob(ref.current!, {
-        quality: 0.95,
-        pixelRatio: 3,
+      const blob = await toBlob(ref.current, {
+        pixelRatio: 2,
         backgroundColor: "#ffffff",
       });
-      if (!blob) throw new Error("toBlob failed");
-      const file = new File([blob], filename, { type: "image/jpeg" });
+      if (!blob) throw new Error("toBlob returned null");
+      const pngFilename = filename.replace(/\.(jpg|jpeg)$/i, ".png");
+      const file = new File([blob], pngFilename, { type: "image/png" });
       if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
         await navigator.share({ files: [file], title });
       } else {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = filename;
+        a.download = pngFilename;
         a.click();
         URL.revokeObjectURL(url);
       }
-    } catch {
+    } catch (e) {
+      console.error("captureAndShare failed:", e);
+      toast.error("Gagal membuat gambar");
       fallback();
     }
   }
@@ -564,7 +568,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
     );
     await captureAndShare(
       receiptRef,
-      `struk-${receipt.id.slice(0, 8)}.jpg`,
+      `struk-${receipt.id.slice(0, 8)}.png`,
       "Struk Transaksi",
       () => printFromReceipt(receipt, false),
     );
@@ -579,7 +583,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
     );
     await captureAndShare(
       invoiceRef,
-      `invoice-${invoiceSale.id.slice(0, 8)}.jpg`,
+      `invoice-${invoiceSale.id.slice(0, 8)}.png`,
       "Invoice Transaksi",
       () => printFromSale(invoiceSale, false),
     );
