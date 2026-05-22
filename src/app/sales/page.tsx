@@ -462,6 +462,7 @@ export default function SalesPage() {
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Struk - ${storeName}</title>
 <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,sans-serif;background:#fdf6ee;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px}.card{background:#fff;border-radius:16px;max-width:420px;width:100%;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.15)}.hdr{background:#FBF8F2;padding:20px 20px 16px;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}.store-name{font-size:20pt;font-weight:700;color:#2C1810;margin-bottom:3px}.brand{font-size:9pt;color:#B88D6A;margin-bottom:4px}.sub{font-size:9pt;color:#7C6352;margin-bottom:2px}.txid{font-size:7pt;color:#B88D6A;font-family:monospace;margin-top:4px}.body{padding:20px}table{width:100%;border-collapse:collapse;margin-bottom:4px}tr{border-bottom:1px solid #F5EFE0}tr:last-child{border-bottom:none}td{padding:7px 0;font-size:10pt;vertical-align:top;color:#2C1810}.div{border:none;border-top:2px dashed #D9CCAF;margin:12px 0}.total{display:flex;justify-content:space-between;align-items:center}.total-label{font-size:12pt;font-weight:700;color:#7C6352}.total-amt{font-size:20pt;font-weight:700;color:#2C1810;font-variant-numeric:tabular-nums}@media print{body{background:#fff;padding:0}.card{box-shadow:none;border-radius:0}.hdr{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>
 <div class="card"><div class="hdr">
+<img src="/td-logo.png" alt="Logo" style="width:52px;height:52px;border-radius:12px;object-fit:contain;background:#A05035;padding:4px;margin-bottom:8px">
 <p class="store-name">${storeName}</p>
 <p class="brand">Tata Data Dapur</p>
 <p class="sub">${opts.date}</p>
@@ -482,6 +483,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
   }) {
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kasir - ${storeName}</title>
 <style>*{box-sizing:border-box;margin:0;padding:0}@page{size:58mm auto;margin:4mm 3mm}body{font-family:"Courier New",Courier,monospace;font-size:9pt;color:#000;width:52mm}h1{font-size:11pt;font-weight:700;text-align:center;margin-bottom:0.5mm}h2{font-size:8pt;font-weight:400;text-align:center;margin-bottom:1mm;opacity:.7}.sub{font-size:8pt;text-align:center;margin-bottom:0.5mm}.txid{font-size:7pt;text-align:center;margin-bottom:3mm;opacity:.7}.div-solid{border-top:1px solid #000;margin:2mm 0}.div-dash{border-top:1px dashed #000;margin:2mm 0}table{width:100%;border-collapse:collapse}td{font-size:8.5pt;padding:1.5mm 0;vertical-align:top}.total-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:1mm}.total-label{font-size:9pt;font-weight:700}.total-amt{font-size:13pt;font-weight:700}.footer{text-align:center;font-size:7pt;margin-top:4mm;opacity:.6}@media print{body{width:auto}}</style></head><body>
+<div style="text-align:center;margin-bottom:2mm"><img src="/td-logo.png" alt="Logo" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#A05035;padding:3px"></div>
 <h1>${storeName}</h1><h2>Tata Data Dapur</h2>
 <p class="sub">${opts.date}</p>
 ${opts.categoryName ? `<p class="sub">${opts.categoryName}</p>` : ""}
@@ -1363,6 +1365,19 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                       textAlign: "center",
                     }}
                   >
+                    <img
+                      src="/td-logo.png"
+                      alt="Logo"
+                      style={{
+                        width: 52,
+                        height: 52,
+                        borderRadius: 12,
+                        objectFit: "contain",
+                        backgroundColor: "#A05035",
+                        padding: 4,
+                        marginBottom: 8,
+                      }}
+                    />
                     <p
                       style={{
                         fontSize: 20,
@@ -1538,6 +1553,19 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                       textAlign: "center",
                     }}
                   >
+                    <img
+                      src="/td-logo.png"
+                      alt="Logo"
+                      style={{
+                        width: 52,
+                        height: 52,
+                        borderRadius: 12,
+                        objectFit: "contain",
+                        backgroundColor: "#A05035",
+                        padding: 4,
+                        marginBottom: 8,
+                      }}
+                    />
                     <p
                       style={{
                         fontSize: 20,
