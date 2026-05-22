@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { Purchase, Sale } from "@/types";
+import { Purchase, SaleItem } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
 function nextDay(date: string): string {
@@ -11,18 +11,22 @@ function nextDay(date: string): string {
 }
 
 export function useSalesByDate(date: string) {
-  return useQuery<Sale[]>({
-    queryKey: ["sales", "date", date],
+  return useQuery<SaleItem[]>({
+    queryKey: ["sale-items", "date", date],
     queryFn: async () => {
       const supabase = createClient();
       const { data, error } = await supabase
-        .from("sales")
-        .select("*, recipe:recipes(name), category:sale_categories(id, name)")
+        .from("sale_items")
+        .select(`
+          *,
+          recipe:recipes(id, name),
+          sale:sales(id, category:sale_categories(id, name))
+        `)
         .gte("created_at", date)
         .lt("created_at", nextDay(date))
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []) as SaleItem[];
     },
     enabled: !!date,
   });

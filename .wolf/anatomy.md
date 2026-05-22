@@ -1,7 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T14:49:36.200Z
-> Files: 68 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-22T11:57:06.418Z
+> Files: 70 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../../../tmp/
+
+- `commitmsg.txt` (~141 tok)
 
 ## ../../.claude/plans/
 
@@ -49,7 +53,7 @@
 
 ## src/app/dashboard/
 
-- `page.tsx` — dynamic — uses useState (~3896 tok)
+- `page.tsx` — dynamic (~3958 tok)
 
 ## src/app/expenses/
 
@@ -77,11 +81,11 @@
 
 ## src/app/reports/
 
-- `page.tsx` — dynamic (~14880 tok)
+- `page.tsx` — dynamic (~14892 tok)
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~11335 tok)
+- `page.tsx` — dynamic (~19207 tok)
 
 ## src/app/settings/
 
@@ -113,12 +117,12 @@
 ## src/hooks/
 
 - `useAuth.ts` — Exports useCurrentUser, useAuth (~343 tok)
-- `useDailyData.ts` — Exports useSalesByDate, usePurchasesByDate (~396 tok)
+- `useDailyData.ts` — Exports useSalesByDate, usePurchasesByDate (~423 tok)
 - `useExpenses.ts` — Exports useExpenses, useExpensesByDate, useExpenseCategories, useReportExpenses + 4 more (~1368 tok)
 - `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem (~766 tok)
 - `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase (~731 tok)
 - `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 3 more (~1806 tok)
-- `useSales.ts` — All sales (no limit) for reports — includes created_at for date filtering (~2939 tok)
+- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3461 tok)
 
 ## src/lib/
 
@@ -132,7 +136,7 @@
 
 ## src/types/
 
-- `index.ts` — Exports CustomUnit, PackagingType, Item, Purchase + 9 more (~743 tok)
+- `index.ts` — Exports CustomUnit, PackagingType, Item, Purchase + 10 more (~793 tok)
 
 ## supabase/migrations/
 
@@ -147,6 +151,7 @@
 - `007_production_crud.sql` — RPCs: delete_production + update_production, both SECURITY DEFINER, reverse/adjust stock on recipes and items (~788 tok)
 - `008_security_fix_rpc_auth.sql` — Security fix: adds auth.uid() guard to all 7 SECURITY DEFINER RPCs; creates user_profiles table with RLS + signup trigger (~3095 tok)
 - `010_sale_addons.sql` — Sale Add-On: is_addon flag on items+recipes, sale_addons table, hpp_addons_at_sale on sales, RPCs: adjust_item_stock + restore_sub_recipe_stock (~623 tok)
+- `011_sale_items.sql` — Migration 011: Multi-item sales (~839 tok)
 
 ## supabase/seeds/
 

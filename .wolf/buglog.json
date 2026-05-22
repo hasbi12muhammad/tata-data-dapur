@@ -116,6 +116,150 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T13:35:43.715Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-05-21T14:48:00.537Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/hooks/useRecipes.ts",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:48:00.537Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-05-21T14:48:25.283Z",
+      "error_message": "CSS fix: is_addon, unit",
+      "file": "src/app/recipes/page.tsx",
+      "root_cause": "is_addon: isIngredient ? isAddon : false, → isAddon,; unit: isIngredient ? unit : null, → (isIngredient || isAddon) ? unit : null,",
+      "fix": "Changed is_addon: isIngredient ? isAddon : false, → isAddon,; unit: isIngredient ? unit : null, → (isIngredient || isAddon) ? unit : null,",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-05-21T14:49:36.250Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-05-22T11:23:44.600Z",
+      "error_message": "Type error",
+      "file": "src/hooks/useSales.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T11:23:44.600Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-05-22T11:24:39.304Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 8→19 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T11:24:39.304Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-05-22T11:24:47.788Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: {/* ── Receipt Modal (setelah save) ────────────────────────; {receipt && (",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-22T11:27:49.195Z"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-05-22T11:25:04.293Z",
+      "error_message": "CSS fix: id, addons, quantity",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "id: editing.id, → saleId,; addons: validAddons, → validAddons.map((a) => ({; quantity: ri.quantity_used * Number(quantity), → Number(quantity),",
+      "fix": "Changed id: editing.id, → saleId,; addons: validAddons, → validAddons.map((a) => ({; quantity: ri.quantity_used * Number(quantity), → Number(quantity),",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-22T11:28:24.239Z"
+    },
+    {
+      "id": "bug-014",
+      "timestamp": "2026-05-22T11:26:11.902Z",
+      "error_message": "Missing error handling in buildAddonRows",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T11:26:11.902Z"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-05-22T11:48:40.847Z",
+      "error_message": "Type error",
+      "file": "src/hooks/useDailyData.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T11:48:40.848Z"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-05-22T11:49:36.629Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/app/reports/page.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T11:49:36.629Z"
     }
   ]
 }

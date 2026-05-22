@@ -95,7 +95,7 @@ export default function DashboardPage() {
       { items: { name: string; qty: number; total: number }[]; total: number }
     >
   >((acc, s) => {
-    const cat = (s as any).category?.name ?? "Tanpa Kategori";
+    const cat = (s as any).sale?.category?.name ?? "Tanpa Kategori";
     const recipeName = (s.recipe as any)?.name ?? "—";
     if (!acc[cat]) acc[cat] = { items: [], total: 0 };
     const existing = acc[cat].items.find((i) => i.name === recipeName);

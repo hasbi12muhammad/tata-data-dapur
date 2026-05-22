@@ -83,7 +83,7 @@ export interface SaleCategory {
 
 export interface SaleAddon {
   id: string;
-  sale_id: string;
+  sale_item_id: string;
   item_id?: string | null;
   sub_recipe_id?: string | null;
   quantity: number;
@@ -92,20 +92,28 @@ export interface SaleAddon {
   created_at: string;
 }
 
-export interface Sale {
+export interface SaleItem {
   id: string;
+  sale_id: string;
   user_id: string;
   recipe_id: string;
-  category_id: string | null;
   quantity_sold: number;
   selling_price: number;
   hpp_at_sale: number;
   hpp_addons_at_sale: number;
-  profit: number;
   created_at: string;
   recipe?: Recipe;
-  category?: SaleCategory;
+  sale?: Pick<Sale, "id" | "created_at" | "category">;
   sale_addons?: SaleAddon[];
+}
+
+export interface Sale {
+  id: string;
+  user_id: string;
+  category_id: string | null;
+  created_at: string;
+  category?: SaleCategory;
+  sale_items?: SaleItem[];
 }
 
 export interface ExpenseCategory {

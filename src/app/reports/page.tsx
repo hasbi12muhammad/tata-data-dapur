@@ -263,7 +263,7 @@ export default function ReportsPage() {
               (sum, s) => sum + s.selling_price * s.quantity_sold,
               0,
             ),
-            profit: rs.reduce((sum, s) => sum + s.profit * s.quantity_sold, 0),
+            profit: rs.reduce((sum, s) => sum + (s.selling_price - s.hpp_at_sale) * s.quantity_sold - (s.hpp_addons_at_sale ?? 0), 0),
           };
         })
         .filter((r) => r.revenue > 0)
