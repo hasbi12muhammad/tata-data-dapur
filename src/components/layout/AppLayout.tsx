@@ -2,8 +2,6 @@
 
 import { Sidebar } from "./Sidebar";
 import { Menu, Settings } from "lucide-react";
-import Image from "next/image";
-import TdLogo from "../../../public/td-logo.png";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -22,7 +20,7 @@ export function AppLayout({ children, title, action }: AppLayoutProps) {
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="h-16 bg-[#FBF8F2] border-b border-[#D9CCAF] flex items-center gap-3 px-4 sm:px-6 flex-shrink-0">
+        <header className="h-16 bg-[#FBF8F2] border-b border-[#D9CCAF] flex items-center gap-4 px-4 sm:px-6 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden p-2 rounded-lg text-[#7C6352] hover:bg-[#E9DFC6] cursor-pointer"
@@ -30,19 +28,6 @@ export function AppLayout({ children, title, action }: AppLayoutProps) {
           >
             <Menu className="w-5 h-5" />
           </button>
-          <Link href="/dashboard" className="flex items-center gap-2 flex-shrink-0 lg:hidden">
-            <Image
-              src={TdLogo}
-              alt="Tata Data"
-              width={30}
-              height={30}
-              className="rounded-lg object-contain bg-[#A05035] p-0.5"
-            />
-            <span className="text-sm font-bold text-[#7C563D] tracking-tight leading-tight hidden sm:block">
-              Tata Data
-            </span>
-          </Link>
-          <div className="w-px h-5 bg-[#D9CCAF] lg:hidden" />
           <h1 className="text-lg font-semibold text-[#2C1810] flex-1 truncate">
             {title}
           </h1>
