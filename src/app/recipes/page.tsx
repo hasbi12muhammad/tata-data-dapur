@@ -347,8 +347,8 @@ export default function RecipesPage() {
                         // Only show badge if at least one ingredient price changed AFTER recipe was created
                         const recipeCreated = new Date(recipe.created_at).getTime();
                         const priceChangedAfterCreate = (recipe.recipe_items ?? []).some((ri) => {
-                          const updatedAt = ri.item?.avg_price_updated_at;
-                          return updatedAt && new Date(updatedAt).getTime() > recipeCreated;
+                          const updatedAt = ri.item?.avg_price_updated_at ?? null;
+                          return updatedAt != null && new Date(updatedAt).getTime() > recipeCreated;
                         });
                         if (!priceChangedAfterCreate) return null;
                         const pct = (diff / prev) * 100;

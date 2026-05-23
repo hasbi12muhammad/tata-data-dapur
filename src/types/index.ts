@@ -19,7 +19,7 @@ export interface Item {
   unit: string;
   avg_price: number;
   prev_avg_price: number;
-  avg_price_updated_at: string | null;
+  avg_price_updated_at?: string | null;
   stock: number;
   is_addon: boolean;
   created_at: string;
