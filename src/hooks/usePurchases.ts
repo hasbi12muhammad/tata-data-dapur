@@ -1,5 +1,18 @@
 "use client";
 
+// Converts a user-selected date string to a proper timestamp.
+// If the date is today (local), use actual now() so the timestamp
+// is accurate relative to other records (e.g. recipe created_at).
+// For past dates, use local noon to avoid UTC-offset day-shift issues.
+function dateToTimestamp(dateStr: string): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  if (dateStr === `${y}-${m}-${d}`) return now.toISOString();
+  return new Date(dateStr + "T12:00:00").toISOString();
+}
+
 import { createClient } from "@/lib/supabase/client";
 import { Purchase, Production } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -88,7 +101,7 @@ export function useCreatePurchase() {
         p_pkg_type_id: p.pkg_type_id ?? null,
         p_pkg_qty: p.pkg_qty ?? null,
         p_size_per_pkg: p.size_per_pkg ?? null,
-        ...(p.date ? { p_created_at: new Date(p.date).toISOString() } : {}),
+        ...(p.date ? { p_created_at: dateToTimestamp(p.date) } : {}),
       });
       if (error) throw error;
     },
@@ -208,7 +221,7 @@ export function useProduceSubRecipe() {
         p_recipe_id: p.recipe_id,
         p_batches: p.batches,
         p_total_cost: p.total_cost,
-        ...(p.date ? { p_created_at: new Date(p.date).toISOString() } : {}),
+        ...(p.date ? { p_created_at: dateToTimestamp(p.date) } : {}),
       });
       if (error) throw error;
     },
