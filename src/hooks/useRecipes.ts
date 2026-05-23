@@ -78,6 +78,7 @@ export function useCreateRecipe() {
       unit?: string | null;
       batch_yield?: number;
       waste_pct?: number;
+      hpp_baseline?: number;
       items: Array<{
         item_id?: string | null;
         sub_recipe_id?: string | null;
@@ -98,6 +99,7 @@ export function useCreateRecipe() {
           unit: payload.unit ?? null,
           batch_yield: payload.batch_yield ?? 1,
           waste_pct: payload.waste_pct ?? 0,
+          hpp_baseline: payload.hpp_baseline ?? null,
         })
         .select()
         .single();
@@ -133,6 +135,7 @@ export function useUpdateRecipe() {
       unit?: string | null;
       batch_yield?: number;
       waste_pct?: number;
+      hpp_baseline?: number;
       items: Array<{
         item_id?: string | null;
         sub_recipe_id?: string | null;
@@ -149,6 +152,7 @@ export function useUpdateRecipe() {
           unit: payload.unit ?? null,
           batch_yield: payload.batch_yield ?? 1,
           waste_pct: payload.waste_pct ?? 0,
+          hpp_baseline: payload.hpp_baseline ?? null,
         })
         .eq("id", payload.id);
       if (re) throw re;

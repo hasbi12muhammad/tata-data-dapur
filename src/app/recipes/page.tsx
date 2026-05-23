@@ -193,6 +193,7 @@ export default function RecipesPage() {
     }));
     const yieldVal = Math.max(Number(batchYield) || 1, 1);
     const wasteVal = Math.min(Math.max(Number(wastePct) || 0, 0), 99);
+    const hppBaseline = calcPreviewHPP();
     if (editing) {
       await updateRecipe.mutateAsync({
         id: editing.id,
@@ -202,6 +203,7 @@ export default function RecipesPage() {
         unit: (isIngredient || isAddon) ? unit : null,
         batch_yield: yieldVal,
         waste_pct: wasteVal,
+        hpp_baseline: hppBaseline,
         items: bomItems,
       });
     } else {
@@ -212,6 +214,7 @@ export default function RecipesPage() {
         unit: (isIngredient || isAddon) ? unit : null,
         batch_yield: yieldVal,
         waste_pct: wasteVal,
+        hpp_baseline: hppBaseline,
         items: bomItems,
       });
     }
@@ -341,17 +344,12 @@ export default function RecipesPage() {
                         {formatCurrency(recipe.hpp)}
                       </span>
                       {(() => {
-                        const diff = recipe.hpp - recipe.prev_hpp;
-                        const prev = recipe.prev_hpp;
-                        if (!prev || Math.abs(diff) < 1) return null;
-                        // Only show badge if at least one ingredient price changed AFTER recipe was created
-                        const recipeCreated = new Date(recipe.created_at).getTime();
-                        const priceChangedAfterCreate = (recipe.recipe_items ?? []).some((ri) => {
-                          const updatedAt = ri.item?.avg_price_updated_at ?? null;
-                          return updatedAt != null && new Date(updatedAt).getTime() > recipeCreated;
-                        });
-                        if (!priceChangedAfterCreate) return null;
-                        const pct = (diff / prev) * 100;
+                        // hpp_baseline: HPP saat recipe dibuat/diedit terakhir (recipe baru)
+                        // fallback ke prev_hpp untuk recipe lama (hpp_baseline IS NULL)
+                        const baseline = recipe.hpp_baseline ?? recipe.prev_hpp;
+                        const diff = recipe.hpp - baseline;
+                        if (!baseline || Math.abs(diff) < 1) return null;
+                        const pct = (diff / baseline) * 100;
                         const up = diff > 0;
                         return (
                           <span

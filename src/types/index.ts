@@ -53,6 +53,7 @@ export interface Recipe {
   avg_price: number;
   batch_yield: number;
   waste_pct: number;
+  hpp_baseline?: number | null;
   created_at: string;
   recipe_items?: RecipeItem[];
 }
