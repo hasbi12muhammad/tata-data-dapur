@@ -114,6 +114,8 @@ export default function RecipesPage() {
   const [isIngredient, setIsIngredient] = useState(false);
   const [isAddon, setIsAddon] = useState(false);
   const [unit, setUnit] = useState<string>("pcs");
+  const [batchYield, setBatchYield] = useState("1");
+  const [wastePct, setWastePct] = useState("0");
 
   function openCreate() {
     setEditing(null);
@@ -121,6 +123,8 @@ export default function RecipesPage() {
     setIsIngredient(false);
     setIsAddon(false);
     setUnit("pcs");
+    setBatchYield("1");
+    setWastePct("0");
     setRows([{ item_id: "", sub_recipe_id: "", quantity_used: "" }]);
     setModalOpen(true);
   }
@@ -131,6 +135,8 @@ export default function RecipesPage() {
     setIsIngredient(recipe.is_ingredient ?? false);
     setIsAddon(recipe.is_addon ?? false);
     setUnit(recipe.unit ?? "pcs");
+    setBatchYield(String(recipe.batch_yield ?? 1));
+    setWastePct(String(recipe.waste_pct ?? 0));
     setRows(
       (recipe.recipe_items ?? []).map((ri) => ({
         item_id: ri.item_id ?? "",
@@ -159,7 +165,7 @@ export default function RecipesPage() {
   }
 
   function calcPreviewHPP(): number {
-    return rows.reduce((sum, row) => {
+    const rawCost = rows.reduce((sum, row) => {
       const qty = Number(row.quantity_used);
       if (row.sub_recipe_id) {
         const sr = recipes?.find((r) => r.id === row.sub_recipe_id);
@@ -168,6 +174,10 @@ export default function RecipesPage() {
       const item = items?.find((i) => i.id === row.item_id);
       return sum + (item?.avg_price ?? 0) * qty;
     }, 0);
+    const yield_ = Math.max(Number(batchYield) || 1, 1);
+    const waste = Math.min(Math.max(Number(wastePct) || 0, 0), 99);
+    const effective = yield_ * (1 - waste / 100);
+    return rawCost / Math.max(effective, 0.001);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -181,6 +191,8 @@ export default function RecipesPage() {
       sub_recipe_id: r.sub_recipe_id || null,
       quantity_used: Number(r.quantity_used),
     }));
+    const yieldVal = Math.max(Number(batchYield) || 1, 1);
+    const wasteVal = Math.min(Math.max(Number(wastePct) || 0, 0), 99);
     if (editing) {
       await updateRecipe.mutateAsync({
         id: editing.id,
@@ -188,6 +200,8 @@ export default function RecipesPage() {
         is_ingredient: isIngredient,
         is_addon: isAddon,
         unit: (isIngredient || isAddon) ? unit : null,
+        batch_yield: yieldVal,
+        waste_pct: wasteVal,
         items: bomItems,
       });
     } else {
@@ -196,6 +210,8 @@ export default function RecipesPage() {
         is_ingredient: isIngredient,
         is_addon: isAddon,
         unit: (isIngredient || isAddon) ? unit : null,
+        batch_yield: yieldVal,
+        waste_pct: wasteVal,
         items: bomItems,
       });
     }
@@ -302,9 +318,23 @@ export default function RecipesPage() {
                   ))}
                 </div>
                 <div className="border-t border-[#E5DACA] pt-3">
+                  {(recipe.batch_yield > 1 || recipe.waste_pct > 0) && (
+                    <div className="flex gap-2 mb-2 flex-wrap">
+                      {recipe.batch_yield > 1 && (
+                        <span className="text-[10px] bg-[#EDE4CF] text-[#7C563D] px-1.5 py-0.5 rounded font-medium">
+                          {recipe.batch_yield} pcs/batch
+                        </span>
+                      )}
+                      {recipe.waste_pct > 0 && (
+                        <span className="text-[10px] bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded font-medium">
+                          waste {recipe.waste_pct}%
+                        </span>
+                      )}
+                    </div>
+                  )}
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-xs text-[#7C6352] font-medium">
-                      HPP
+                      HPP/pcs
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
                       <span className="text-sm font-bold text-[#A05035] tabular-nums">
@@ -381,6 +411,27 @@ export default function RecipesPage() {
           {(isIngredient || isAddon) && (
             <UnitSelect value={unit ?? "pcs"} onChange={setUnit} required={isIngredient} />
           )}
+
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              label="Hasil per Batch (pcs)"
+              type="number"
+              min="1"
+              step="1"
+              value={batchYield}
+              onChange={(e) => setBatchYield(e.target.value)}
+              required
+            />
+            <Input
+              label="Estimasi Waste (%)"
+              type="number"
+              min="0"
+              max="99"
+              step="0.1"
+              value={wastePct}
+              onChange={(e) => setWastePct(e.target.value)}
+            />
+          </div>
 
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -475,10 +526,15 @@ export default function RecipesPage() {
             return previewHPP > 0 ? (
               <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-2.5">
                 <p className="text-xs text-blue-700 font-medium">
-                  Estimasi HPP:{" "}
+                  Estimasi HPP/pcs:{" "}
                   <span className="font-bold">
                     {formatCurrency(previewHPP)}
                   </span>
+                  {Number(batchYield) > 1 && (
+                    <span className="ml-1 opacity-70">
+                      (total batch: {formatCurrency(previewHPP * Math.max(Number(batchYield) * (1 - Math.min(Number(wastePct), 99) / 100), 0.001))})
+                    </span>
+                  )}
                 </p>
               </div>
             ) : null;

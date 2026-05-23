@@ -5,12 +5,22 @@ import { Recipe, RecipeItem } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-export function calcHPP(items: RecipeItem[], usePrev: boolean): number {
-  return items.reduce((sum, ri) => {
+export function calcHPP(
+  items: RecipeItem[],
+  usePrev: boolean,
+  batchYield: number = 1,
+  wastePct: number = 0,
+): number {
+  const rawCost = items.reduce((sum, ri) => {
     if (ri.sub_recipe_id && ri.sub_recipe) {
-      const subItems = ri.sub_recipe.recipe_items ?? [];
-      const subHPP = calcHPP(subItems, usePrev);
-      return sum + subHPP * ri.quantity_used;
+      const sub = ri.sub_recipe;
+      const subHppPerUnit = calcHPP(
+        sub.recipe_items ?? [],
+        usePrev,
+        sub.batch_yield ?? 1,
+        sub.waste_pct ?? 0,
+      );
+      return sum + subHppPerUnit * ri.quantity_used;
     }
     const item = ri.item;
     const price = usePrev
@@ -18,6 +28,8 @@ export function calcHPP(items: RecipeItem[], usePrev: boolean): number {
       : (item?.avg_price ?? 0);
     return sum + price * ri.quantity_used;
   }, 0);
+  const effectiveYield = Math.max(batchYield * (1 - wastePct / 100), 0.001);
+  return rawCost / effectiveYield;
 }
 
 export function useRecipes() {
@@ -33,7 +45,7 @@ export function useRecipes() {
             *,
             item:items(name, unit, avg_price, prev_avg_price),
             sub_recipe:recipes!sub_recipe_id(
-              id, name, unit, stock, avg_price, is_ingredient,
+              id, name, unit, stock, avg_price, is_ingredient, batch_yield, waste_pct,
               recipe_items!recipe_id(
                 quantity_used, item_id,
                 item:items(name, unit, avg_price, prev_avg_price)
@@ -48,8 +60,8 @@ export function useRecipes() {
         is_ingredient: r.is_ingredient ?? false,
         stock: r.stock ?? 0,
         avg_price: r.avg_price ?? 0,
-        hpp: calcHPP(r.recipe_items ?? [], false),
-        prev_hpp: calcHPP(r.recipe_items ?? [], true),
+        hpp: calcHPP(r.recipe_items ?? [], false, r.batch_yield ?? 1, r.waste_pct ?? 0),
+        prev_hpp: calcHPP(r.recipe_items ?? [], true, r.batch_yield ?? 1, r.waste_pct ?? 0),
       }));
     },
   });
@@ -64,6 +76,8 @@ export function useCreateRecipe() {
       is_ingredient?: boolean;
       is_addon?: boolean;
       unit?: string | null;
+      batch_yield?: number;
+      waste_pct?: number;
       items: Array<{
         item_id?: string | null;
         sub_recipe_id?: string | null;
@@ -82,6 +96,8 @@ export function useCreateRecipe() {
           is_ingredient: payload.is_ingredient ?? false,
           is_addon: payload.is_addon ?? false,
           unit: payload.unit ?? null,
+          batch_yield: payload.batch_yield ?? 1,
+          waste_pct: payload.waste_pct ?? 0,
         })
         .select()
         .single();
@@ -115,6 +131,8 @@ export function useUpdateRecipe() {
       is_ingredient?: boolean;
       is_addon?: boolean;
       unit?: string | null;
+      batch_yield?: number;
+      waste_pct?: number;
       items: Array<{
         item_id?: string | null;
         sub_recipe_id?: string | null;
@@ -129,6 +147,8 @@ export function useUpdateRecipe() {
           is_ingredient: payload.is_ingredient ?? false,
           is_addon: payload.is_addon ?? false,
           unit: payload.unit ?? null,
+          batch_yield: payload.batch_yield ?? 1,
+          waste_pct: payload.waste_pct ?? 0,
         })
         .eq("id", payload.id);
       if (re) throw re;

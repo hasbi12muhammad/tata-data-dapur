@@ -50,6 +50,8 @@ export interface Recipe {
   unit?: string;
   stock: number;
   avg_price: number;
+  batch_yield: number;
+  waste_pct: number;
   created_at: string;
   recipe_items?: RecipeItem[];
 }
