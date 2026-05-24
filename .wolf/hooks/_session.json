@@ -1,36 +1,10 @@
 {
-  "session_id": "session-2026-05-17-0237",
-  "started": "2026-05-17T02:37:34.952Z",
-  "files_read": {
-    "/home/user/tata-data-dapur/src/lib/providers.tsx": {
-      "count": 1,
-      "tokens": 272,
-      "first_read": "2026-05-17T02:38:04.307Z"
-    },
-    "/home/user/tata-data-dapur/package.json": {
-      "count": 1,
-      "tokens": 287,
-      "first_read": "2026-05-17T02:38:26.017Z"
-    }
-  },
-  "files_written": [
-    {
-      "file": "/home/user/tata-data-dapur/package.json",
-      "action": "edit",
-      "tokens": 18,
-      "at": "2026-05-17T02:38:28.975Z"
-    },
-    {
-      "file": "/home/user/tata-data-dapur/package.json",
-      "action": "edit",
-      "tokens": 38,
-      "at": "2026-05-17T02:38:32.868Z"
-    }
-  ],
-  "edit_counts": {
-    "package.json": 2
-  },
-  "anatomy_hits": 2,
+  "session_id": "session-2026-05-24-0836",
+  "started": "2026-05-24T08:36:09.419Z",
+  "files_read": {},
+  "files_written": [],
+  "edit_counts": {},
+  "anatomy_hits": 0,
   "anatomy_misses": 0,
   "repeated_reads_warned": 0,
   "cerebrum_warnings": 0,
