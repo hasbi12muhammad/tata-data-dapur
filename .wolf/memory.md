@@ -449,3 +449,9 @@
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 | 18:57 | Created supabase/migrations/011_sale_items.sql | — | ~839 |
+| 12:14 | Created supabase/migrations/016_fix_record_purchase_prev_avg_price.sql | — | ~675 |
+
+## Session: 2026-05-26 12:16
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|

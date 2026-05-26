@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-22T11:57:06.418Z
-> Files: 70 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-26T12:14:40.536Z
+> Files: 71 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -152,6 +152,7 @@
 - `008_security_fix_rpc_auth.sql` — Security fix: adds auth.uid() guard to all 7 SECURITY DEFINER RPCs; creates user_profiles table with RLS + signup trigger (~3095 tok)
 - `010_sale_addons.sql` — Sale Add-On: is_addon flag on items+recipes, sale_addons table, hpp_addons_at_sale on sales, RPCs: adjust_item_stock + restore_sub_recipe_stock (~623 tok)
 - `011_sale_items.sql` — Migration 011: Multi-item sales (~839 tok)
+- `016_fix_record_purchase_prev_avg_price.sql` — Root cause: there are two overloaded record_purchase functions. (~675 tok)
 
 ## supabase/seeds/
 
