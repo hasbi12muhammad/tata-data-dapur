@@ -3,11 +3,11 @@
   "created_at": "2026-04-20T14:13:02.073Z",
   "lifetime": {
     "total_tokens_estimated": 963990,
-    "total_reads": 198,
+    "total_reads": 199,
     "total_writes": 438,
-    "total_sessions": 13,
+    "total_sessions": 14,
     "anatomy_hits": 170,
-    "anatomy_misses": 28,
+    "anatomy_misses": 29,
     "repeated_reads_blocked": 303,
     "estimated_savings_vs_bare_cli": 2509799
   },
@@ -3796,6 +3796,28 @@
         "writes_count": 47,
         "repeated_reads_blocked": 30,
         "anatomy_lookups": 17
+      }
+    },
+    {
+      "id": "session-2026-05-28-1523",
+      "started": "2026-05-28T15:23:15.041Z",
+      "ended": "2026-05-28T15:23:34.860Z",
+      "reads": [
+        {
+          "file": "/root/.claude/uploads/36cf2372-d688-49ba-be45-3006eb54b959/61577e5a-Screenshot_20260528222051566_com.android.chrome.jpg",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
       }
     }
   ],
