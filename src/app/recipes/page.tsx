@@ -284,6 +284,12 @@ export default function RecipesPage() {
                         Stok: <span className="font-semibold">{recipe.stock} {recipe.unit}</span>
                       </p>
                     )}
+                    {!recipe.is_ingredient && !recipe.is_addon && (
+                      <p className={`text-xs mt-0.5 font-medium ${(recipe.stock ?? 0) > 0 ? "text-[#5C7A3E]" : (recipe.stock ?? 0) < 0 ? "text-red-500" : "text-[#B88D6A]"}`}>
+                        Stok: {recipe.stock ?? 0} pcs
+                        {(recipe.stock ?? 0) <= 0 && <span className="ml-1 font-normal opacity-80">· perlu produksi</span>}
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <button

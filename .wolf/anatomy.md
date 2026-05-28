@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-28T12:32:00.488Z
-> Files: 74 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-28T14:49:21.626Z
+> Files: 76 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -71,13 +71,17 @@
 
 - `page.tsx` — dynamic (~309 tok)
 
+## src/app/produksi/
+
+- `page.tsx` — dynamic (~5264 tok)
+
 ## src/app/purchases/
 
-- `page.tsx` — dynamic (~11771 tok)
+- `page.tsx` — dynamic (~12794 tok)
 
 ## src/app/recipes/
 
-- `page.tsx` — dynamic (~5560 tok)
+- `page.tsx` — dynamic (~6462 tok)
 
 ## src/app/reports/
 
@@ -85,7 +89,7 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~19618 tok)
+- `page.tsx` — dynamic (~21184 tok)
 
 ## src/app/settings/
 
@@ -102,7 +106,7 @@
 ## src/components/layout/
 
 - `AppLayout.tsx` — AppLayout (~655 tok)
-- `Sidebar.tsx` — ALL_NAV (~1209 tok)
+- `Sidebar.tsx` — ALL_NAV (~1229 tok)
 
 ## src/components/ui/
 
@@ -120,9 +124,9 @@
 - `useDailyData.ts` — Exports useSalesByDate, usePurchasesByDate (~423 tok)
 - `useExpenses.ts` — Exports useExpenses, useExpensesByDate, useExpenseCategories, useReportExpenses + 4 more (~1368 tok)
 - `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem (~766 tok)
-- `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase (~731 tok)
+- `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase, useDeletePurchase + 5 more (~2374 tok)
 - `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 3 more (~1806 tok)
-- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3461 tok)
+- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3684 tok)
 
 ## src/lib/
 
@@ -156,6 +160,7 @@
 - `013_item_price_updated_at.sql` — Track when item avg_price last changed so recipe HPP diff badge (~1226 tok)
 - `014_recipe_hpp_baseline.sql` — Store HPP baseline per recipe so diff badge compares against (~85 tok)
 - `015_record_purchase_set_prev_avg_price.sql` — Fix: record_purchase sebelumnya tidak set prev_avg_price. (~440 tok)
+- `017_produce_recipe.sql` — Finished goods inventory: RPC produce_recipe (deduct items+sub-recipes → tambah recipes.stock, record productions) + restore_recipe_stock. Sale flow: deduct recipes.stock, bukan ingredients langsung. (~350 tok)
 
 ## supabase/seeds/
 

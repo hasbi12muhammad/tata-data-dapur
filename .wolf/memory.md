@@ -449,14 +449,113 @@
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 | 18:57 | Created supabase/migrations/011_sale_items.sql | — | ~839 |
-| 12:14 | Created supabase/migrations/016_fix_record_purchase_prev_avg_price.sql | — | ~675 |
+| 18:57 | Session end: 1 writes across 1 files (011_sale_items.sql) | 1 reads | ~1716 tok |
+| 18:58 | Session end: 1 writes across 1 files (011_sale_items.sql) | 1 reads | ~1716 tok |
+| 19:04 | Session end: 1 writes across 1 files (011_sale_items.sql) | 3 reads | ~24384 tok |
+| 19:05 | Session end: 1 writes across 1 files (011_sale_items.sql) | 3 reads | ~24384 tok |
+| 19:27 | Edited src/app/sales/page.tsx | CSS: failed | ~550 |
+| 19:28 | Edited src/app/sales/page.tsx | added 1 import(s) | ~28 |
+| 19:28 | Session end: 3 writes across 2 files (011_sale_items.sql, page.tsx) | 4 reads | ~25020 tok |
+| 19:36 | Edited src/components/layout/AppLayout.tsx | added 2 import(s) | ~70 |
+| 19:36 | Edited src/components/layout/AppLayout.tsx | expanded (+13 lines) | ~302 |
+| 19:37 | Session end: 5 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 6 reads | ~27078 tok |
+| 19:43 | Edited src/app/sales/page.tsx | expanded (+13 lines) | ~452 |
+| 19:44 | Edited src/app/sales/page.tsx | expanded (+13 lines) | ~383 |
+| 19:44 | Edited src/app/sales/page.tsx | 2→3 lines | ~66 |
+| 19:44 | Edited src/app/sales/page.tsx | 1→2 lines | ~68 |
+| 19:45 | Session end: 9 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 6 reads | ~28324 tok |
+| 19:58 | Session end: 9 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 8 reads | ~30228 tok |
+| 20:04 | Edited src/app/sales/page.tsx | 42→39 lines | ~463 |
+| 20:04 | Edited src/app/sales/page.tsx | reduced (-11 lines) | ~531 |
+| 20:05 | Session end: 11 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 9 reads | ~31222 tok |
 
-## Session: 2026-05-26 12:16
+## Session: 2026-05-23 18:15
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 18:30 | Created supabase/migrations/012_batch_yield_waste.sql | — | ~112 |
+| 18:32 | Session end: 1 writes across 1 files (012_batch_yield_waste.sql) | 0 reads | ~120 tok |
+| 18:34 | Session end: 1 writes across 1 files (012_batch_yield_waste.sql) | 0 reads | ~120 tok |
+| 18:45 | Created supabase/migrations/013_item_price_updated_at.sql | — | ~1226 |
+| 18:46 | Session end: 2 writes across 2 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql) | 1 reads | ~1433 tok |
+| 18:53 | Session end: 2 writes across 2 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql) | 1 reads | ~1433 tok |
+| 19:04 | Created supabase/migrations/014_recipe_hpp_baseline.sql | — | ~85 |
+| 19:05 | Session end: 3 writes across 3 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql) | 2 reads | ~1524 tok |
+| 19:18 | Created supabase/migrations/015_record_purchase_set_prev_avg_price.sql | — | ~440 |
+| 19:18 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 3 reads | ~1995 tok |
+| 19:31 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 4 reads | ~1995 tok |
+| 19:36 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 5 reads | ~1995 tok |
+| 19:40 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 5 reads | ~1995 tok |
+| 19:49 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 6 reads | ~1995 tok |
+| 20:01 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 6 reads | ~1995 tok |
+
+## Session: 2026-05-28 19:23
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 
-## Session: 2026-05-28 12:36
+## Session: 2026-05-28 19:30
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
+| 19:32 | Edited src/middleware.ts | removed 12 lines | ~8 |
+| 19:32 | Session end: 1 writes across 1 files (middleware.ts) | 2 reads | ~839 tok |
+| 19:33 | Session end: 1 writes across 1 files (middleware.ts) | 2 reads | ~839 tok |
+
+## Session: 2026-05-28 20:23
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 20:36 | Created supabase/migrations/017_produce_recipe.sql | — | ~947 |
+| 20:37 | Brainstorm + implement finished goods inventory (migration 017) | 017_produce_recipe.sql | produce_recipe + restore_recipe_stock RPCs deployed to Supabase | ~300 |
+| 20:37 | Session end: 1 writes across 1 files (017_produce_recipe.sql) | 0 reads | ~1015 tok |
+| 20:46 | Edited src/hooks/useSales.ts | 8→7 lines | ~40 |
+| 20:46 | Edited src/hooks/useSales.ts | reduced (-7 lines) | ~102 |
+| 20:47 | Edited src/hooks/useSales.ts | modified for() | ~189 |
+| 20:47 | Edited src/hooks/useSales.ts | added 1 condition(s) | ~179 |
+| 20:47 | Edited src/hooks/useSales.ts | added nullish coalescing | ~196 |
+| 20:48 | Edited src/app/sales/page.tsx | 3→3 lines | ~41 |
+| 20:48 | Edited src/app/sales/page.tsx | expanded (+26 lines) | ~247 |
+| 20:49 | Edited src/app/sales/page.tsx | added error handling | ~1064 |
+| 20:49 | Edited src/app/sales/page.tsx | 2→7 lines | ~63 |
+| 20:50 | Edited src/app/sales/page.tsx | added nullish coalescing | ~235 |
+| 20:50 | Edited src/app/sales/page.tsx | CSS: Stok, Dibutuhkan, Kurang | ~717 |
+| 20:51 | Implement finished goods inventory frontend | useSales.ts, sales/page.tsx | Stock check + confirm modal + banner + produce_recipe call. TypeScript clean. | ~500 |
+| 20:51 | Session end: 12 writes across 3 files (017_produce_recipe.sql, useSales.ts, page.tsx) | 2 reads | ~28046 tok |
+| 20:55 | Session end: 12 writes across 3 files (017_produce_recipe.sql, useSales.ts, page.tsx) | 2 reads | ~28046 tok |
+| 20:58 | Session end: 12 writes across 3 files (017_produce_recipe.sql, useSales.ts, page.tsx) | 3 reads | ~39817 tok |
+| 21:29 | Session end: 12 writes across 3 files (017_produce_recipe.sql, useSales.ts, page.tsx) | 3 reads | ~39817 tok |
+| 21:32 | Session end: 12 writes across 3 files (017_produce_recipe.sql, useSales.ts, page.tsx) | 3 reads | ~39817 tok |
+| 21:33 | Edited src/app/recipes/page.tsx | added nullish coalescing | ~216 |
+| 21:35 | Edited src/hooks/usePurchases.ts | 5→5 lines | ~60 |
+| 21:35 | Edited src/hooks/usePurchases.ts | added 1 condition(s) | ~290 |
+| 21:35 | Edited src/components/layout/Sidebar.tsx | 10→11 lines | ~42 |
+| 21:35 | Edited src/components/layout/Sidebar.tsx | 2→3 lines | ~50 |
+| 21:37 | Created src/app/produksi/page.tsx | — | ~5264 |
+| 21:37 | Edited src/app/purchases/page.tsx | 13→8 lines | ~69 |
+| 21:37 | Edited src/app/purchases/page.tsx | removed 6 lines | ~18 |
+| 21:37 | Edited src/app/purchases/page.tsx | 5→1 lines | ~16 |
+| 21:38 | Edited src/app/purchases/page.tsx | 3→1 lines | ~14 |
+| 21:38 | Edited src/app/purchases/page.tsx | 4→2 lines | ~21 |
+| 21:38 | Edited src/app/purchases/page.tsx | removed 8 lines | ~9 |
+| 21:38 | Edited src/app/purchases/page.tsx | removed 13 lines | ~12 |
+| 21:38 | Edited src/app/purchases/page.tsx | removed 24 lines | ~3 |
+| 21:39 | Edited src/app/purchases/page.tsx | removed 27 lines | ~14 |
+| 21:39 | Edited src/app/purchases/page.tsx | 7→8 lines | ~56 |
+| 21:40 | Edited src/app/purchases/page.tsx | 3→2 lines | ~24 |
+| 21:40 | Edited src/app/purchases/page.tsx | 10→9 lines | ~47 |
+| 21:40 | Edited src/app/purchases/page.tsx | 4→4 lines | ~32 |
+| 21:41 | Edited src/app/purchases/page.tsx | removed 155 lines | ~4 |
+| 21:42 | Edited src/app/purchases/page.tsx | reduced (-55 lines) | ~158 |
+| 21:42 | Edited src/app/purchases/page.tsx | reduced (-10 lines) | ~34 |
+| 21:42 | Edited src/app/purchases/page.tsx | removed 17 lines | ~13 |
+| 21:42 | Edited src/app/purchases/page.tsx | removed 55 lines | ~7 |
+| 21:42 | Edited src/app/purchases/page.tsx | 2→1 lines | ~13 |
+| 21:43 | Edited src/app/purchases/page.tsx | 2→1 lines | ~10 |
+| 21:43 | Edited src/app/purchases/page.tsx | 6→4 lines | ~39 |
+| 21:47 | Edited src/app/purchases/page.tsx | modified emptyItemRow() | ~242 |
+| 21:47 | Edited src/app/purchases/page.tsx | modified updateRow() | ~220 |
+| 21:47 | Edited src/app/purchases/page.tsx | modified for() | ~312 |
+| 21:49 | Edited src/app/purchases/page.tsx | added 4 condition(s) | ~5479 |
+| 21:49 | 3 tasks selesai: badge stok recipes, halaman /produksi baru, multi-item purchase modal | recipes/page.tsx, Sidebar.tsx, /produksi/page.tsx, purchases/page.tsx, usePurchases.ts | TypeScript clean 0 errors | ~800 |
+| 21:49 | Session end: 43 writes across 5 files (017_produce_recipe.sql, useSales.ts, page.tsx, usePurchases.ts, Sidebar.tsx) | 7 reads | ~61051 tok |

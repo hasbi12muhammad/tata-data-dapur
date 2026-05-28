@@ -7,6 +7,7 @@ import { useAuth, useCurrentUser } from "@/hooks/useAuth";
 import {
   BarChart3,
   BookOpen,
+  Factory,
   LayoutDashboard,
   LogOut,
   Package,
@@ -24,6 +25,7 @@ const ALL_NAV = [
   { href: "/purchases", label: "Pembelian", icon: ShoppingCart },
   { href: "/expenses", label: "Pengeluaran", icon: Receipt },
   { href: "/recipes", label: "Produk", icon: BookOpen },
+  { href: "/produksi", label: "Produksi", icon: Factory },
   { href: "/sales", label: "Penjualan", icon: TrendingUp },
   { href: "/reports", label: "Laporan", icon: BarChart3 },
 ];

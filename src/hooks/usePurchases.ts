@@ -192,7 +192,7 @@ export function useProductions() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("productions")
-        .select("*, recipe:recipes(name, unit)")
+        .select("*, recipe:recipes(name, unit, is_ingredient)")
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -217,6 +217,31 @@ export function useProduceSubRecipe() {
       } = await supabase.auth.getUser();
 
       const { error } = await supabase.rpc("produce_sub_recipe", {
+        p_user_id: user!.id,
+        p_recipe_id: p.recipe_id,
+        p_batches: p.batches,
+        p_total_cost: p.total_cost,
+        ...(p.date ? { p_created_at: dateToTimestamp(p.date) } : {}),
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["productions"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+      toast.success("Produksi dicatat");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
+export function useProduceRecipe() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (p: { recipe_id: string; batches: number; total_cost: number; date?: string }) => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase.rpc("produce_recipe", {
         p_user_id: user!.id,
         p_recipe_id: p.recipe_id,
         p_batches: p.batches,

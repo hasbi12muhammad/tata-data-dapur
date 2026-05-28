@@ -24,7 +24,7 @@ import { formatCurrency } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { format } from "date-fns";
 import {
-  CheckCircle2, FileText, Filter, Minus, Pencil, Plus,
+  AlertTriangle, CheckCircle2, FileText, Filter, Minus, Pencil, Plus,
   Printer, Search, Share2, TrendingUp, Trash2, X,
 } from "lucide-react";
 import { useMemo, useEffect, useRef, useState } from "react";
@@ -104,6 +104,32 @@ export default function SalesPage() {
   const updateSale = useUpdateSale();
   const deleteSale = useDeleteSale();
   const createCategory = useCreateSaleCategory();
+
+  // ─── Stock confirm state ───────────────────────────────────────────────────
+  interface StockShortfall {
+    recipeId: string;
+    recipeName: string;
+    currentStock: number;
+    needed: number;
+  }
+  type SalePayloadItem = {
+    recipe_id: string;
+    quantity_sold: number;
+    selling_price: number;
+    hpp_at_sale: number;
+    addons?: Array<{
+      item_id?: string | null;
+      sub_recipe_id?: string | null;
+      quantity: number;
+      price_per_unit_at_sale: number;
+      name_at_sale: string;
+    }>;
+  };
+  const [stockConfirm, setStockConfirm] = useState<{
+    shortfalls: StockShortfall[];
+    payload: SalePayloadItem[];
+  } | null>(null);
+  const [producePending, setProducePending] = useState(false);
 
   // ─── Modal state ───────────────────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
@@ -292,44 +318,7 @@ export default function SalesPage() {
 
   // ─── Submit ────────────────────────────────────────────────────────────────
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const validRows = itemRows.filter(
-      (r) => r.recipeId && Number(r.quantity) > 0 && r.sellingPrice,
-    );
-    if (!validRows.length) return;
-
-    const itemsPayload = validRows.map((row) => {
-      const recipe = recipes?.find((r) => r.id === row.recipeId);
-      const validAddons = row.addonRows
-        .filter((a) => a.sourceKey && Number(a.quantity) > 0)
-        .map((a) => {
-          const [type, id] = a.sourceKey.split(":");
-          return {
-            item_id: type === "item" ? id : null,
-            sub_recipe_id: type === "sr" ? id : null,
-            quantity: Number(a.quantity),
-            price_per_unit_at_sale: a.pricePerUnit,
-            name_at_sale: a.name,
-          };
-        });
-      const sub_recipe_deductions = (recipe?.recipe_items ?? [])
-        .filter((ri) => ri.sub_recipe_id)
-        .map((ri) => ({
-          sub_recipe_id: ri.sub_recipe_id!,
-          quantity: ri.quantity_used * Number(row.quantity),
-        }));
-      return {
-        recipe_id: row.recipeId,
-        quantity_sold: Number(row.quantity),
-        selling_price: Number(row.sellingPrice),
-        hpp_at_sale: recipe?.hpp ?? 0,
-        sub_recipe_deductions,
-        addons: validAddons,
-      };
-    });
-
+  async function executeSale(itemsPayload: SalePayloadItem[]) {
     if (editing) {
       await updateSale.mutateAsync({
         id: editing.id,
@@ -360,12 +349,95 @@ export default function SalesPage() {
         });
       }
     }
-
     closeModal();
     resetForm();
   }
 
+  async function handleProduceAndSell() {
+    if (!stockConfirm) return;
+    setProducePending(true);
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      for (const sf of stockConfirm.shortfalls) {
+        const recipe = recipes?.find((r) => r.id === sf.recipeId);
+        const shortfall = sf.needed - sf.currentStock;
+        const hppTotal = (recipe?.hpp ?? 0) * shortfall;
+        const { error } = await supabase.rpc("produce_recipe", {
+          p_user_id: user!.id,
+          p_recipe_id: sf.recipeId,
+          p_batches: shortfall,
+          p_total_cost: hppTotal,
+        });
+        if (error) throw error;
+      }
+      const payload = stockConfirm.payload;
+      setStockConfirm(null);
+      await executeSale(payload);
+    } catch (e: unknown) {
+      toast.error((e as Error).message ?? "Gagal produksi");
+    } finally {
+      setProducePending(false);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    const validRows = itemRows.filter(
+      (r) => r.recipeId && Number(r.quantity) > 0 && r.sellingPrice,
+    );
+    if (!validRows.length) return;
+
+    const itemsPayload: SalePayloadItem[] = validRows.map((row) => {
+      const recipe = recipes?.find((r) => r.id === row.recipeId);
+      const validAddons = row.addonRows
+        .filter((a) => a.sourceKey && Number(a.quantity) > 0)
+        .map((a) => {
+          const [type, id] = a.sourceKey.split(":");
+          return {
+            item_id: type === "item" ? id : null,
+            sub_recipe_id: type === "sr" ? id : null,
+            quantity: Number(a.quantity),
+            price_per_unit_at_sale: a.pricePerUnit,
+            name_at_sale: a.name,
+          };
+        });
+      return {
+        recipe_id: row.recipeId,
+        quantity_sold: Number(row.quantity),
+        selling_price: Number(row.sellingPrice),
+        hpp_at_sale: recipe?.hpp ?? 0,
+        addons: validAddons,
+      };
+    });
+
+    // Check stock for each recipe before submitting
+    const shortfalls = validRows
+      .map((row) => {
+        const recipe = recipes?.find((r) => r.id === row.recipeId);
+        if (!recipe) return null;
+        const currentStock = recipe.stock ?? 0;
+        const needed = Number(row.quantity);
+        if (currentStock >= needed) return null;
+        return { recipeId: row.recipeId, recipeName: recipe.name, currentStock, needed };
+      })
+      .filter(Boolean) as StockShortfall[];
+
+    if (shortfalls.length > 0) {
+      setStockConfirm({ shortfalls, payload: itemsPayload });
+      return;
+    }
+
+    await executeSale(itemsPayload);
+  }
+
   // ─── Filter & sort ─────────────────────────────────────────────────────────
+
+  const negativeStockRecipes = useMemo(
+    () => (recipes ?? []).filter((r) => !r.is_ingredient && !r.is_addon && (r.stock ?? 0) < 0),
+    [recipes],
+  );
 
   const filtered = useMemo(() => {
     let rows = sales ?? [];
@@ -604,6 +676,22 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
         </Button>
       }
     >
+      {/* ── Negative stock banner ──────────────────────────────────────────────── */}
+      {negativeStockRecipes.length > 0 && (
+        <div className="mb-3 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+          <div>
+            <span className="font-semibold">Stok produk jadi negatif: </span>
+            {negativeStockRecipes.map((r, i) => (
+              <span key={r.id}>
+                {r.name} ({r.stock ?? 0} pcs){i < negativeStockRecipes.length - 1 ? ", " : ""}
+              </span>
+            ))}
+            <span className="ml-1">— buat produksi untuk mengisi stok.</span>
+          </div>
+        </div>
+      )}
+
       <Card>
         {/* Filter bottom sheet */}
         {filterSheetOpen && (
@@ -1298,6 +1386,59 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
           </div>
         </form>
       </Modal>
+
+      {/* ── Stock Confirm Modal ──────────────────────────────────────────────────── */}
+      {stockConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setStockConfirm(null)} />
+          <div className="relative w-full max-w-sm rounded-2xl bg-[#FBF8F2] p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-2 text-amber-700">
+              <AlertTriangle className="h-5 w-5 shrink-0" />
+              <span className="font-semibold text-[#2C1810]">Stok tidak cukup</span>
+            </div>
+            <div className="mb-5 space-y-2">
+              {stockConfirm.shortfalls.map((sf) => (
+                <div key={sf.recipeId} className="rounded-lg border border-[#D9CCAF] bg-white px-3 py-2.5 text-sm">
+                  <p className="font-medium text-[#2C1810]">{sf.recipeName}</p>
+                  <p className="mt-0.5 text-[#7C6352]">
+                    Stok: <span className="font-medium text-red-600">{sf.currentStock} pcs</span>
+                    {" · "}Dibutuhkan: <span className="font-medium">{sf.needed} pcs</span>
+                    {" · "}Kurang: <span className="font-medium text-amber-700">{sf.needed - sf.currentStock} pcs</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mb-4 text-sm text-[#7C6352]">
+              Produksi otomatis akan deduct bahan baku sesuai resep.
+            </p>
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={handleProduceAndSell}
+                loading={producePending}
+                className="w-full"
+              >
+                Produksi & Jual
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => { setStockConfirm(null); void executeSale(stockConfirm.payload); }}
+                disabled={producePending}
+                className="w-full"
+              >
+                Jual Tetap (stok negatif)
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setStockConfirm(null)}
+                disabled={producePending}
+                className="w-full"
+              >
+                Batal
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Receipt Modal (setelah save) ────────────────────────────────────────── */}
       {receipt && (

@@ -136,7 +136,6 @@ type ItemInput = {
   quantity_sold: number;
   selling_price: number;
   hpp_at_sale: number;
-  sub_recipe_deductions?: Array<{ sub_recipe_id: string; quantity: number }>;
   addons?: AddonInput[];
 };
 
@@ -243,20 +242,13 @@ export function useCreateSale() {
         if (itemError) throw itemError;
         const saleItemId = itemData.id as string;
 
-        // Deduct sub-recipe stocks
-        if (item.sub_recipe_deductions?.length) {
-          for (const d of item.sub_recipe_deductions) {
-            const { error: deductError } = await supabase.rpc(
-              "deduct_sub_recipe_stock",
-              {
-                p_user_id: user!.id,
-                p_recipe_id: d.sub_recipe_id,
-                p_quantity: d.quantity,
-              },
-            );
-            if (deductError) throw deductError;
-          }
-        }
+        // Deduct finished goods stock
+        const { error: stockDeductError } = await supabase.rpc("deduct_sub_recipe_stock", {
+          p_user_id: user!.id,
+          p_recipe_id: item.recipe_id,
+          p_quantity: item.quantity_sold,
+        });
+        if (stockDeductError) throw stockDeductError;
 
         // Insert addons + deduct addon stock
         if (item.addons?.length) {
@@ -304,13 +296,19 @@ export function useUpdateSale() {
         data: { user },
       } = await supabase.auth.getUser();
 
-      // Fetch old sale_items + their addons to restore addon stocks
+      // Fetch old sale_items + their addons to restore stocks
       const { data: oldItems } = await supabase
         .from("sale_items")
-        .select("id, sale_addons(*)")
+        .select("id, recipe_id, quantity_sold, sale_addons(*)")
         .eq("sale_id", p.id);
 
       for (const oi of oldItems ?? []) {
+        // Restore finished goods stock
+        await supabase.rpc("restore_recipe_stock", {
+          p_user_id: user!.id,
+          p_recipe_id: oi.recipe_id,
+          p_quantity: oi.quantity_sold,
+        });
         const addons = (oi.sale_addons ?? []) as SaleAddon[];
         if (addons.length) {
           await restoreAddonStock(supabase, user!.id, addons);
@@ -357,6 +355,14 @@ export function useUpdateSale() {
         if (itemError) throw itemError;
         const saleItemId = itemData.id as string;
 
+        // Deduct finished goods stock
+        const { error: stockDeductError } = await supabase.rpc("deduct_sub_recipe_stock", {
+          p_user_id: user!.id,
+          p_recipe_id: item.recipe_id,
+          p_quantity: item.quantity_sold,
+        });
+        if (stockDeductError) throw stockDeductError;
+
         if (item.addons?.length) {
           const { error: addonError } = await supabase
             .from("sale_addons")
@@ -392,6 +398,22 @@ export function useDeleteSale() {
   return useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      // Restore finished goods stocks before deleting
+      const { data: saleItems } = await supabase
+        .from("sale_items")
+        .select("recipe_id, quantity_sold")
+        .eq("sale_id", id);
+
+      for (const si of saleItems ?? []) {
+        await supabase.rpc("restore_recipe_stock", {
+          p_user_id: user!.id,
+          p_recipe_id: si.recipe_id,
+          p_quantity: si.quantity_sold,
+        });
+      }
+
       const { error } = await supabase.from("sales").delete().eq("id", id);
       if (error) throw error;
     },
