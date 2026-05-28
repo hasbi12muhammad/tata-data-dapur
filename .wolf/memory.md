@@ -449,9 +449,54 @@
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 | 18:57 | Created supabase/migrations/011_sale_items.sql | — | ~839 |
-| 12:14 | Created supabase/migrations/016_fix_record_purchase_prev_avg_price.sql | — | ~675 |
+| 18:57 | Session end: 1 writes across 1 files (011_sale_items.sql) | 1 reads | ~1716 tok |
+| 18:58 | Session end: 1 writes across 1 files (011_sale_items.sql) | 1 reads | ~1716 tok |
+| 19:04 | Session end: 1 writes across 1 files (011_sale_items.sql) | 3 reads | ~24384 tok |
+| 19:05 | Session end: 1 writes across 1 files (011_sale_items.sql) | 3 reads | ~24384 tok |
+| 19:27 | Edited src/app/sales/page.tsx | CSS: failed | ~550 |
+| 19:28 | Edited src/app/sales/page.tsx | added 1 import(s) | ~28 |
+| 19:28 | Session end: 3 writes across 2 files (011_sale_items.sql, page.tsx) | 4 reads | ~25020 tok |
+| 19:36 | Edited src/components/layout/AppLayout.tsx | added 2 import(s) | ~70 |
+| 19:36 | Edited src/components/layout/AppLayout.tsx | expanded (+13 lines) | ~302 |
+| 19:37 | Session end: 5 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 6 reads | ~27078 tok |
+| 19:43 | Edited src/app/sales/page.tsx | expanded (+13 lines) | ~452 |
+| 19:44 | Edited src/app/sales/page.tsx | expanded (+13 lines) | ~383 |
+| 19:44 | Edited src/app/sales/page.tsx | 2→3 lines | ~66 |
+| 19:44 | Edited src/app/sales/page.tsx | 1→2 lines | ~68 |
+| 19:45 | Session end: 9 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 6 reads | ~28324 tok |
+| 19:58 | Session end: 9 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 8 reads | ~30228 tok |
+| 20:04 | Edited src/app/sales/page.tsx | 42→39 lines | ~463 |
+| 20:04 | Edited src/app/sales/page.tsx | reduced (-11 lines) | ~531 |
+| 20:05 | Session end: 11 writes across 3 files (011_sale_items.sql, page.tsx, AppLayout.tsx) | 9 reads | ~31222 tok |
 
-## Session: 2026-05-26 12:16
+## Session: 2026-05-23 18:15
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
+| 18:30 | Created supabase/migrations/012_batch_yield_waste.sql | — | ~112 |
+| 18:32 | Session end: 1 writes across 1 files (012_batch_yield_waste.sql) | 0 reads | ~120 tok |
+| 18:34 | Session end: 1 writes across 1 files (012_batch_yield_waste.sql) | 0 reads | ~120 tok |
+| 18:45 | Created supabase/migrations/013_item_price_updated_at.sql | — | ~1226 |
+| 18:46 | Session end: 2 writes across 2 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql) | 1 reads | ~1433 tok |
+| 18:53 | Session end: 2 writes across 2 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql) | 1 reads | ~1433 tok |
+| 19:04 | Created supabase/migrations/014_recipe_hpp_baseline.sql | — | ~85 |
+| 19:05 | Session end: 3 writes across 3 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql) | 2 reads | ~1524 tok |
+| 19:18 | Created supabase/migrations/015_record_purchase_set_prev_avg_price.sql | — | ~440 |
+| 19:18 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 3 reads | ~1995 tok |
+| 19:31 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 4 reads | ~1995 tok |
+| 19:36 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 5 reads | ~1995 tok |
+| 19:40 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 5 reads | ~1995 tok |
+| 19:49 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 6 reads | ~1995 tok |
+| 20:01 | Session end: 4 writes across 4 files (012_batch_yield_waste.sql, 013_item_price_updated_at.sql, 014_recipe_hpp_baseline.sql, 015_record_purchase_set_prev_avg_price.sql) | 6 reads | ~1995 tok |
+
+## Session: 2026-05-28 19:23
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-28 19:30
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 19:32 | Edited src/middleware.ts | removed 12 lines | ~8 |
+| 19:32 | Session end: 1 writes across 1 files (middleware.ts) | 2 reads | ~839 tok |

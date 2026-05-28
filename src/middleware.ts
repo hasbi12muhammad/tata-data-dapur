@@ -57,17 +57,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Version guard: only v1 users allowed
-    const { data: profile } = await supabase
-      .from("user_profiles")
-      .select("version")
-      .eq("id", user.id)
-      .single();
-    if (!profile || profile.version !== "v1") {
-      await supabase.auth.signOut();
-      return NextResponse.redirect(new URL("/unauthorized", request.url));
-    }
-
     if (pathname === "/") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }

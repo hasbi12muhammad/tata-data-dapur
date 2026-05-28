@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-26T12:14:40.536Z
-> Files: 71 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-28T12:32:00.488Z
+> Files: 74 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -43,7 +43,7 @@
 
 ## src/
 
-- `middleware.ts` — Exports middleware, config (~831 tok)
+- `middleware.ts` — Exports middleware, config (~730 tok)
 
 ## src/app/
 
@@ -85,7 +85,7 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~19207 tok)
+- `page.tsx` — dynamic (~19618 tok)
 
 ## src/app/settings/
 
@@ -101,7 +101,7 @@
 
 ## src/components/layout/
 
-- `AppLayout.tsx` — AppLayout — uses useState (~477 tok)
+- `AppLayout.tsx` — AppLayout (~655 tok)
 - `Sidebar.tsx` — ALL_NAV (~1209 tok)
 
 ## src/components/ui/
@@ -152,7 +152,10 @@
 - `008_security_fix_rpc_auth.sql` — Security fix: adds auth.uid() guard to all 7 SECURITY DEFINER RPCs; creates user_profiles table with RLS + signup trigger (~3095 tok)
 - `010_sale_addons.sql` — Sale Add-On: is_addon flag on items+recipes, sale_addons table, hpp_addons_at_sale on sales, RPCs: adjust_item_stock + restore_sub_recipe_stock (~623 tok)
 - `011_sale_items.sql` — Migration 011: Multi-item sales (~839 tok)
-- `016_fix_record_purchase_prev_avg_price.sql` — Root cause: there are two overloaded record_purchase functions. (~675 tok)
+- `012_batch_yield_waste.sql` — Add batch production fields to recipes (~112 tok)
+- `013_item_price_updated_at.sql` — Track when item avg_price last changed so recipe HPP diff badge (~1226 tok)
+- `014_recipe_hpp_baseline.sql` — Store HPP baseline per recipe so diff badge compares against (~85 tok)
+- `015_record_purchase_set_prev_avg_price.sql` — Fix: record_purchase sebelumnya tidak set prev_avg_price. (~440 tok)
 
 ## supabase/seeds/
 
