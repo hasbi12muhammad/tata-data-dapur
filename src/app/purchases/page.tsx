@@ -22,7 +22,7 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
 import { useQueryClient } from "@tanstack/react-query";
-import { FileUp, Filter, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
+import { ChevronDown, FileUp, Filter, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const cls =
@@ -138,18 +138,28 @@ export default function PurchasesPage() {
 
   // ─── Multi-item create state ──────────────────────────────────────────────
   const [itemRows, setItemRows] = useState<PurchaseItemRow[]>([emptyItemRow()]);
+  const [expandedKey, setExpandedKey] = useState<string | null>(null);
 
   function updateRow(key: string, patch: Partial<PurchaseItemRow>) {
     setItemRows((rows) => rows.map((r) => r._key === key ? { ...r, ...patch } : r));
   }
-  function addRow() { setItemRows((rows) => [...rows, emptyItemRow()]); }
+  function addRow() {
+    const newRow = emptyItemRow();
+    setItemRows((rows) => [...rows, newRow]);
+    setExpandedKey(newRow._key);
+  }
   function removeRow(key: string) {
-    setItemRows((rows) => { const next = rows.filter((r) => r._key !== key); return next.length ? next : [emptyItemRow()]; });
+    const next = itemRows.filter((r) => r._key !== key);
+    const result = next.length ? next : [emptyItemRow()];
+    setItemRows(result);
+    if (key === expandedKey) setExpandedKey(result[0]._key);
   }
 
   function openCreate() {
     setEditing(null);
-    setItemRows([emptyItemRow()]);
+    const firstRow = emptyItemRow();
+    setItemRows([firstRow]);
+    setExpandedKey(firstRow._key);
     setDate(new Date().toISOString().slice(0, 10));
     setModalOpen(true);
   }
@@ -676,6 +686,38 @@ export default function PurchasesPage() {
                   const rowDiff = rowPPU > 0 && rowAvg > 0 ? rowPPU - rowAvg : null;
                   const rowPct = rowDiff !== null ? (rowDiff / rowAvg) * 100 : null;
                   const u = (patch: Partial<PurchaseItemRow>) => updateRow(row._key, patch);
+                  const isExpanded = row._key === expandedKey || itemRows.length === 1;
+                  if (!isExpanded) {
+                    return (
+                      <div
+                        key={row._key}
+                        onClick={() => setExpandedKey(row._key)}
+                        className="rounded-xl border border-[#D9CCAF] bg-[#FDFAF5] px-3 py-2.5 cursor-pointer hover:bg-[#F5EFE0] active:bg-[#EDE4CF] transition-colors flex items-center gap-2"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-[#7C6352] shrink-0">Item {idx + 1}</span>
+                            {rowItem ? (
+                              <span className="text-sm text-[#2C1810] truncate">{rowItem.name} ({rowItem.unit})</span>
+                            ) : (
+                              <span className="text-sm text-[#B88D6A]">Belum diisi</span>
+                            )}
+                          </div>
+                          {rowTotal > 0 && <p className="text-xs text-[#5C6B38] mt-0.5 font-medium">{formatCurrency(rowTotal)}</p>}
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <ChevronDown className="w-4 h-4 text-[#B88D6A]" />
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); removeRow(row._key); }}
+                            className="text-[#B88D6A] hover:text-red-500 p-0.5 transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  }
                   return (
                     <div key={row._key} className="rounded-xl border border-[#D9CCAF] p-3 space-y-3">
                       <div className="flex items-center justify-between">
