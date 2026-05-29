@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-20T14:13:02.073Z",
   "lifetime": {
-    "total_tokens_estimated": 977790,
-    "total_reads": 202,
-    "total_writes": 441,
-    "total_sessions": 14,
-    "anatomy_hits": 171,
-    "anatomy_misses": 31,
+    "total_tokens_estimated": 991590,
+    "total_reads": 204,
+    "total_writes": 444,
+    "total_sessions": 15,
+    "anatomy_hits": 172,
+    "anatomy_misses": 32,
     "repeated_reads_blocked": 303,
-    "estimated_savings_vs_bare_cli": 2509999
+    "estimated_savings_vs_bare_cli": 2510199
   },
   "sessions": [
     {
@@ -3846,6 +3846,50 @@
       "id": "session-2026-05-28-1523",
       "started": "2026-05-28T15:23:15.041Z",
       "ended": "2026-05-28T15:29:20.705Z",
+      "reads": [
+        {
+          "file": "/root/.claude/uploads/36cf2372-d688-49ba-be45-3006eb54b959/61577e5a-Screenshot_20260528222051566_com.android.chrome.jpg",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 12794,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 31,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 264,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 711,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 12794,
+        "output_tokens_estimated": 1006,
+        "reads_count": 2,
+        "writes_count": 3,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-05-28-1523",
+      "started": "2026-05-28T15:23:15.041Z",
+      "ended": "2026-05-28T15:29:29.029Z",
       "reads": [
         {
           "file": "/root/.claude/uploads/36cf2372-d688-49ba-be45-3006eb54b959/61577e5a-Screenshot_20260528222051566_com.android.chrome.jpg",
