@@ -302,18 +302,20 @@ export function useUpdateSale() {
         .select("id, recipe_id, quantity_sold, sale_addons(*)")
         .eq("sale_id", p.id);
 
-      for (const oi of oldItems ?? []) {
-        // Restore finished goods stock
-        await supabase.rpc("restore_recipe_stock", {
-          p_user_id: user!.id,
-          p_recipe_id: oi.recipe_id,
-          p_quantity: oi.quantity_sold,
-        });
-        const addons = (oi.sale_addons ?? []) as SaleAddon[];
-        if (addons.length) {
-          await restoreAddonStock(supabase, user!.id, addons);
-        }
-      }
+      await Promise.all(
+        (oldItems ?? []).map(async (oi) => {
+          const { error: restoreError } = await supabase.rpc("restore_recipe_stock", {
+            p_user_id: user!.id,
+            p_recipe_id: oi.recipe_id,
+            p_quantity: oi.quantity_sold,
+          });
+          if (restoreError) throw restoreError;
+          const addons = (oi.sale_addons ?? []) as SaleAddon[];
+          if (addons.length) {
+            await restoreAddonStock(supabase, user!.id, addons);
+          }
+        }),
+      );
 
       // Delete old sale_items (cascades to sale_addons)
       await supabase.from("sale_items").delete().eq("sale_id", p.id);
@@ -406,13 +408,16 @@ export function useDeleteSale() {
         .select("recipe_id, quantity_sold")
         .eq("sale_id", id);
 
-      for (const si of saleItems ?? []) {
-        await supabase.rpc("restore_recipe_stock", {
-          p_user_id: user!.id,
-          p_recipe_id: si.recipe_id,
-          p_quantity: si.quantity_sold,
-        });
-      }
+      await Promise.all(
+        (saleItems ?? []).map(async (si) => {
+          const { error: restoreError } = await supabase.rpc("restore_recipe_stock", {
+            p_user_id: user!.id,
+            p_recipe_id: si.recipe_id,
+            p_quantity: si.quantity_sold,
+          });
+          if (restoreError) throw restoreError;
+        }),
+      );
 
       const { error } = await supabase.from("sales").delete().eq("id", id);
       if (error) throw error;
@@ -421,6 +426,7 @@ export function useDeleteSale() {
       qc.invalidateQueries({ queryKey: ["sales"] });
       qc.invalidateQueries({ queryKey: ["report-sales"] });
       qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
       toast.success("Penjualan dihapus");
     },
     onError: (e: Error) => toast.error(e.message),

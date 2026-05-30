@@ -221,6 +221,39 @@ export default function PurchasesPage() {
       // Multi-item create
       const validRows = itemRows.filter((r) => r.itemId);
       if (!validRows.length) return;
+
+      // Validate all rows before submitting any
+      for (let i = 0; i < validRows.length; i++) {
+        const row = validRows[i];
+        const label = `Baris ${i + 1}`;
+        if (row.usePkg) {
+          if (!row.pkgTypeId) {
+            toast.error(`${label}: pilih jenis kemasan`);
+            return;
+          }
+          if (!row.pkgQty || Number(row.pkgQty) <= 0) {
+            toast.error(`${label}: jumlah kemasan harus diisi`);
+            return;
+          }
+          if (!row.sizePerPkg || Number(row.sizePerPkg) <= 0) {
+            toast.error(`${label}: isi per kemasan harus diisi`);
+            return;
+          }
+        } else {
+          if (!row.quantity || Number(row.quantity) <= 0) {
+            toast.error(`${label}: jumlah harus diisi`);
+            return;
+          }
+        }
+        const rowPPUCheck = row.usePkg && row.pkgPriceMode === "per_pkg" && row.sizePerPkg && Number(row.sizePerPkg) > 0
+          ? Number(row.pricePerPkg) / Number(row.sizePerPkg)
+          : Number(row.pricePerUnit) || 0;
+        if (!rowPPUCheck) {
+          toast.error(`${label}: harga harus diisi`);
+          return;
+        }
+      }
+
       for (const row of validRows) {
         const rowPPU = row.usePkg && row.pkgPriceMode === "per_pkg" && row.sizePerPkg && Number(row.sizePerPkg) > 0
           ? Number(row.pricePerPkg) / Number(row.sizePerPkg)
@@ -228,7 +261,6 @@ export default function PurchasesPage() {
         const finalQty = row.usePkg
           ? Number(row.pkgQty) * Number(row.sizePerPkg)
           : Number(row.quantity);
-        if (!finalQty || finalQty <= 0 || !rowPPU) continue;
         await createPurchase.mutateAsync({
           item_id: row.itemId,
           quantity: finalQty,

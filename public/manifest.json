@@ -1,6 +1,6 @@
 {
   "name": "Tata Data Dapur",
-  "short_name": "TDD",
+  "short_name": "Tata Data Dapur",
   "description": "Kelola HPP, resep, dan laporan bisnis F&B kamu",
   "start_url": "/dashboard",
   "display": "standalone",

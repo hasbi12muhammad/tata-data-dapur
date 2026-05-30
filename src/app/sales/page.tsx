@@ -28,6 +28,7 @@ import {
   Printer, Search, Share2, TrendingUp, Trash2, X,
 } from "lucide-react";
 import { useMemo, useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const cls =
@@ -104,6 +105,7 @@ export default function SalesPage() {
   const updateSale = useUpdateSale();
   const deleteSale = useDeleteSale();
   const createCategory = useCreateSaleCategory();
+  const qc = useQueryClient();
 
   // ─── Stock confirm state ───────────────────────────────────────────────────
   interface StockShortfall {
@@ -356,6 +358,8 @@ export default function SalesPage() {
   async function handleProduceAndSell() {
     if (!stockConfirm) return;
     setProducePending(true);
+    let produced = 0;
+    const total = stockConfirm.shortfalls.length;
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
@@ -370,14 +374,20 @@ export default function SalesPage() {
           p_total_cost: hppTotal,
         });
         if (error) throw error;
+        produced++;
       }
       const payload = stockConfirm.payload;
       setStockConfirm(null);
       await executeSale(payload);
     } catch (e: unknown) {
-      toast.error((e as Error).message ?? "Gagal produksi");
+      const msg = produced > 0 && produced < total
+        ? `Produksi sebagian berhasil (${produced}/${total} resep). Penjualan dibatalkan. Cek halaman Produksi untuk koreksi manual.`
+        : ((e as Error).message ?? "Gagal produksi");
+      toast.error(msg, { duration: 6000 });
     } finally {
       setProducePending(false);
+      qc.invalidateQueries({ queryKey: ["productions"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
     }
   }
 

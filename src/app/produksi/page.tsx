@@ -55,14 +55,15 @@ export default function ProduksiPage() {
   const [pendingDateTo, setPendingDateTo] = useState("");
 
   // ─── Derived data ──────────────────────────────────────────────────────────
-  const finishedRecipes = useMemo(
-    () => (recipes ?? []).filter((r) => !r.is_ingredient && !r.is_addon),
-    [recipes],
-  );
-  const subRecipes = useMemo(
-    () => (recipes ?? []).filter((r) => r.is_ingredient),
-    [recipes],
-  );
+  const { finishedRecipes, subRecipes } = useMemo(() => {
+    const finished = [];
+    const sub = [];
+    for (const r of recipes ?? []) {
+      if (r.is_ingredient) sub.push(r);
+      else if (!r.is_addon) finished.push(r);
+    }
+    return { finishedRecipes: finished, subRecipes: sub };
+  }, [recipes]);
 
   const selectedRecipe = useMemo(() => {
     const pool = mode === "jadi" ? finishedRecipes : subRecipes;

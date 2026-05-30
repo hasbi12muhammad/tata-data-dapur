@@ -396,62 +396,20 @@
 | 20:44 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
 | 20:46 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
 | 20:47 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
-| 20:48 | Session end: 20 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 15 reads | ~58848 tok |
-| 20:55 | Edited src/app/sales/page.tsx | CSS: unit | ~241 |
-| 20:55 | Session end: 21 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 16 reads | ~59089 tok |
-| 20:57 | Session end: 21 writes across 7 files (oke-sekarang-aku-mau-curious-creek.md, 010_sale_addons.sql, index.ts, useItems.ts, useRecipes.ts) | 16 reads | ~59089 tok |
 
-## Session: 2026-05-21 21:34
+## Session: 2026-05-21 10:55
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
-| 21:48 | Edited src/hooks/useRecipes.ts | added nullish coalescing | ~192 |
-| 21:48 | Edited src/app/recipes/page.tsx | modified if() | ~139 |
-| 21:48 | Edited src/app/recipes/page.tsx | 14→12 lines | ~155 |
-| 21:48 | Edited src/app/recipes/page.tsx | 4→1 lines | ~19 |
-| 21:48 | Edited src/app/recipes/page.tsx | 13→18 lines | ~292 |
-| 21:49 | Edited src/app/sales/page.tsx | inline fix | ~24 |
-| 21:49 | Edited src/app/sales/page.tsx | 1→2 lines | ~36 |
-| 21:49 | Edited src/app/sales/page.tsx | modified if() | ~62 |
-| 21:49 | Edited src/app/sales/page.tsx | expanded (+9 lines) | ~295 |
-| $(date +%H:%M) | Produk jadi bisa jadi add-on: hook useAddonFinishedRecipes, is_addon/unit exposed di recipes form, optgroup Produk Jadi di dropdown add-on sales | useRecipes.ts, recipes/page.tsx, sales/page.tsx | done | ~1200 |
-| 21:50 | Session end: 9 writes across 2 files (useRecipes.ts, page.tsx) | 3 reads | ~19543 tok |
-| 21:51 | Session end: 9 writes across 2 files (useRecipes.ts, page.tsx) | 3 reads | ~19543 tok |
 
-## Session: 2026-05-22 18:11
+## Session: 2026-05-28 10:26
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
-| 18:23 | Edited src/hooks/useSales.ts | 10→12 lines | ~115 |
-| 18:24 | Edited src/app/sales/page.tsx | expanded (+11 lines) | ~224 |
-| 18:24 | Edited src/app/sales/page.tsx | added optional chaining | ~190 |
-| 18:25 | Edited src/app/sales/page.tsx | added 1 condition(s) | ~408 |
-| 18:26 | Edited src/app/sales/page.tsx | added error handling | ~2589 |
-| 18:26 | Edited src/app/sales/page.tsx | 7→10 lines | ~268 |
-| 18:26 | Edited src/app/sales/page.tsx | 10→13 lines | ~331 |
-| 18:27 | Edited src/app/sales/page.tsx | added optional chaining | ~2771 |
-| 18:28 | Edited src/app/sales/page.tsx | inline fix | ~54 |
-| $(date +%H:%M) | feat(sales): invoice/struk modal — print A4+thermal, share/kirim, nama toko dari user_metadata.store_name | src/app/sales/page.tsx, src/hooks/useSales.ts | done | ~1200 |
-| 18:29 | Session end: 9 writes across 2 files (useSales.ts, page.tsx) | 3 reads | ~24349 tok |
-| 18:30 | Created ../../../../tmp/commitmsg.txt | — | ~151 |
-| 18:30 | Session end: 10 writes across 3 files (useSales.ts, page.tsx, commitmsg.txt) | 3 reads | ~24511 tok |
-| 18:36 | Session end: 10 writes across 3 files (useSales.ts, page.tsx, commitmsg.txt) | 4 reads | ~24511 tok |
-| 18:47 | Created supabase/migrations/011_sale_items.sql | — | ~817 |
-| 18:47 | Edited src/types/index.ts | expanded (+8 lines) | ~208 |
-| 18:48 | Created src/hooks/useSales.ts | — | ~3461 |
-| 18:48 | Edited src/hooks/useDailyData.ts | modified nextDay() | ~265 |
-| 18:48 | Edited src/app/dashboard/page.tsx | inline fix | ~20 |
-| 18:49 | Edited src/app/reports/page.tsx | added nullish coalescing | ~39 |
-| 18:53 | Created src/app/sales/page.tsx | — | ~19207 |
+| 10:27 | Edited public/manifest.json | inline fix | ~10 |
+| 10:27 | Session end: 1 writes across 1 files (manifest.json) | 1 reads | ~193 tok |
 
-## Session: 2026-05-22 18:55
-
-| Time | Action | File(s) | Outcome | ~Tokens |
-|------|--------|---------|---------|--------|
-| 18:57 | Created supabase/migrations/011_sale_items.sql | — | ~839 |
-| 12:14 | Created supabase/migrations/016_fix_record_purchase_prev_avg_price.sql | — | ~675 |
-
-## Session: 2026-05-26 12:16
+## Session: 2026-05-30 10:09
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-28T15:28:51.405Z
-> Files: 76 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-28T03:27:42.323Z
+> Files: 71 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -38,12 +38,12 @@
 
 ## public/
 
-- `manifest.json` (~183 tok)
+- `manifest.json` (~186 tok)
 - `sw.js` — Declares CACHE (~338 tok)
 
 ## src/
 
-- `middleware.ts` — Exports middleware, config (~730 tok)
+- `middleware.ts` — Exports middleware, config (~831 tok)
 
 ## src/app/
 
@@ -71,17 +71,13 @@
 
 - `page.tsx` — dynamic (~309 tok)
 
-## src/app/produksi/
-
-- `page.tsx` — dynamic (~5264 tok)
-
 ## src/app/purchases/
 
-- `page.tsx` — dynamic (~13417 tok)
+- `page.tsx` — dynamic (~11771 tok)
 
 ## src/app/recipes/
 
-- `page.tsx` — dynamic (~6462 tok)
+- `page.tsx` — dynamic (~5560 tok)
 
 ## src/app/reports/
 
@@ -89,7 +85,7 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~21184 tok)
+- `page.tsx` — dynamic (~19207 tok)
 
 ## src/app/settings/
 
@@ -105,8 +101,8 @@
 
 ## src/components/layout/
 
-- `AppLayout.tsx` — AppLayout (~655 tok)
-- `Sidebar.tsx` — ALL_NAV (~1229 tok)
+- `AppLayout.tsx` — AppLayout — uses useState (~477 tok)
+- `Sidebar.tsx` — ALL_NAV (~1209 tok)
 
 ## src/components/ui/
 
@@ -124,9 +120,9 @@
 - `useDailyData.ts` — Exports useSalesByDate, usePurchasesByDate (~423 tok)
 - `useExpenses.ts` — Exports useExpenses, useExpensesByDate, useExpenseCategories, useReportExpenses + 4 more (~1368 tok)
 - `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem (~766 tok)
-- `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase, useDeletePurchase + 5 more (~2374 tok)
+- `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase (~731 tok)
 - `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 3 more (~1806 tok)
-- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3684 tok)
+- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3461 tok)
 
 ## src/lib/
 
@@ -156,11 +152,7 @@
 - `008_security_fix_rpc_auth.sql` — Security fix: adds auth.uid() guard to all 7 SECURITY DEFINER RPCs; creates user_profiles table with RLS + signup trigger (~3095 tok)
 - `010_sale_addons.sql` — Sale Add-On: is_addon flag on items+recipes, sale_addons table, hpp_addons_at_sale on sales, RPCs: adjust_item_stock + restore_sub_recipe_stock (~623 tok)
 - `011_sale_items.sql` — Migration 011: Multi-item sales (~839 tok)
-- `012_batch_yield_waste.sql` — Add batch production fields to recipes (~112 tok)
-- `013_item_price_updated_at.sql` — Track when item avg_price last changed so recipe HPP diff badge (~1226 tok)
-- `014_recipe_hpp_baseline.sql` — Store HPP baseline per recipe so diff badge compares against (~85 tok)
-- `015_record_purchase_set_prev_avg_price.sql` — Fix: record_purchase sebelumnya tidak set prev_avg_price. (~440 tok)
-- `017_produce_recipe.sql` — Finished goods inventory: RPC produce_recipe (deduct items+sub-recipes → tambah recipes.stock, record productions) + restore_recipe_stock. Sale flow: deduct recipes.stock, bukan ingredients langsung. (~350 tok)
+- `016_fix_record_purchase_prev_avg_price.sql` — Root cause: there are two overloaded record_purchase functions. (~675 tok)
 
 ## supabase/seeds/
 

@@ -188,6 +188,7 @@ export function useUpdateProduction() {
 export function useProductions() {
   return useQuery<Production[]>({
     queryKey: ["productions"],
+    staleTime: 30_000,
     queryFn: async (): Promise<Production[]> => {
       const supabase = createClient();
       const { data, error } = await supabase
