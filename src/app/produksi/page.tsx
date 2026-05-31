@@ -319,7 +319,17 @@ export default function ProduksiPage() {
             <select
               className={`${cls} w-full`}
               value={recipeId}
-              onChange={(e) => { setRecipeId(e.target.value); setTotalCost(""); }}
+              onChange={(e) => {
+                const newId = e.target.value;
+                setRecipeId(newId);
+                const pool = mode === "jadi" ? finishedRecipes : subRecipes;
+                const r = pool.find((x) => x.id === newId);
+                if (r && quantity) {
+                  setTotalCost(String(Math.ceil((r.hpp ?? 0) * Number(quantity))));
+                } else {
+                  setTotalCost("");
+                }
+              }}
               required
             >
               <option value="">Pilih {mode === "jadi" ? "produk" : "bahan"}...</option>
@@ -335,26 +345,51 @@ export default function ProduksiPage() {
           <Input
             label={`Jumlah diproduksi${selectedRecipe?.unit ? ` (${selectedRecipe.unit})` : " (pcs)"}`}
             type="number" min="0.01" step="0.01"
-            value={quantity} onChange={(e) => setQuantity(e.target.value)} required
+            value={quantity}
+            onChange={(e) => {
+              const qty = e.target.value;
+              setQuantity(qty);
+              if (selectedRecipe && qty) {
+                setTotalCost(String(Math.ceil((selectedRecipe.hpp ?? 0) * Number(qty))));
+              } else {
+                setTotalCost("");
+              }
+            }}
+            required
           />
 
-          <Input
-            label="Total biaya produksi (Rp)"
-            type="number" min="0" step="1"
-            value={totalCost} onChange={(e) => setTotalCost(e.target.value)} required
-          />
-
-          {/* HPP estimate */}
-          {estimatedHpp !== null && (
-            <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-2.5">
-              <p className="text-xs text-amber-700 font-medium">
-                Estimasi HPP: <span className="font-bold">{formatCurrency(estimatedHpp)}</span>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-sm font-medium text-[#4A3728]">
+                Total biaya produksi (Rp) <span className="text-red-500">*</span>
+              </label>
+              {estimatedHpp !== null && totalCost !== "" &&
+                Number(totalCost) !== Math.ceil(estimatedHpp) && (
+                <button
+                  type="button"
+                  onClick={() => setTotalCost(String(Math.ceil(estimatedHpp)))}
+                  className="text-xs text-[#A05035] hover:underline font-medium"
+                >
+                  ← Pakai estimasi
+                </button>
+              )}
+            </div>
+            <input
+              type="number" min="0" step="1"
+              className={`${cls} w-full`}
+              value={totalCost}
+              onChange={(e) => setTotalCost(e.target.value)}
+              required
+            />
+            {estimatedHpp !== null && (
+              <p className="mt-1 text-xs text-amber-700 font-medium">
+                Estimasi HPP: <span className="font-bold">{formatCurrency(Math.ceil(estimatedHpp))}</span>
                 {selectedRecipe && (
                   <> · HPP/unit: <span className="font-bold">{formatCurrency(selectedRecipe.hpp ?? 0)}</span></>
                 )}
               </p>
-            </div>
-          )}
+            )}
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-[#4A3728] mb-1">Tanggal</label>
