@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-28T03:27:42.323Z
-> Files: 71 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-31T15:37:53.753Z
+> Files: 72 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -70,6 +70,10 @@
 ## src/app/offline/
 
 - `page.tsx` — dynamic (~309 tok)
+
+## src/app/produksi/
+
+- `page.tsx` — dynamic (~5663 tok)
 
 ## src/app/purchases/
 

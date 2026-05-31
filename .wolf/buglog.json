@@ -276,6 +276,38 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-28T03:27:42.334Z"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-05-31T15:37:42.621Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-31T15:37:42.621Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-05-31T15:37:53.767Z",
+      "error_message": "CSS fix: HPP",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "HPP: <span className=\"font-bold\">{formatCurrency(estimatedHpp) → <span className=\"font-bold\">{formatCurrency(Math.ceil(estimatedHpp))",
+      "fix": "Changed HPP: <span className=\"font-bold\">{formatCurrency(estimatedHpp) → <span className=\"font-bold\">{formatCurrency(Math.ceil(estimatedHpp))",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-31T15:37:53.767Z"
     }
   ]
 }
