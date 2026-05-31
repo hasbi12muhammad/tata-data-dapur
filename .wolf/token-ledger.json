@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-20T14:13:02.073Z",
   "lifetime": {
-    "total_tokens_estimated": 977717,
-    "total_reads": 209,
-    "total_writes": 439,
-    "total_sessions": 14,
-    "anatomy_hits": 179,
-    "anatomy_misses": 30,
-    "repeated_reads_blocked": 305,
-    "estimated_savings_vs_bare_cli": 2517789
+    "total_tokens_estimated": 991590,
+    "total_reads": 204,
+    "total_writes": 444,
+    "total_sessions": 18,
+    "anatomy_hits": 172,
+    "anatomy_misses": 32,
+    "repeated_reads_blocked": 303,
+    "estimated_savings_vs_bare_cli": 2510199
   },
   "sessions": [
     {
@@ -3799,36 +3799,12 @@
       }
     },
     {
-      "id": "session-2026-05-21-1055",
-      "started": "2026-05-21T03:55:52.621Z",
-      "ended": "2026-05-21T03:59:30.185Z",
+      "id": "session-2026-05-28-1523",
+      "started": "2026-05-28T15:23:15.041Z",
+      "ended": "2026-05-28T15:23:34.860Z",
       "reads": [
         {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/001_initial_schema.sql",
-          "tokens_estimated": 1686,
-          "was_repeated": false,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/006_sub_recipe.sql",
-          "tokens_estimated": 1363,
-          "was_repeated": false,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/008_security_fix_rpc_auth.sql",
-          "tokens_estimated": 3095,
-          "was_repeated": true,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/010_sale_addons.sql",
-          "tokens_estimated": 623,
-          "was_repeated": false,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/009_dynamic_units_packaging.sql",
+          "file": "/root/.claude/uploads/36cf2372-d688-49ba-be45-3006eb54b959/61577e5a-Screenshot_20260528222051566_com.android.chrome.jpg",
           "tokens_estimated": 0,
           "was_repeated": false,
           "anatomy_had_description": false
@@ -3836,45 +3812,21 @@
       ],
       "writes": [],
       "totals": {
-        "input_tokens_estimated": 6767,
+        "input_tokens_estimated": 0,
         "output_tokens_estimated": 0,
-        "reads_count": 5,
+        "reads_count": 1,
         "writes_count": 0,
-        "repeated_reads_blocked": 1,
-        "anatomy_lookups": 4
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
       }
     },
     {
-      "id": "session-2026-05-21-1055",
-      "started": "2026-05-21T03:55:52.621Z",
-      "ended": "2026-05-21T04:01:30.234Z",
+      "id": "session-2026-05-28-1523",
+      "started": "2026-05-28T15:23:15.041Z",
+      "ended": "2026-05-28T15:24:01.585Z",
       "reads": [
         {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/001_initial_schema.sql",
-          "tokens_estimated": 1686,
-          "was_repeated": false,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/006_sub_recipe.sql",
-          "tokens_estimated": 1363,
-          "was_repeated": false,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/008_security_fix_rpc_auth.sql",
-          "tokens_estimated": 3095,
-          "was_repeated": true,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/010_sale_addons.sql",
-          "tokens_estimated": 623,
-          "was_repeated": false,
-          "anatomy_had_description": false
-        },
-        {
-          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/009_dynamic_units_packaging.sql",
+          "file": "/root/.claude/uploads/36cf2372-d688-49ba-be45-3006eb54b959/61577e5a-Screenshot_20260528222051566_com.android.chrome.jpg",
           "tokens_estimated": 0,
           "was_repeated": false,
           "anatomy_had_description": false
@@ -3882,38 +3834,98 @@
       ],
       "writes": [],
       "totals": {
-        "input_tokens_estimated": 6767,
+        "input_tokens_estimated": 0,
         "output_tokens_estimated": 0,
-        "reads_count": 5,
+        "reads_count": 1,
         "writes_count": 0,
-        "repeated_reads_blocked": 1,
-        "anatomy_lookups": 4
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
       }
     },
     {
-      "id": "session-2026-05-28-1026",
-      "started": "2026-05-28T03:26:01.231Z",
-      "ended": "2026-05-28T03:27:47.898Z",
+      "id": "session-2026-05-28-1523",
+      "started": "2026-05-28T15:23:15.041Z",
+      "ended": "2026-05-28T15:29:20.705Z",
       "reads": [
         {
-          "file": "/home/gbk/Project/tata-data-dapur/public/manifest.json",
-          "tokens_estimated": 183,
+          "file": "/root/.claude/uploads/36cf2372-d688-49ba-be45-3006eb54b959/61577e5a-Screenshot_20260528222051566_com.android.chrome.jpg",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 12794,
           "was_repeated": false,
           "anatomy_had_description": false
         }
       ],
       "writes": [
         {
-          "file": "/home/gbk/Project/tata-data-dapur/public/manifest.json",
-          "tokens_estimated": 10,
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 31,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 264,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 711,
           "action": "edit"
         }
       ],
       "totals": {
-        "input_tokens_estimated": 183,
-        "output_tokens_estimated": 10,
-        "reads_count": 1,
-        "writes_count": 1,
+        "input_tokens_estimated": 12794,
+        "output_tokens_estimated": 1006,
+        "reads_count": 2,
+        "writes_count": 3,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-05-28-1523",
+      "started": "2026-05-28T15:23:15.041Z",
+      "ended": "2026-05-28T15:29:29.029Z",
+      "reads": [
+        {
+          "file": "/root/.claude/uploads/36cf2372-d688-49ba-be45-3006eb54b959/61577e5a-Screenshot_20260528222051566_com.android.chrome.jpg",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 12794,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 31,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 264,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 711,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 12794,
+        "output_tokens_estimated": 1006,
+        "reads_count": 2,
+        "writes_count": 3,
         "repeated_reads_blocked": 0,
         "anatomy_lookups": 1
       }
