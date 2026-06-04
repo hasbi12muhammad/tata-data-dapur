@@ -1180,67 +1180,94 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                           </button>
                         </div>
                         {row.addonRows.map((addon, addonIdx) => (
-                          <div key={addonIdx} className="flex gap-2 items-center mb-1.5">
-                            <div className="flex-1">
-                              <select
-                                className={`${cls} w-full`}
-                                value={addon.sourceKey}
-                                onChange={(e) =>
-                                  selectAddonSource(row._key, addonIdx, e.target.value)
-                                }
-                                required
+                          <div key={addonIdx} className="mb-2">
+                            {/* Row 1: source select + remove */}
+                            <div className="flex gap-2 items-center mb-1">
+                              <div className="flex-1">
+                                <select
+                                  className={`${cls} w-full`}
+                                  value={addon.sourceKey}
+                                  onChange={(e) =>
+                                    selectAddonSource(row._key, addonIdx, e.target.value)
+                                  }
+                                  required
+                                >
+                                  <option value="">Pilih add-on...</option>
+                                  {(addonItems ?? []).length > 0 && (
+                                    <optgroup label="── Bahan Baku ──">
+                                      {(addonItems ?? []).map((it) => (
+                                        <option key={it.id} value={`item:${it.id}`}>
+                                          {it.name} ({formatCurrency(it.avg_price)}/{it.unit})
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                  )}
+                                  {(addonSubRecipes ?? []).length > 0 && (
+                                    <optgroup label="── Setengah Jadi ──">
+                                      {(addonSubRecipes ?? []).map((sr) => (
+                                        <option key={sr.id} value={`sr:${sr.id}`}>
+                                          {sr.name} ({formatCurrency(sr.avg_price)}/{sr.unit})
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                  )}
+                                  {(addonFinishedRecipes ?? []).length > 0 && (
+                                    <optgroup label="── Produk Jadi ──">
+                                      {(addonFinishedRecipes ?? []).map((fr) => (
+                                        <option key={fr.id} value={`sr:${fr.id}`}>
+                                          {fr.name} ({formatCurrency(fr.avg_price)}/{fr.unit ?? "pcs"})
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                  )}
+                                </select>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removeAddonFromItem(row._key, addonIdx)}
+                                className="p-1.5 rounded text-[#D9CCAF] hover:text-red-500 flex-shrink-0"
                               >
-                                <option value="">Pilih add-on...</option>
-                                {(addonItems ?? []).length > 0 && (
-                                  <optgroup label="── Bahan Baku ──">
-                                    {(addonItems ?? []).map((it) => (
-                                      <option key={it.id} value={`item:${it.id}`}>
-                                        {it.name} ({formatCurrency(it.avg_price)}/{it.unit})
-                                      </option>
-                                    ))}
-                                  </optgroup>
-                                )}
-                                {(addonSubRecipes ?? []).length > 0 && (
-                                  <optgroup label="── Setengah Jadi ──">
-                                    {(addonSubRecipes ?? []).map((sr) => (
-                                      <option key={sr.id} value={`sr:${sr.id}`}>
-                                        {sr.name} ({formatCurrency(sr.avg_price)}/{sr.unit})
-                                      </option>
-                                    ))}
-                                  </optgroup>
-                                )}
-                                {(addonFinishedRecipes ?? []).length > 0 && (
-                                  <optgroup label="── Produk Jadi ──">
-                                    {(addonFinishedRecipes ?? []).map((fr) => (
-                                      <option key={fr.id} value={`sr:${fr.id}`}>
-                                        {fr.name} ({formatCurrency(fr.avg_price)}/{fr.unit ?? "pcs"})
-                                      </option>
-                                    ))}
-                                  </optgroup>
-                                )}
-                              </select>
+                                <Minus className="w-4 h-4" />
+                              </button>
                             </div>
-                            <div className="w-20">
-                              <input
-                                type="number"
-                                min="0.001"
-                                step="0.001"
-                                placeholder="Qty"
-                                value={addon.quantity}
-                                onChange={(e) =>
-                                  updateAddonQty(row._key, addonIdx, e.target.value)
-                                }
-                                className={`${cls} w-full`}
-                                required
-                              />
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => removeAddonFromItem(row._key, addonIdx)}
-                              className="p-1.5 rounded text-[#D9CCAF] hover:text-red-500 flex-shrink-0"
-                            >
-                              <Minus className="w-4 h-4" />
-                            </button>
+                            {/* Row 2: qty + price + clear (shown when source selected) */}
+                            {addon.sourceKey && (
+                              <div className="flex gap-2 items-center pl-1">
+                                <input
+                                  type="number"
+                                  min="0.001"
+                                  step="0.001"
+                                  placeholder="Qty"
+                                  value={addon.quantity}
+                                  onChange={(e) =>
+                                    updateAddonQty(row._key, addonIdx, e.target.value)
+                                  }
+                                  className={`${cls} w-20`}
+                                  required
+                                />
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="1"
+                                  placeholder="Harga jual"
+                                  value={addon.pricePerUnit || ""}
+                                  onChange={(e) =>
+                                    updateAddonPrice(row._key, addonIdx, Number(e.target.value))
+                                  }
+                                  className={`${cls} flex-1`}
+                                />
+                                {addon.pricePerUnit > 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => updateAddonPrice(row._key, addonIdx, 0)}
+                                    className="text-[#B88D6A] hover:text-[#A05035] flex-shrink-0"
+                                    aria-label="Hapus harga add-on"
+                                  >
+                                    <X className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </div>
+                            )}
                           </div>
                         ))}
                         {addonTotal > 0 && (
