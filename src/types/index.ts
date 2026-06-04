@@ -22,6 +22,7 @@ export interface Item {
   avg_price_updated_at?: string | null;
   stock: number;
   is_addon: boolean;
+  selling_price?: number | null;
   created_at: string;
 }
 
@@ -54,6 +55,7 @@ export interface Recipe {
   batch_yield: number;
   waste_pct: number;
   hpp_baseline?: number | null;
+  selling_price?: number | null;
   created_at: string;
   recipe_items?: RecipeItem[];
 }
