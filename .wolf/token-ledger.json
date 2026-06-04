@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-20T14:13:02.073Z",
   "lifetime": {
-    "total_tokens_estimated": 977717,
-    "total_reads": 209,
-    "total_writes": 439,
+    "total_tokens_estimated": 1288502,
+    "total_reads": 271,
+    "total_writes": 489,
     "total_sessions": 14,
-    "anatomy_hits": 179,
-    "anatomy_misses": 30,
-    "repeated_reads_blocked": 305,
-    "estimated_savings_vs_bare_cli": 2517789
+    "anatomy_hits": 223,
+    "anatomy_misses": 48,
+    "repeated_reads_blocked": 484,
+    "estimated_savings_vs_bare_cli": 3335191
   },
   "sessions": [
     {
@@ -3916,6 +3916,762 @@
         "writes_count": 1,
         "repeated_reads_blocked": 0,
         "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:12:45.515Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 19207,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3461,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 35845,
+        "output_tokens_estimated": 0,
+        "reads_count": 7,
+        "writes_count": 0,
+        "repeated_reads_blocked": 17,
+        "anatomy_lookups": 5
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:29:08.456Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 19207,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3461,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 35845,
+        "output_tokens_estimated": 0,
+        "reads_count": 7,
+        "writes_count": 0,
+        "repeated_reads_blocked": 17,
+        "anatomy_lookups": 5
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:33:50.613Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 21209,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3461,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 113,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 86,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 44,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 393,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 37847,
+        "output_tokens_estimated": 779,
+        "reads_count": 7,
+        "writes_count": 6,
+        "repeated_reads_blocked": 21,
+        "anatomy_lookups": 5
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:38:10.239Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 21209,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3461,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 113,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 86,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 44,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 393,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 37847,
+        "output_tokens_estimated": 779,
+        "reads_count": 7,
+        "writes_count": 6,
+        "repeated_reads_blocked": 21,
+        "anatomy_lookups": 5
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:41:44.887Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 21209,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3461,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/middleware.ts",
+          "tokens_estimated": 831,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 113,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 86,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 44,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 393,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 488,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 38678,
+        "output_tokens_estimated": 1267,
+        "reads_count": 8,
+        "writes_count": 7,
+        "repeated_reads_blocked": 24,
+        "anatomy_lookups": 6
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:43:30.487Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 21209,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3744,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/middleware.ts",
+          "tokens_estimated": 831,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 113,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 86,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 44,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 393,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 488,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 150,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 102,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 38961,
+        "output_tokens_estimated": 1519,
+        "reads_count": 8,
+        "writes_count": 9,
+        "repeated_reads_blocked": 25,
+        "anatomy_lookups": 6
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:44:32.127Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 21209,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3744,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/middleware.ts",
+          "tokens_estimated": 831,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/produksi/page.tsx",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 113,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 86,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 44,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 393,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 488,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 150,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 102,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 141,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/produksi/page.tsx",
+          "tokens_estimated": 88,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 38961,
+        "output_tokens_estimated": 1748,
+        "reads_count": 9,
+        "writes_count": 11,
+        "repeated_reads_blocked": 27,
+        "anatomy_lookups": 6
+      }
+    },
+    {
+      "id": "session-2026-05-30-1009",
+      "started": "2026-05-30T03:09:56.860Z",
+      "ended": "2026-05-30T04:48:34.512Z",
+      "reads": [
+        {
+          "file": "/tmp/review.diff",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/.claude/projects/-home-gbk-Project-tata-data-dapur/32e0b480-e170-45de-bbac-26077106deb5/tool-results/bw5f56ura.txt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 11771,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 21209,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 3744,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/supabase/migrations/016_fix_record_purchase_prev_avg_price.sql",
+          "tokens_estimated": 675,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 731,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/middleware.ts",
+          "tokens_estimated": 831,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/produksi/page.tsx",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 113,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 86,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 44,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/sales/page.tsx",
+          "tokens_estimated": 393,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/purchases/page.tsx",
+          "tokens_estimated": 488,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 150,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/useSales.ts",
+          "tokens_estimated": 102,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/hooks/usePurchases.ts",
+          "tokens_estimated": 141,
+          "action": "edit"
+        },
+        {
+          "file": "/home/gbk/Project/tata-data-dapur/src/app/produksi/page.tsx",
+          "tokens_estimated": 88,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 38961,
+        "output_tokens_estimated": 1748,
+        "reads_count": 9,
+        "writes_count": 11,
+        "repeated_reads_blocked": 27,
+        "anatomy_lookups": 6
       }
     }
   ],

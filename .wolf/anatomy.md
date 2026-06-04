@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-28T03:27:42.323Z
-> Files: 71 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-30T04:44:11.423Z
+> Files: 72 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -71,9 +71,13 @@
 
 - `page.tsx` — dynamic (~309 tok)
 
+## src/app/produksi/
+
+- `page.tsx` — dynamic (~5285 tok)
+
 ## src/app/purchases/
 
-- `page.tsx` — dynamic (~11771 tok)
+- `page.tsx` — dynamic (~13730 tok)
 
 ## src/app/recipes/
 
@@ -85,7 +89,7 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~19207 tok)
+- `page.tsx` — dynamic (~21332 tok)
 
 ## src/app/settings/
 
@@ -120,9 +124,9 @@
 - `useDailyData.ts` — Exports useSalesByDate, usePurchasesByDate (~423 tok)
 - `useExpenses.ts` — Exports useExpenses, useExpensesByDate, useExpenseCategories, useReportExpenses + 4 more (~1368 tok)
 - `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem (~766 tok)
-- `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase (~731 tok)
+- `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase, useDeletePurchase + 5 more (~2381 tok)
 - `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 3 more (~1806 tok)
-- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3461 tok)
+- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3766 tok)
 
 ## src/lib/
 

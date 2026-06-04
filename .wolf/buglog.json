@@ -276,6 +276,70 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-28T03:27:42.334Z"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-05-30T04:32:31.766Z",
+      "error_message": "Missing guard clause",
+      "file": "src/hooks/useSales.ts",
+      "root_cause": "No early return/throw for edge case: restoreError",
+      "fix": "Added guard clause: if (restoreError)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-30T04:32:36.005Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-05-30T04:32:52.044Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "Had \"react-hot-toast\"",
+      "fix": "Changed to \"@tanstack/react-query\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-30T04:32:52.044Z"
+    },
+    {
+      "id": "bug-020",
+      "timestamp": "2026-05-30T04:43:07.906Z",
+      "error_message": "Function not marked async",
+      "file": "src/hooks/useSales.ts",
+      "root_cause": "Function uses await but wasn't declared async",
+      "fix": "Added async modifier",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-30T04:43:12.682Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-05-30T04:44:11.448Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "8 lines replaced/restructured",
+      "fix": "Rewrote 8→9 lines (8 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-30T04:44:11.448Z"
     }
   ]
 }
