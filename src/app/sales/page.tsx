@@ -192,6 +192,20 @@ export default function SalesPage() {
     );
   }
 
+  function selectRecipe(key: string, recipeId: string) {
+    const recipe = recipes?.find((r) => r.id === recipeId);
+    setItemRows((rows) =>
+      rows.map((r) => {
+        if (r._key !== key) return r;
+        return {
+          ...r,
+          recipeId,
+          sellingPrice: recipe?.selling_price != null ? String(recipe.selling_price) : "",
+        };
+      }),
+    );
+  }
+
   function addAddonToItem(key: string) {
     setItemRows((rows) =>
       rows.map((r) =>
@@ -218,6 +232,21 @@ export default function SalesPage() {
     );
   }
 
+  function updateAddonPrice(itemKey: string, addonIdx: number, price: number) {
+    setItemRows((rows) =>
+      rows.map((r) =>
+        r._key !== itemKey
+          ? r
+          : {
+              ...r,
+              addonRows: r.addonRows.map((a, i) =>
+                i !== addonIdx ? a : { ...a, pricePerUnit: price },
+              ),
+            },
+      ),
+    );
+  }
+
   function selectAddonSource(itemKey: string, addonIdx: number, sourceKey: string) {
     const [type, id] = sourceKey.split(":");
     let name = "";
@@ -225,13 +254,13 @@ export default function SalesPage() {
     if (type === "item") {
       const item = addonItems?.find((x) => x.id === id);
       name = item?.name ?? "";
-      pricePerUnit = item?.avg_price ?? 0;
+      pricePerUnit = item?.selling_price ?? item?.avg_price ?? 0;
     } else if (type === "sr") {
       const sr =
         addonSubRecipes?.find((x) => x.id === id) ??
         addonFinishedRecipes?.find((x) => x.id === id);
       name = sr?.name ?? "";
-      pricePerUnit = sr?.avg_price ?? 0;
+      pricePerUnit = sr?.selling_price ?? sr?.avg_price ?? 0;
     }
     setItemRows((rows) =>
       rows.map((r) =>
@@ -1125,7 +1154,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                           label="Produk"
                           value={row.recipeId}
                           onChange={(e) =>
-                            updateItemField(row._key, "recipeId", e.target.value)
+                            selectRecipe(row._key, e.target.value)
                           }
                           required
                         >
