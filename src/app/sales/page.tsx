@@ -124,6 +124,7 @@ export default function SalesPage() {
       sub_recipe_id?: string | null;
       quantity: number;
       price_per_unit_at_sale: number;
+      hpp_per_unit?: number;
       name_at_sale: string;
     }>;
   };
@@ -200,7 +201,7 @@ export default function SalesPage() {
         return {
           ...r,
           recipeId,
-          sellingPrice: recipe?.selling_price != null ? String(recipe.selling_price) : "",
+          sellingPrice: recipe?.selling_price ? String(recipe.selling_price) : "",
         };
       }),
     );
@@ -254,13 +255,13 @@ export default function SalesPage() {
     if (type === "item") {
       const item = addonItems?.find((x) => x.id === id);
       name = item?.name ?? "";
-      pricePerUnit = item?.selling_price ?? item?.avg_price ?? 0;
+      pricePerUnit = item?.selling_price || item?.avg_price || 0;
     } else if (type === "sr") {
       const sr =
         addonSubRecipes?.find((x) => x.id === id) ??
         addonFinishedRecipes?.find((x) => x.id === id);
       name = sr?.name ?? "";
-      pricePerUnit = sr?.selling_price ?? sr?.avg_price ?? 0;
+      pricePerUnit = sr?.selling_price || sr?.avg_price || 0;
     }
     setItemRows((rows) =>
       rows.map((r) =>
@@ -434,11 +435,21 @@ export default function SalesPage() {
         .filter((a) => a.sourceKey && Number(a.quantity) > 0)
         .map((a) => {
           const [type, id] = a.sourceKey.split(":");
+          let hppPerUnit = 0;
+          if (type === "item") {
+            hppPerUnit = addonItems?.find((x) => x.id === id)?.avg_price ?? 0;
+          } else if (type === "sr") {
+            hppPerUnit =
+              addonSubRecipes?.find((x) => x.id === id)?.avg_price ??
+              addonFinishedRecipes?.find((x) => x.id === id)?.avg_price ??
+              0;
+          }
           return {
             item_id: type === "item" ? id : null,
             sub_recipe_id: type === "sr" ? id : null,
             quantity: Number(a.quantity),
             price_per_unit_at_sale: a.pricePerUnit,
+            hpp_per_unit: hppPerUnit,
             name_at_sale: a.name,
           };
         });
