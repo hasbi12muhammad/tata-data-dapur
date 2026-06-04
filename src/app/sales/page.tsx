@@ -48,6 +48,7 @@ interface ItemRow {
   recipeId: string;
   quantity: string;
   sellingPrice: string;
+  baseSellingPrice: string; // recipe's standalone price, used for auto-sum with addons
   addonRows: AddonRow[];
 }
 
@@ -89,7 +90,14 @@ function saleMargin(s: Sale) {
 }
 
 function emptyItemRow(): ItemRow {
-  return { _key: crypto.randomUUID(), recipeId: "", quantity: "1", sellingPrice: "", addonRows: [] };
+  return { _key: crypto.randomUUID(), recipeId: "", quantity: "1", sellingPrice: "", baseSellingPrice: "", addonRows: [] };
+}
+
+function calcSellingPrice(baseSellingPrice: string, addonRows: AddonRow[]): string {
+  if (!baseSellingPrice) return "";
+  const base = Number(baseSellingPrice);
+  const addonSum = addonRows.reduce((s, a) => s + (a.pricePerUnit || 0), 0);
+  return String(base + addonSum);
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -195,14 +203,12 @@ export default function SalesPage() {
 
   function selectRecipe(key: string, recipeId: string) {
     const recipe = recipes?.find((r) => r.id === recipeId);
+    const basePrice = recipe?.selling_price ? String(recipe.selling_price) : "";
     setItemRows((rows) =>
       rows.map((r) => {
         if (r._key !== key) return r;
-        return {
-          ...r,
-          recipeId,
-          sellingPrice: recipe?.selling_price ? String(recipe.selling_price) : "",
-        };
+        const nextRow = { ...r, recipeId, baseSellingPrice: basePrice };
+        return { ...nextRow, sellingPrice: calcSellingPrice(basePrice, r.addonRows) || basePrice };
       }),
     );
   }
@@ -225,26 +231,25 @@ export default function SalesPage() {
 
   function removeAddonFromItem(itemKey: string, addonIdx: number) {
     setItemRows((rows) =>
-      rows.map((r) =>
-        r._key !== itemKey
-          ? r
-          : { ...r, addonRows: r.addonRows.filter((_, i) => i !== addonIdx) },
-      ),
+      rows.map((r) => {
+        if (r._key !== itemKey) return r;
+        const updatedAddons = r.addonRows.filter((_, i) => i !== addonIdx);
+        const newPrice = calcSellingPrice(r.baseSellingPrice, updatedAddons);
+        return { ...r, addonRows: updatedAddons, ...(newPrice && { sellingPrice: newPrice }) };
+      }),
     );
   }
 
   function updateAddonPrice(itemKey: string, addonIdx: number, price: number) {
     setItemRows((rows) =>
-      rows.map((r) =>
-        r._key !== itemKey
-          ? r
-          : {
-              ...r,
-              addonRows: r.addonRows.map((a, i) =>
-                i !== addonIdx ? a : { ...a, pricePerUnit: price },
-              ),
-            },
-      ),
+      rows.map((r) => {
+        if (r._key !== itemKey) return r;
+        const updatedAddons = r.addonRows.map((a, i) =>
+          i !== addonIdx ? a : { ...a, pricePerUnit: price },
+        );
+        const newPrice = calcSellingPrice(r.baseSellingPrice, updatedAddons);
+        return { ...r, addonRows: updatedAddons, ...(newPrice && { sellingPrice: newPrice }) };
+      }),
     );
   }
 
@@ -264,16 +269,14 @@ export default function SalesPage() {
       pricePerUnit = sr?.selling_price || sr?.avg_price || 0;
     }
     setItemRows((rows) =>
-      rows.map((r) =>
-        r._key !== itemKey
-          ? r
-          : {
-              ...r,
-              addonRows: r.addonRows.map((a, i) =>
-                i !== addonIdx ? a : { ...a, sourceKey, name, pricePerUnit },
-              ),
-            },
-      ),
+      rows.map((r) => {
+        if (r._key !== itemKey) return r;
+        const updatedAddons = r.addonRows.map((a, i) =>
+          i !== addonIdx ? a : { ...a, sourceKey, name, pricePerUnit },
+        );
+        const newPrice = calcSellingPrice(r.baseSellingPrice, updatedAddons);
+        return { ...r, addonRows: updatedAddons, ...(newPrice && { sellingPrice: newPrice }) };
+      }),
     );
   }
 
@@ -331,6 +334,7 @@ export default function SalesPage() {
       recipeId: si.recipe_id,
       quantity: String(si.quantity_sold),
       sellingPrice: String(si.selling_price),
+      baseSellingPrice: "",
       addonRows: (si.sale_addons ?? []).map((a) => ({
         sourceKey: a.item_id ? `item:${a.item_id}` : `sr:${a.sub_recipe_id}`,
         quantity: String(a.quantity),
