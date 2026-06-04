@@ -21,6 +21,13 @@ export function formatNumber(num: number, decimals = 2): string {
   }).format(num);
 }
 
+// Format raw digit string with dot thousand separators (e.g. "3000" → "3.000")
+export function formatThousands(value: string): string {
+  const digits = value.replace(/\D/g, "");
+  if (!digits) return "";
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 export function calcProfitMargin(profit: number, revenue: number): number {
   if (revenue === 0) return 0;
   return (profit / revenue) * 100;

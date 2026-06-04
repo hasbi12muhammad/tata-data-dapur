@@ -20,7 +20,7 @@ import {
   useUpdateSale,
 } from "@/hooks/useSales";
 import { Sale, SaleItem } from "@/types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatThousands } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { format } from "date-fns";
 import {
@@ -1261,13 +1261,12 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                                   required
                                 />
                                 <input
-                                  type="number"
-                                  min="0"
-                                  step="1"
+                                  type="text"
+                                  inputMode="numeric"
                                   placeholder="Harga jual"
-                                  value={addon.pricePerUnit || ""}
+                                  value={addon.pricePerUnit ? formatThousands(String(addon.pricePerUnit)) : ""}
                                   onChange={(e) =>
-                                    updateAddonPrice(row._key, addonIdx, Number(e.target.value))
+                                    updateAddonPrice(row._key, addonIdx, Number(e.target.value.replace(/\./g, "")))
                                   }
                                   className={`${cls} flex-1`}
                                 />
@@ -1309,15 +1308,15 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                       <div>
                         <Input
                           label="Harga Jual per Unit (Rp)"
-                          type="number"
-                          min="0"
-                          value={row.sellingPrice}
+                          type="text"
+                          inputMode="numeric"
+                          value={formatThousands(row.sellingPrice)}
                           onChange={(e) =>
-                            updateItemField(row._key, "sellingPrice", e.target.value)
+                            updateItemField(row._key, "sellingPrice", e.target.value.replace(/\./g, ""))
                           }
                           required
                           placeholder={
-                            hppPerUnit > 0 ? String(Math.ceil(hppPerUnit)) : undefined
+                            hppPerUnit > 0 ? formatThousands(String(Math.ceil(hppPerUnit))) : undefined
                           }
                         />
                         <div className="flex items-center justify-between mt-1 gap-2">
