@@ -1278,14 +1278,46 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                             hppPerUnit > 0 ? String(Math.ceil(hppPerUnit)) : undefined
                           }
                         />
-                        {hppPerUnit > 0 && (
-                          <p className="text-xs text-[#B88D6A] mt-1">
-                            HPP Akhir/unit:{" "}
-                            <span className="font-medium tabular-nums">
-                              {formatCurrency(hppPerUnit)}
-                            </span>
-                          </p>
-                        )}
+                        <div className="flex items-center justify-between mt-1 gap-2">
+                          <div className="flex items-center gap-2">
+                            {hppPerUnit > 0 && (
+                              <p className="text-xs text-[#B88D6A]">
+                                HPP/unit:{" "}
+                                <span className="font-medium tabular-nums">
+                                  {formatCurrency(hppPerUnit)}
+                                </span>
+                              </p>
+                            )}
+                            {(() => {
+                              const sp = Number(row.sellingPrice);
+                              if (!sp || !hppPerUnit) return null;
+                              const margin = ((sp - hppPerUnit) / sp) * 100;
+                              const color =
+                                margin >= 30
+                                  ? "text-green-600"
+                                  : margin >= 15
+                                  ? "text-yellow-600"
+                                  : "text-red-500";
+                              return (
+                                <span className={`text-xs font-semibold ${color}`}>
+                                  Margin {margin.toFixed(1)}%
+                                </span>
+                              );
+                            })()}
+                          </div>
+                          {row.sellingPrice !== "" && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateItemField(row._key, "sellingPrice", "")
+                              }
+                              className="flex items-center gap-0.5 text-xs text-[#B88D6A] hover:text-[#A05035] shrink-0"
+                              aria-label="Hapus harga jual"
+                            >
+                              <X className="w-3 h-3" /> Hapus
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
