@@ -128,6 +128,7 @@ type AddonInput = {
   sub_recipe_id?: string | null;
   quantity: number;
   price_per_unit_at_sale: number;
+  hpp_per_unit?: number;
   name_at_sale: string;
 };
 
@@ -193,21 +194,25 @@ async function persistSellingPrices(
 ) {
   try {
     for (const item of items) {
-      await supabase
-        .from("recipes")
-        .update({ selling_price: item.selling_price })
-        .eq("id", item.recipe_id);
+      if (item.selling_price > 0) {
+        await supabase
+          .from("recipes")
+          .update({ selling_price: item.selling_price })
+          .eq("id", item.recipe_id);
+      }
       for (const addon of item.addons ?? []) {
-        if (addon.item_id) {
-          await supabase
-            .from("items")
-            .update({ selling_price: addon.price_per_unit_at_sale })
-            .eq("id", addon.item_id);
-        } else if (addon.sub_recipe_id) {
-          await supabase
-            .from("recipes")
-            .update({ selling_price: addon.price_per_unit_at_sale })
-            .eq("id", addon.sub_recipe_id);
+        if (addon.price_per_unit_at_sale > 0) {
+          if (addon.item_id) {
+            await supabase
+              .from("items")
+              .update({ selling_price: addon.price_per_unit_at_sale })
+              .eq("id", addon.item_id);
+          } else if (addon.sub_recipe_id) {
+            await supabase
+              .from("recipes")
+              .update({ selling_price: addon.price_per_unit_at_sale })
+              .eq("id", addon.sub_recipe_id);
+          }
         }
       }
     }
@@ -250,7 +255,7 @@ export function useCreateSale() {
       // Create each sale_item with its addons
       for (const item of p.items) {
         const hpp_addons_at_sale = (item.addons ?? []).reduce(
-          (sum, a) => sum + a.quantity * a.price_per_unit_at_sale,
+          (sum, a) => sum + a.quantity * (a.hpp_per_unit ?? a.price_per_unit_at_sale),
           0,
         );
 
@@ -366,7 +371,7 @@ export function useUpdateSale() {
       // Re-insert sale_items + addons
       for (const item of p.items) {
         const hpp_addons_at_sale = (item.addons ?? []).reduce(
-          (sum, a) => sum + a.quantity * a.price_per_unit_at_sale,
+          (sum, a) => sum + a.quantity * (a.hpp_per_unit ?? a.price_per_unit_at_sale),
           0,
         );
 
