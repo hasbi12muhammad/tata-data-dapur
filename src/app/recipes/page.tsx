@@ -373,6 +373,32 @@ export default function RecipesPage() {
                       })()}
                     </div>
                   </div>
+                  {recipe.selling_price != null && (
+                    <div className="flex justify-between items-center gap-2 mt-2">
+                      <span className="text-xs text-[#7C6352] font-medium">
+                        Jual/pcs
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-semibold text-[#2C1810] tabular-nums">
+                          {formatCurrency(recipe.selling_price)}
+                        </span>
+                        {recipe.hpp > 0 && (() => {
+                          const margin = ((recipe.selling_price! - recipe.hpp) / recipe.selling_price!) * 100;
+                          const color =
+                            margin >= 30
+                              ? "bg-green-50 text-green-700"
+                              : margin >= 15
+                              ? "bg-yellow-50 text-yellow-700"
+                              : "bg-red-50 text-red-600";
+                          return (
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${color}`}>
+                              {margin.toFixed(1)}%
+                            </span>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardBody>
             </Card>
