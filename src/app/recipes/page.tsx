@@ -373,7 +373,7 @@ export default function RecipesPage() {
                       })()}
                     </div>
                   </div>
-                  {recipe.selling_price != null && (
+                  {!!recipe.selling_price && (
                     <div className="flex justify-between items-center gap-2 mt-2">
                       <span className="text-xs text-[#7C6352] font-medium">
                         Jual/pcs

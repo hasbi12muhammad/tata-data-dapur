@@ -194,7 +194,8 @@ async function persistSellingPrices(
 ) {
   try {
     for (const item of items) {
-      if (item.selling_price > 0) {
+      // Only remember standalone price — combo price (with add-ons) is not the base product's price
+      if (item.selling_price > 0 && (item.addons ?? []).length === 0) {
         await supabase
           .from("recipes")
           .update({ selling_price: item.selling_price })
