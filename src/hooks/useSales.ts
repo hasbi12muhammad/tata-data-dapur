@@ -187,6 +187,35 @@ async function restoreAddonStock(
   }
 }
 
+async function persistSellingPrices(
+  supabase: ReturnType<typeof createClient>,
+  items: ItemInput[],
+) {
+  try {
+    for (const item of items) {
+      await supabase
+        .from("recipes")
+        .update({ selling_price: item.selling_price })
+        .eq("id", item.recipe_id);
+      for (const addon of item.addons ?? []) {
+        if (addon.item_id) {
+          await supabase
+            .from("items")
+            .update({ selling_price: addon.price_per_unit_at_sale })
+            .eq("id", addon.item_id);
+        } else if (addon.sub_recipe_id) {
+          await supabase
+            .from("recipes")
+            .update({ selling_price: addon.price_per_unit_at_sale })
+            .eq("id", addon.sub_recipe_id);
+        }
+      }
+    }
+  } catch {
+    // best-effort, ignore errors
+  }
+}
+
 export function useCreateSale() {
   const qc = useQueryClient();
 
@@ -269,6 +298,7 @@ export function useCreateSale() {
         }
       }
 
+      await persistSellingPrices(supabase, p.items);
       return saleId;
     },
     onSuccess: () => {
@@ -382,6 +412,7 @@ export function useUpdateSale() {
           await deductAddonStock(supabase, user!.id, item.addons);
         }
       }
+      await persistSellingPrices(supabase, p.items);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["sales"] });
