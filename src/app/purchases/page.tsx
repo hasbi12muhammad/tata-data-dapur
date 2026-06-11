@@ -17,7 +17,7 @@ import {
 } from "@/hooks/usePurchases";
 import { usePackagingTypes, useCreatePackagingType } from "@/hooks/usePackagingTypes";
 import { Purchase } from "@/types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatThousands } from "@/lib/utils";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
@@ -680,9 +680,9 @@ export default function PurchasesPage() {
                 </div>
               )}
               {usePkg && pkgPriceMode === "per_pkg" ? (
-                <Input label="Harga per kemasan (Rp)" type="number" min="0" step="1" value={pricePerPkg} onChange={(e) => setPricePerPkg(e.target.value)} required />
+                <Input label="Harga per kemasan (Rp)" type="text" inputMode="numeric" value={formatThousands(pricePerPkg)} onChange={(e) => setPricePerPkg(e.target.value.replace(/\./g, ""))} required />
               ) : (
-                <Input label={`Harga per ${selectedItem?.unit ?? "unit"}`} type="number" min="0" step="1" value={pricePerUnit} onChange={(e) => setPricePerUnit(e.target.value)} required />
+                <Input label={`Harga per ${selectedItem?.unit ?? "unit"}`} type="text" inputMode="numeric" value={formatThousands(pricePerUnit)} onChange={(e) => setPricePerUnit(e.target.value.replace(/\./g, ""))} required />
               )}
               {computedTotal > 0 && (
                 <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5 space-y-1">
@@ -812,9 +812,9 @@ export default function PurchasesPage() {
                         </div>
                       )}
                       {row.usePkg && row.pkgPriceMode === "per_pkg" ? (
-                        <Input label="Harga per kemasan (Rp)" type="number" min="0" step="1" value={row.pricePerPkg} onChange={(e) => u({ pricePerPkg: e.target.value })} required />
+                        <Input label="Harga per kemasan (Rp)" type="text" inputMode="numeric" value={formatThousands(row.pricePerPkg)} onChange={(e) => u({ pricePerPkg: e.target.value.replace(/\./g, "") })} required />
                       ) : (
-                        <Input label={`Harga per ${rowItem?.unit ?? "unit"}`} type="number" min="0" step="1" value={row.pricePerUnit} onChange={(e) => u({ pricePerUnit: e.target.value })} required />
+                        <Input label={`Harga per ${rowItem?.unit ?? "unit"}`} type="text" inputMode="numeric" value={formatThousands(row.pricePerUnit)} onChange={(e) => u({ pricePerUnit: e.target.value.replace(/\./g, "") })} required />
                       )}
                       {rowTotal > 0 && (
                         <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5 space-y-1">

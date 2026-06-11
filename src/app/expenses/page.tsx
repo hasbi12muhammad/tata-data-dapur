@@ -17,7 +17,7 @@ import {
   useUpdateExpense,
 } from "@/hooks/useExpenses";
 import { Expense } from "@/types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatThousands } from "@/lib/utils";
 import { format } from "date-fns";
 import { Filter, Pencil, Plus, Receipt, Search, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -502,10 +502,10 @@ export default function ExpensesPage() {
             <div className="flex-1">
               <Input
                 label="Harga Satuan (IDR)"
-                type="number"
-                min="0"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                type="text"
+                inputMode="numeric"
+                value={formatThousands(price)}
+                onChange={(e) => setPrice(e.target.value.replace(/\./g, ""))}
                 required
               />
             </div>

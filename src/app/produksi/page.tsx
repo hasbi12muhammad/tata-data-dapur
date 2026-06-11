@@ -18,7 +18,7 @@ import {
 import { calcHPP, useRecipes } from "@/hooks/useRecipes";
 import { createClient } from "@/lib/supabase/client";
 import { Production } from "@/types";
-import { formatCurrency, formatNumber } from "@/lib/utils";
+import { formatCurrency, formatNumber, formatThousands } from "@/lib/utils";
 import { format } from "date-fns";
 import { AlertTriangle, Factory, Filter, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -481,10 +481,10 @@ export default function ProduksiPage() {
               )}
             </div>
             <input
-              type="number" min="0" step="0.01"
+              type="text" inputMode="numeric"
               className={`${cls} w-full`}
-              value={totalCost}
-              onChange={(e) => setTotalCost(e.target.value)}
+              value={formatThousands(totalCost)}
+              onChange={(e) => setTotalCost(e.target.value.replace(/\./g, ""))}
               required
             />
             {estimatedHpp !== null && (
@@ -525,8 +525,8 @@ export default function ProduksiPage() {
             />
             <Input
               label="Total biaya (Rp)"
-              type="number" min="0" step="1"
-              value={editCost} onChange={(e) => setEditCost(e.target.value)} required
+              type="text" inputMode="numeric"
+              value={formatThousands(editCost)} onChange={(e) => setEditCost(e.target.value.replace(/\./g, ""))} required
             />
             <div className="flex gap-2 pt-1">
               <Button type="button" variant="ghost" onClick={() => setEditing(null)} className="flex-1">Batal</Button>
