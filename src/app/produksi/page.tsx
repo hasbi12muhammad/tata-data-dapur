@@ -143,27 +143,27 @@ export default function ProduksiPage() {
       total_cost: Number(totalCost),
       date,
     };
-    if (mode === "jadi") {
-      // Check item (bahan baku) stocks first — show all shortfalls at once
-      const itemShortfalls: ItemShortfall[] = [];
-      for (const ri of selectedRecipe?.recipe_items ?? []) {
-        if (!ri.item_id || !ri.item) continue;
-        const needed = ri.quantity_used * Number(quantity);
-        if ((ri.item.stock ?? 0) < needed) {
-          itemShortfalls.push({
-            name: ri.item.name,
-            unit: ri.item.unit ?? "pcs",
-            currentStock: ri.item.stock ?? 0,
-            needed,
-          });
-        }
+    // Check item (bahan baku) stocks first for both modes
+    const itemShortfalls: ItemShortfall[] = [];
+    for (const ri of selectedRecipe?.recipe_items ?? []) {
+      if (!ri.item_id || !ri.item) continue;
+      const needed = ri.quantity_used * Number(quantity);
+      if ((ri.item.stock ?? 0) < needed) {
+        itemShortfalls.push({
+          name: ri.item.name,
+          unit: ri.item.unit ?? "pcs",
+          currentStock: ri.item.stock ?? 0,
+          needed,
+        });
       }
-      if (itemShortfalls.length > 0) {
-        setItemConfirm(itemShortfalls);
-        setModalOpen(false);
-        return;
-      }
+    }
+    if (itemShortfalls.length > 0) {
+      setItemConfirm(itemShortfalls);
+      setModalOpen(false);
+      return;
+    }
 
+    if (mode === "jadi") {
       // Check sub-recipe ingredient stocks before producing
       const shortfalls: SubRecipeShortfall[] = [];
       for (const ri of selectedRecipe?.recipe_items ?? []) {
