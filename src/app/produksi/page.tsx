@@ -18,7 +18,7 @@ import {
 import { calcHPP, useRecipes } from "@/hooks/useRecipes";
 import { createClient } from "@/lib/supabase/client";
 import { Production } from "@/types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatNumber } from "@/lib/utils";
 import { format } from "date-fns";
 import { AlertTriangle, Factory, Filter, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -36,6 +36,15 @@ export default function ProduksiPage() {
   const produceSubRecipe = useProduceSubRecipe();
   const produceRecipe = useProduceRecipe();
   const qc = useQueryClient();
+
+  // ─── Item (bahan baku) shortfall — info only ──────────────────────────────
+  interface ItemShortfall {
+    name: string;
+    unit: string;
+    currentStock: number;
+    needed: number;
+  }
+  const [itemConfirm, setItemConfirm] = useState<ItemShortfall[] | null>(null);
 
   // ─── Sub-recipe auto-produce confirm state ─────────────────────────────────
   interface SubRecipeShortfall {
@@ -135,6 +144,26 @@ export default function ProduksiPage() {
       date,
     };
     if (mode === "jadi") {
+      // Check item (bahan baku) stocks first — show all shortfalls at once
+      const itemShortfalls: ItemShortfall[] = [];
+      for (const ri of selectedRecipe?.recipe_items ?? []) {
+        if (!ri.item_id || !ri.item) continue;
+        const needed = ri.quantity_used * Number(quantity);
+        if ((ri.item.stock ?? 0) < needed) {
+          itemShortfalls.push({
+            name: ri.item.name,
+            unit: ri.item.unit ?? "pcs",
+            currentStock: ri.item.stock ?? 0,
+            needed,
+          });
+        }
+      }
+      if (itemShortfalls.length > 0) {
+        setItemConfirm(itemShortfalls);
+        setModalOpen(false);
+        return;
+      }
+
       // Check sub-recipe ingredient stocks before producing
       const shortfalls: SubRecipeShortfall[] = [];
       for (const ri of selectedRecipe?.recipe_items ?? []) {
@@ -507,6 +536,37 @@ export default function ProduksiPage() {
         )}
       </Modal>
 
+      {/* ── Item bahan baku kurang — info only ────────────────────────────────── */}
+      {itemConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setItemConfirm(null)} />
+          <div className="relative w-full max-w-sm rounded-2xl bg-[#FBF8F2] p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-2 text-red-600">
+              <AlertTriangle className="h-5 w-5 shrink-0" />
+              <span className="font-semibold text-[#2C1810]">Bahan baku tidak cukup</span>
+            </div>
+            <div className="mb-5 space-y-2">
+              {itemConfirm.map((sf) => (
+                <div key={sf.name} className="rounded-lg border border-[#D9CCAF] bg-white px-3 py-2.5 text-sm">
+                  <p className="font-medium text-[#2C1810]">{sf.name}</p>
+                  <p className="mt-0.5 text-[#7C6352]">
+                    Stok: <span className="font-medium text-red-600">{formatNumber(sf.currentStock, 2)} {sf.unit}</span>
+                    {" · "}Dibutuhkan: <span className="font-medium">{formatNumber(sf.needed, 2)} {sf.unit}</span>
+                    {" · "}Kurang: <span className="font-medium text-amber-700">{formatNumber(sf.needed - sf.currentStock, 2)} {sf.unit}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mb-4 text-sm text-[#7C6352]">
+              Tambahkan stok bahan baku terlebih dahulu sebelum produksi.
+            </p>
+            <Button variant="ghost" onClick={() => setItemConfirm(null)} className="w-full">
+              Batal
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* ── Sub-recipe auto-produce confirm ────────────────────────────────────── */}
       {subRecipeConfirm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -521,9 +581,9 @@ export default function ProduksiPage() {
                 <div key={sf.recipeId} className="rounded-lg border border-[#D9CCAF] bg-white px-3 py-2.5 text-sm">
                   <p className="font-medium text-[#2C1810]">{sf.recipeName}</p>
                   <p className="mt-0.5 text-[#7C6352]">
-                    Stok: <span className="font-medium text-red-600">{sf.currentStock} {sf.unit}</span>
-                    {" · "}Dibutuhkan: <span className="font-medium">{sf.needed} {sf.unit}</span>
-                    {" · "}Kurang: <span className="font-medium text-amber-700">{sf.needed - sf.currentStock} {sf.unit}</span>
+                    Stok: <span className="font-medium text-red-600">{formatNumber(sf.currentStock, 2)} {sf.unit}</span>
+                    {" · "}Dibutuhkan: <span className="font-medium">{formatNumber(sf.needed, 2)} {sf.unit}</span>
+                    {" · "}Kurang: <span className="font-medium text-amber-700">{formatNumber(sf.needed - sf.currentStock, 2)} {sf.unit}</span>
                   </p>
                 </div>
               ))}

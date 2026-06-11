@@ -308,6 +308,150 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-31T15:37:53.767Z"
+    },
+    {
+      "id": "bug-020",
+      "timestamp": "2026-06-11T12:03:05.774Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/app/recipes/page.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: HPP/{recipe.unit ?? \"pcs\"} | Also: Jual/{recipe.unit ?? \"pcs\"} | Also: label={`Hasil per Batch (${unit ?? \"pcs\"})`} | Also: Estimasi HPP/{unit ?? \"pcs\"}:{\" \"}",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 5,
+      "last_seen": "2026-06-11T12:03:23.932Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-06-11T12:46:20.315Z",
+      "error_message": "Type error",
+      "file": "src/hooks/useSales.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T12:46:20.315Z"
+    },
+    {
+      "id": "bug-022",
+      "timestamp": "2026-06-11T12:46:31.049Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T12:46:31.049Z"
+    },
+    {
+      "id": "bug-023",
+      "timestamp": "2026-06-11T12:55:16.855Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 6→8 lines (2 removed) | Also: const recipe = recipes?.find((r) => r.id === sf.re; const hppTotal = (recipe?.hpp ?? 0) * shortfall;",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-11T12:56:49.996Z"
+    },
+    {
+      "id": "bug-024",
+      "timestamp": "2026-06-11T12:55:48.804Z",
+      "error_message": "Missing error handling in function",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T12:55:48.804Z"
+    },
+    {
+      "id": "bug-025",
+      "timestamp": "2026-06-11T12:56:37.295Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T12:56:37.295Z"
+    },
+    {
+      "id": "bug-026",
+      "timestamp": "2026-06-11T13:36:58.883Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T13:36:58.883Z"
+    },
+    {
+      "id": "bug-027",
+      "timestamp": "2026-06-11T13:37:09.451Z",
+      "error_message": "CSS fix: Stok, Dibutuhkan, Kurang",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "Stok: <span className=\"font-medium text-red-600\">{sf.currentStock → <span className=\"font-medium text-red-600\">{formatNumber(sf.currentStock, 2); Dibutuhkan: <span className=\"font-medium\">{sf.needed → <span className=\"font-medium\">{formatNumber(sf.needed, 2); Kurang: <span className=\"font-medium text-amber-700\">{sf.needed - sf.currentStock → <span className=\"font-medium text-amber-700\">{formatNumber(sf.needed - sf.currentStock, 2)",
+      "fix": "Changed Stok: <span className=\"font-medium text-red-600\">{sf.currentStock → <span className=\"font-medium text-red-600\">{formatNumber(sf.currentStock, 2); Dibutuhkan: <span className=\"font-medium\">{sf.needed → <span className=\"font-medium\">{formatNumber(sf.needed, 2); Kurang: <span className=\"font-medium text-amber-700\">{sf.needed - sf.currentStock → <span className=\"font-medium text-amber-700\">{formatNumber(sf.needed - sf.currentStock, 2)",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-11T13:37:50.973Z"
+    },
+    {
+      "id": "bug-028",
+      "timestamp": "2026-06-11T13:37:21.657Z",
+      "error_message": "Type error",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T13:37:21.657Z"
     }
   ]
 }

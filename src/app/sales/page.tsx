@@ -20,7 +20,7 @@ import {
   useUpdateSale,
 } from "@/hooks/useSales";
 import { Sale, SaleItem } from "@/types";
-import { formatCurrency, formatThousands } from "@/lib/utils";
+import { formatCurrency, formatNumber, formatThousands } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { format } from "date-fns";
 import {
@@ -1546,9 +1546,9 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                 <div key={sf.recipeId} className="rounded-lg border border-[#D9CCAF] bg-white px-3 py-2.5 text-sm">
                   <p className="font-medium text-[#2C1810]">{sf.recipeName}</p>
                   <p className="mt-0.5 text-[#7C6352]">
-                    Stok: <span className="font-medium text-red-600">{sf.currentStock} {sf.unit}</span>
-                    {" · "}Dibutuhkan: <span className="font-medium">{sf.needed} {sf.unit}</span>
-                    {" · "}Kurang: <span className="font-medium text-amber-700">{sf.needed - sf.currentStock} {sf.unit}</span>
+                    Stok: <span className="font-medium text-red-600">{formatNumber(sf.currentStock, 2)} {sf.unit}</span>
+                    {" · "}Dibutuhkan: <span className="font-medium">{formatNumber(sf.needed, 2)} {sf.unit}</span>
+                    {" · "}Kurang: <span className="font-medium text-amber-700">{formatNumber(sf.needed - sf.currentStock, 2)} {sf.unit}</span>
                   </p>
                 </div>
               ))}

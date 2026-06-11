@@ -493,3 +493,20 @@
 | 19:56 | Edited src/app/sales/page.tsx | added optional chaining | ~412 |
 | 19:56 | Edited src/app/sales/page.tsx | modified for() | ~200 |
 | 19:56 | Session end: 24 writes across 4 files (019_fix_delete_production_sub_recipe.sql, page.tsx, 020_fix_adjust_item_stock_guard.sql, useSales.ts) | 14 reads | ~54891 tok |
+| 20:01 | Session end: 24 writes across 4 files (019_fix_delete_production_sub_recipe.sql, page.tsx, 020_fix_adjust_item_stock_guard.sql, useSales.ts) | 14 reads | ~54891 tok |
+| 20:09 | Session end: 24 writes across 4 files (019_fix_delete_production_sub_recipe.sql, page.tsx, 020_fix_adjust_item_stock_guard.sql, useSales.ts) | 14 reads | ~54891 tok |
+
+## Session: 2026-06-11 20:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 20:36 | Edited src/hooks/useRecipes.ts | 8→8 lines | ~122 |
+| 20:36 | Edited src/app/produksi/page.tsx | inline fix | ~17 |
+| 20:36 | Edited src/app/produksi/page.tsx | CSS: name | ~228 |
+| 20:36 | Edited src/app/produksi/page.tsx | added optional chaining | ~233 |
+| 20:37 | Edited src/app/produksi/page.tsx | 10→10 lines | ~215 |
+| 20:37 | Edited src/app/produksi/page.tsx | CSS: Stok, Dibutuhkan, Kurang | ~523 |
+| 20:37 | Edited src/app/sales/page.tsx | inline fix | ~22 |
+| 20:37 | Edited src/app/sales/page.tsx | 3→3 lines | ~109 |
+| 10:10 | Added item bahan baku pre-check (all shortfalls at once) + formatNumber in shortfall modals | produksi/page.tsx, sales/page.tsx, useRecipes.ts | done | ~600 |
+| 20:38 | Session end: 8 writes across 2 files (useRecipes.ts, page.tsx) | 4 reads | ~34389 tok |
