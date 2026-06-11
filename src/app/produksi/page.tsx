@@ -431,7 +431,7 @@ export default function ProduksiPage() {
                 const pool = mode === "jadi" ? finishedRecipes : subRecipes;
                 const r = pool.find((x) => x.id === newId);
                 if (r && quantity) {
-                  setTotalCost(String((r.hpp ?? 0) * Number(quantity)));
+                  setTotalCost(String(Math.round((r.hpp ?? 0) * Number(quantity))));
                 } else {
                   setTotalCost("");
                 }
@@ -456,7 +456,7 @@ export default function ProduksiPage() {
               const qty = e.target.value;
               setQuantity(qty);
               if (selectedRecipe && qty) {
-                setTotalCost(String((selectedRecipe.hpp ?? 0) * Number(qty)));
+                setTotalCost(String(Math.round((selectedRecipe.hpp ?? 0) * Number(qty))));
               } else {
                 setTotalCost("");
               }
