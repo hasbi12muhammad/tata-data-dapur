@@ -27,6 +27,8 @@
 <!-- Mistakes made and corrected. Each entry prevents the same mistake recurring. -->
 <!-- Format: [YYYY-MM-DD] Description of what went wrong and what to do instead. -->
 - [2026-05-16] When appending to buglog.json, inserting after the closing `]` of the bugs array produces invalid JSON. Always append INSIDE the array before `]`.
+- [2026-06-11] `delete_production` and `update_production` only iterated `recipe_items WHERE item_id IS NOT NULL`. Sub-recipe rows (`sub_recipe_id IS NOT NULL`) were silently skipped, so sub-recipe stocks were never restored on delete/edit. Always loop BOTH item_id and sub_recipe_id when reversing a production. Guard the sub-recipe loop with `IF NOT v_is_ingredient` because `produce_sub_recipe` does NOT deduct nested sub-recipes — only `produce_recipe` does.
+- [2026-06-11] Auto-fill `totalCost` in produksi form was `Math.ceil(hpp * qty)`. User wants precise `hpp * qty` stored (numeric 2dp), rounded only for display. Use `String(hpp * qty)` for auto-fill and `step="0.01"` on the input.
 
 ## Decision Log
 

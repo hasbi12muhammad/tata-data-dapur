@@ -121,6 +121,8 @@ export default function SalesPage() {
     recipeName: string;
     currentStock: number;
     needed: number;
+    unit: string;
+    isIngredient: boolean;
   }
   type SalePayloadItem = {
     recipe_id: string;
@@ -398,10 +400,12 @@ export default function SalesPage() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       for (const sf of stockConfirm.shortfalls) {
-        const recipe = recipes?.find((r) => r.id === sf.recipeId);
+        const allRecipes = [...(recipes ?? []), ...(addonSubRecipes ?? []), ...(addonFinishedRecipes ?? [])];
+        const recipe = allRecipes.find((r) => r.id === sf.recipeId);
         const shortfall = sf.needed - sf.currentStock;
-        const hppTotal = (recipe?.hpp ?? 0) * shortfall;
-        const { error } = await supabase.rpc("produce_recipe", {
+        const hppTotal = (recipe?.hpp || recipe?.avg_price || 0) * shortfall;
+        const rpc = sf.isIngredient ? "produce_sub_recipe" : "produce_recipe";
+        const { error } = await supabase.rpc(rpc, {
           p_user_id: user!.id,
           p_recipe_id: sf.recipeId,
           p_batches: shortfall,
@@ -474,12 +478,41 @@ export default function SalesPage() {
         const currentStock = recipe.stock ?? 0;
         const needed = Number(row.quantity);
         if (currentStock >= needed) return null;
-        return { recipeId: row.recipeId, recipeName: recipe.name, currentStock, needed };
+        return { recipeId: row.recipeId, recipeName: recipe.name, currentStock, needed, unit: recipe.unit ?? "pcs", isIngredient: false };
       })
       .filter(Boolean) as StockShortfall[];
 
-    if (shortfalls.length > 0) {
-      setStockConfirm({ shortfalls, payload: itemsPayload });
+    // Also check addon sub-recipe stocks
+    const addonShortfallMap = new Map<string, StockShortfall>();
+    for (const row of validRows) {
+      for (const addon of row.addonRows) {
+        if (!addon.sourceKey || Number(addon.quantity) <= 0) continue;
+        const [type, id] = addon.sourceKey.split(":");
+        if (type !== "sr") continue;
+        const sr =
+          addonSubRecipes?.find((x) => x.id === id) ??
+          addonFinishedRecipes?.find((x) => x.id === id);
+        if (!sr) continue;
+        const qty = Number(addon.quantity);
+        const existing = addonShortfallMap.get(id);
+        const totalNeeded = (existing?.needed ?? 0) + qty;
+        const currentStock = sr.stock ?? 0;
+        if (totalNeeded > currentStock) {
+          addonShortfallMap.set(id, {
+            recipeId: id,
+            recipeName: sr.name,
+            currentStock,
+            needed: totalNeeded,
+            unit: sr.unit ?? "pcs",
+            isIngredient: sr.is_ingredient ?? true,
+          });
+        }
+      }
+    }
+
+    const allShortfalls = [...shortfalls, ...Array.from(addonShortfallMap.values())];
+    if (allShortfalls.length > 0) {
+      setStockConfirm({ shortfalls: allShortfalls, payload: itemsPayload });
       return;
     }
 
@@ -1513,9 +1546,9 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                 <div key={sf.recipeId} className="rounded-lg border border-[#D9CCAF] bg-white px-3 py-2.5 text-sm">
                   <p className="font-medium text-[#2C1810]">{sf.recipeName}</p>
                   <p className="mt-0.5 text-[#7C6352]">
-                    Stok: <span className="font-medium text-red-600">{sf.currentStock} pcs</span>
-                    {" · "}Dibutuhkan: <span className="font-medium">{sf.needed} pcs</span>
-                    {" · "}Kurang: <span className="font-medium text-amber-700">{sf.needed - sf.currentStock} pcs</span>
+                    Stok: <span className="font-medium text-red-600">{sf.currentStock} {sf.unit}</span>
+                    {" · "}Dibutuhkan: <span className="font-medium">{sf.needed} {sf.unit}</span>
+                    {" · "}Kurang: <span className="font-medium text-amber-700">{sf.needed - sf.currentStock} {sf.unit}</span>
                   </p>
                 </div>
               ))}
@@ -1530,14 +1563,6 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                 className="w-full"
               >
                 Produksi & Jual
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => { setStockConfirm(null); void executeSale(stockConfirm.payload); }}
-                disabled={producePending}
-                className="w-full"
-              >
-                Jual Tetap (stok negatif)
               </Button>
               <Button
                 variant="ghost"

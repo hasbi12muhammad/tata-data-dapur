@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-31T15:37:53.753Z
-> Files: 72 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-11T12:56:49.944Z
+> Files: 74 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -73,7 +73,7 @@
 
 ## src/app/produksi/
 
-- `page.tsx` — dynamic (~5663 tok)
+- `page.tsx` — dynamic (~7061 tok)
 
 ## src/app/purchases/
 
@@ -81,7 +81,7 @@
 
 ## src/app/recipes/
 
-- `page.tsx` — dynamic (~5560 tok)
+- `page.tsx` — dynamic (~6882 tok)
 
 ## src/app/reports/
 
@@ -89,7 +89,7 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~19207 tok)
+- `page.tsx` — dynamic (~23260 tok)
 
 ## src/app/settings/
 
@@ -126,7 +126,7 @@
 - `useItems.ts` — Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem (~766 tok)
 - `usePurchases.ts` — Exports usePurchases, useUpdatePurchase, useCreatePurchase (~731 tok)
 - `useRecipes.ts` — Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 3 more (~1806 tok)
-- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~3461 tok)
+- `useSales.ts` — All sale_items (no limit) for reports — includes created_at for date filtering (~4180 tok)
 
 ## src/lib/
 
@@ -157,6 +157,8 @@
 - `010_sale_addons.sql` — Sale Add-On: is_addon flag on items+recipes, sale_addons table, hpp_addons_at_sale on sales, RPCs: adjust_item_stock + restore_sub_recipe_stock (~623 tok)
 - `011_sale_items.sql` — Migration 011: Multi-item sales (~839 tok)
 - `016_fix_record_purchase_prev_avg_price.sql` — Root cause: there are two overloaded record_purchase functions. (~675 tok)
+- `019_fix_delete_production_sub_recipe.sql` — Migration 019: Fix delete_production + update_production sub-recipe stock restoration (~3137 tok)
+- `020_fix_adjust_item_stock_guard.sql` — Migration 020: Add negative-stock guard to adjust_item_stock (~313 tok)
 
 ## supabase/seeds/
 

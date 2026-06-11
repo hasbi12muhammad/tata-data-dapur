@@ -457,3 +457,39 @@
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
+
+## Session: 2026-06-11 18:30
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 18:44 | Created supabase/migrations/019_fix_delete_production_sub_recipe.sql | — | ~3137 |
+| 18:44 | Edited src/app/produksi/page.tsx | modified if() | ~39 |
+| 18:44 | Edited src/app/produksi/page.tsx | modified if() | ~42 |
+| 18:44 | Edited src/app/produksi/page.tsx | 10→10 lines | ~120 |
+| 18:44 | Edited src/app/produksi/page.tsx | 7→7 lines | ~69 |
+
+| $(date +%H:%M) | Fix: delete/update_production tidak restore stok sub-resep (setengah jadi); tambah stock guard di produce_recipe/produce_sub_recipe/deduct_sub_recipe_stock; fix price rounding di produksi form | supabase/migrations/019_fix_delete_production_sub_recipe.sql, src/app/produksi/page.tsx | Migration applied, frontend updated | ~2000 |
+| 18:46 | Session end: 5 writes across 2 files (019_fix_delete_production_sub_recipe.sql, page.tsx) | 1 reads | ~9294 tok |
+| 19:03 | Edited src/app/recipes/page.tsx | added nullish coalescing | ~22 |
+| 19:03 | Edited src/app/recipes/page.tsx | added nullish coalescing | ~43 |
+| 19:03 | Edited src/app/recipes/page.tsx | added nullish coalescing | ~45 |
+| 19:03 | Edited src/app/recipes/page.tsx | added nullish coalescing | ~17 |
+| 19:03 | Edited src/app/recipes/page.tsx | added nullish coalescing | ~15 |
+| 19:03 | Session end: 10 writes across 2 files (019_fix_delete_production_sub_recipe.sql, page.tsx) | 3 reads | ~14996 tok |
+| 19:10 | Session end: 10 writes across 2 files (019_fix_delete_production_sub_recipe.sql, page.tsx) | 9 reads | ~42695 tok |
+| 19:46 | Created supabase/migrations/020_fix_adjust_item_stock_guard.sql | — | ~313 |
+| 19:46 | Edited src/hooks/useSales.ts | added 1 condition(s) | ~218 |
+| 19:46 | Edited src/app/sales/page.tsx | CSS: unit | ~41 |
+| 19:46 | Edited src/app/sales/page.tsx | added nullish coalescing | ~34 |
+| 19:46 | Edited src/app/sales/page.tsx | 5→5 lines | ~117 |
+| 19:46 | Edited src/app/sales/page.tsx | — | ~0 |
+| 19:47 | Session end: 16 writes across 4 files (019_fix_delete_production_sub_recipe.sql, page.tsx, 020_fix_adjust_item_stock_guard.sql, useSales.ts) | 14 reads | ~47646 tok |
+| 19:55 | Edited src/app/produksi/page.tsx | added 2 import(s) | ~122 |
+| 19:55 | Edited src/app/produksi/page.tsx | modified ProduksiPage() | ~279 |
+| 19:55 | Edited src/app/produksi/page.tsx | added error handling | ~751 |
+| 19:55 | Edited src/app/produksi/page.tsx | added 1 import(s) | ~27 |
+| 19:56 | Edited src/app/produksi/page.tsx | CSS: Stok, Dibutuhkan, Kurang | ~589 |
+| 19:56 | Edited src/app/sales/page.tsx | CSS: isIngredient | ~49 |
+| 19:56 | Edited src/app/sales/page.tsx | added optional chaining | ~412 |
+| 19:56 | Edited src/app/sales/page.tsx | modified for() | ~200 |
+| 19:56 | Session end: 24 writes across 4 files (019_fix_delete_production_sub_recipe.sql, page.tsx, 020_fix_adjust_item_stock_guard.sql, useSales.ts) | 14 reads | ~54891 tok |

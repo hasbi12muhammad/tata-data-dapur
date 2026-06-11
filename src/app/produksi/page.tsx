@@ -15,12 +15,15 @@ import {
   useProduceSubRecipe,
   useProduceRecipe,
 } from "@/hooks/usePurchases";
-import { useRecipes } from "@/hooks/useRecipes";
+import { calcHPP, useRecipes } from "@/hooks/useRecipes";
+import { createClient } from "@/lib/supabase/client";
 import { Production } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Factory, Filter, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { AlertTriangle, Factory, Filter, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -32,6 +35,22 @@ export default function ProduksiPage() {
   const updateProduction = useUpdateProduction();
   const produceSubRecipe = useProduceSubRecipe();
   const produceRecipe = useProduceRecipe();
+  const qc = useQueryClient();
+
+  // ─── Sub-recipe auto-produce confirm state ─────────────────────────────────
+  interface SubRecipeShortfall {
+    recipeId: string;
+    recipeName: string;
+    currentStock: number;
+    needed: number;
+    unit: string;
+    hpp: number;
+  }
+  const [subRecipeConfirm, setSubRecipeConfirm] = useState<{
+    shortfalls: SubRecipeShortfall[];
+    mainPayload: { recipe_id: string; batches: number; total_cost: number; date: string };
+  } | null>(null);
+  const [subProducePending, setSubProducePending] = useState(false);
 
   // ─── Create modal state ────────────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
@@ -116,11 +135,69 @@ export default function ProduksiPage() {
       date,
     };
     if (mode === "jadi") {
+      // Check sub-recipe ingredient stocks before producing
+      const shortfalls: SubRecipeShortfall[] = [];
+      for (const ri of selectedRecipe?.recipe_items ?? []) {
+        if (!ri.sub_recipe_id || !ri.sub_recipe) continue;
+        const sr = ri.sub_recipe;
+        const needed = ri.quantity_used * Number(quantity);
+        if ((sr.stock ?? 0) < needed) {
+          shortfalls.push({
+            recipeId: sr.id,
+            recipeName: sr.name,
+            currentStock: sr.stock ?? 0,
+            needed,
+            unit: sr.unit ?? "pcs",
+            hpp: calcHPP(sr.recipe_items ?? [], false, sr.batch_yield ?? 1, sr.waste_pct ?? 0),
+          });
+        }
+      }
+      if (shortfalls.length > 0) {
+        setSubRecipeConfirm({ shortfalls, mainPayload: payload });
+        setModalOpen(false);
+        return;
+      }
       await produceRecipe.mutateAsync(payload);
     } else {
       await produceSubRecipe.mutateAsync(payload);
     }
     setModalOpen(false);
+  }
+
+  async function handleProduceSubAndMain() {
+    if (!subRecipeConfirm) return;
+    setSubProducePending(true);
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      for (const sf of subRecipeConfirm.shortfalls) {
+        const shortfall = sf.needed - sf.currentStock;
+        const { error } = await supabase.rpc("produce_sub_recipe", {
+          p_user_id: user!.id,
+          p_recipe_id: sf.recipeId,
+          p_batches: shortfall,
+          p_total_cost: sf.hpp * shortfall,
+        });
+        if (error) throw new Error(`Gagal produksi "${sf.recipeName}": ${error.message}`);
+      }
+      const mp = subRecipeConfirm.mainPayload;
+      const { error: mainErr } = await supabase.rpc("produce_recipe", {
+        p_user_id: user!.id,
+        p_recipe_id: mp.recipe_id,
+        p_batches: mp.batches,
+        p_total_cost: mp.total_cost,
+      });
+      if (mainErr) throw mainErr;
+      setSubRecipeConfirm(null);
+      toast.success("Produksi dicatat");
+    } catch (e: unknown) {
+      toast.error((e as Error).message ?? "Gagal produksi bahan");
+    } finally {
+      setSubProducePending(false);
+      qc.invalidateQueries({ queryKey: ["productions"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+    }
   }
 
   async function handleEditSubmit(e: React.FormEvent) {
@@ -325,7 +402,7 @@ export default function ProduksiPage() {
                 const pool = mode === "jadi" ? finishedRecipes : subRecipes;
                 const r = pool.find((x) => x.id === newId);
                 if (r && quantity) {
-                  setTotalCost(String(Math.ceil((r.hpp ?? 0) * Number(quantity))));
+                  setTotalCost(String((r.hpp ?? 0) * Number(quantity)));
                 } else {
                   setTotalCost("");
                 }
@@ -350,7 +427,7 @@ export default function ProduksiPage() {
               const qty = e.target.value;
               setQuantity(qty);
               if (selectedRecipe && qty) {
-                setTotalCost(String(Math.ceil((selectedRecipe.hpp ?? 0) * Number(qty))));
+                setTotalCost(String((selectedRecipe.hpp ?? 0) * Number(qty)));
               } else {
                 setTotalCost("");
               }
@@ -364,10 +441,10 @@ export default function ProduksiPage() {
                 Total biaya produksi (Rp) <span className="text-red-500">*</span>
               </label>
               {estimatedHpp !== null && totalCost !== "" &&
-                Number(totalCost) !== Math.ceil(estimatedHpp) && (
+                Number(totalCost) !== estimatedHpp && (
                 <button
                   type="button"
-                  onClick={() => setTotalCost(String(Math.ceil(estimatedHpp)))}
+                  onClick={() => setTotalCost(String(estimatedHpp))}
                   className="text-xs text-[#A05035] hover:underline font-medium"
                 >
                   ← Pakai estimasi
@@ -375,7 +452,7 @@ export default function ProduksiPage() {
               )}
             </div>
             <input
-              type="number" min="0" step="1"
+              type="number" min="0" step="0.01"
               className={`${cls} w-full`}
               value={totalCost}
               onChange={(e) => setTotalCost(e.target.value)}
@@ -429,6 +506,42 @@ export default function ProduksiPage() {
           </form>
         )}
       </Modal>
+
+      {/* ── Sub-recipe auto-produce confirm ────────────────────────────────────── */}
+      {subRecipeConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setSubRecipeConfirm(null)} />
+          <div className="relative w-full max-w-sm rounded-2xl bg-[#FBF8F2] p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-2 text-amber-700">
+              <AlertTriangle className="h-5 w-5 shrink-0" />
+              <span className="font-semibold text-[#2C1810]">Bahan setengah jadi kurang</span>
+            </div>
+            <div className="mb-5 space-y-2">
+              {subRecipeConfirm.shortfalls.map((sf) => (
+                <div key={sf.recipeId} className="rounded-lg border border-[#D9CCAF] bg-white px-3 py-2.5 text-sm">
+                  <p className="font-medium text-[#2C1810]">{sf.recipeName}</p>
+                  <p className="mt-0.5 text-[#7C6352]">
+                    Stok: <span className="font-medium text-red-600">{sf.currentStock} {sf.unit}</span>
+                    {" · "}Dibutuhkan: <span className="font-medium">{sf.needed} {sf.unit}</span>
+                    {" · "}Kurang: <span className="font-medium text-amber-700">{sf.needed - sf.currentStock} {sf.unit}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mb-4 text-sm text-[#7C6352]">
+              Produksi otomatis akan deduct bahan baku sesuai resep masing-masing.
+            </p>
+            <div className="flex flex-col gap-2">
+              <Button onClick={handleProduceSubAndMain} loading={subProducePending} className="w-full">
+                Produksi Bahan & Lanjutkan
+              </Button>
+              <Button variant="ghost" onClick={() => setSubRecipeConfirm(null)} disabled={subProducePending} className="w-full">
+                Batal
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

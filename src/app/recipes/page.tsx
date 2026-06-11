@@ -331,7 +331,7 @@ export default function RecipesPage() {
                     <div className="flex gap-2 mb-2 flex-wrap">
                       {recipe.batch_yield > 1 && (
                         <span className="text-[10px] bg-[#EDE4CF] text-[#7C563D] px-1.5 py-0.5 rounded font-medium">
-                          {recipe.batch_yield} pcs/batch
+                          {recipe.batch_yield} {recipe.unit ?? "pcs"}/batch
                         </span>
                       )}
                       {recipe.waste_pct > 0 && (
@@ -343,7 +343,7 @@ export default function RecipesPage() {
                   )}
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-xs text-[#7C6352] font-medium">
-                      HPP/pcs
+                      HPP/{recipe.unit ?? "pcs"}
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
                       <span className="text-sm font-bold text-[#A05035] tabular-nums">
@@ -376,7 +376,7 @@ export default function RecipesPage() {
                   {!!recipe.selling_price && (
                     <div className="flex justify-between items-center gap-2 mt-2">
                       <span className="text-xs text-[#7C6352] font-medium">
-                        Jual/pcs
+                        Jual/{recipe.unit ?? "pcs"}
                       </span>
                       <div className="flex items-center gap-1.5">
                         <span className="text-sm font-semibold text-[#2C1810] tabular-nums">
@@ -451,7 +451,7 @@ export default function RecipesPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Input
-              label="Hasil per Batch (pcs)"
+              label={`Hasil per Batch (${unit ?? "pcs"})`}
               type="number"
               min="1"
               step="1"
@@ -563,7 +563,7 @@ export default function RecipesPage() {
             return previewHPP > 0 ? (
               <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-2.5">
                 <p className="text-xs text-blue-700 font-medium">
-                  Estimasi HPP/pcs:{" "}
+                  Estimasi HPP/{unit ?? "pcs"}:{" "}
                   <span className="font-bold">
                     {formatCurrency(previewHPP)}
                   </span>

@@ -439,10 +439,10 @@ export function useDeleteSale() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Restore finished goods stocks before deleting
+      // Restore finished goods stocks + addon stocks before deleting
       const { data: saleItems } = await supabase
         .from("sale_items")
-        .select("recipe_id, quantity_sold")
+        .select("recipe_id, quantity_sold, sale_addons(*)")
         .eq("sale_id", id);
 
       await Promise.all(
@@ -453,6 +453,10 @@ export function useDeleteSale() {
             p_quantity: si.quantity_sold,
           });
           if (restoreError) throw restoreError;
+          const addons = (si.sale_addons ?? []) as SaleAddon[];
+          if (addons.length) {
+            await restoreAddonStock(supabase, user!.id, addons);
+          }
         }),
       );
 
