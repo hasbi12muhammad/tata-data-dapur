@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-11T13:37:50.917Z
-> Files: 74 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-13T03:00:57.878Z
+> Files: 80 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -13,7 +13,8 @@
 
 ## ./
 
-- `.gitignore` — Git ignore rules (~128 tok)
+- `.env.example` — Per-deployment env reference (Supabase creds, tenant branding, feature flags) (~180 tok)
+- `.gitignore` — Git ignore rules (~132 tok)
 - `AGENTS.md` — This is NOT the Next.js you know (~82 tok)
 - `CLAUDE.md` — OpenWolf (~60 tok)
 - `eslint.config.mjs` — ESLint flat configuration (~109 tok)
@@ -36,6 +37,11 @@
 
 - `openwolf.md` (~313 tok)
 
+## docs/
+
+- `ARCHITECTURE.md` — Arsitektur Multi-Tenant (Base App + Paket Fitur) (~761 tok)
+- `PROVISIONING.md` — Playbook: Onboarding Klien Baru (~715 tok)
+
 ## public/
 
 - `manifest.json` (~186 tok)
@@ -43,12 +49,12 @@
 
 ## src/
 
-- `middleware.ts` — Exports middleware, config (~831 tok)
+- `middleware.ts` — Exports middleware, config (~738 tok)
 
 ## src/app/
 
 - `globals.css` — Styles: 3 rules, 12 vars, 1 media queries (~330 tok)
-- `layout.tsx` — metadata (~244 tok)
+- `layout.tsx` — appName (~265 tok)
 - `page.tsx` — Redirected by middleware to /dashboard or /login (~30 tok)
 
 ## src/app/dashboard/
@@ -65,7 +71,7 @@
 
 ## src/app/login/
 
-- `page.tsx` — dynamic — renders form — uses useState (~771 tok)
+- `page.tsx` — dynamic — renders form (~797 tok)
 
 ## src/app/offline/
 
@@ -106,7 +112,7 @@
 ## src/components/layout/
 
 - `AppLayout.tsx` — AppLayout — uses useState (~477 tok)
-- `Sidebar.tsx` — ALL_NAV (~1209 tok)
+- `Sidebar.tsx` — ALL_NAV (~1402 tok)
 
 ## src/components/ui/
 
@@ -133,10 +139,19 @@
 - `providers.tsx` — Providers — uses useState (~272 tok)
 - `utils.ts` — Exports cn, formatCurrency, formatNumber, calcProfitMargin (~211 tok)
 
+## src/lib/features/
+
+- `entitlements.ts` — Entitlements — resolves which features are active for THIS deployment. (~745 tok)
+- `registry.ts` — Feature registry — single source of truth for every module/feature that the (~737 tok)
+
 ## src/lib/supabase/
 
 - `client.ts` — Exports createClient (~62 tok)
 - `server.ts` — Exports createClient (~176 tok)
+
+## src/lib/tenant/
+
+- `config.ts` — Tenant config — per-deployment identity & branding, sourced from env vars. (~255 tok)
 
 ## src/types/
 

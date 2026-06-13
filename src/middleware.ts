@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isPathAllowed } from "@/lib/features/entitlements";
 
 export async function middleware(request: NextRequest) {
   try {
@@ -43,8 +44,6 @@ export async function middleware(request: NextRequest) {
       // Supabase unreachable — treat as unauthenticated
     }
 
-    const RECIPE_HIDDEN_UID = "0a6cfba1-0ac2-4792-b306-e67ee912390b";
-
     // Public routes — no auth or version check needed
     if (pathname === "/login" || pathname === "/unauthorized") {
       if (user && pathname === "/login") {
@@ -61,8 +60,9 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    // Hide Recipes module for specific user — redirect to dashboard
-    if (user.id === RECIPE_HIDDEN_UID && pathname.startsWith("/recipes")) {
+    // Feature gating — block routes whose feature is not part of this
+    // deployment's package (env-driven, see lib/features/entitlements).
+    if (!isPathAllowed(pathname)) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 

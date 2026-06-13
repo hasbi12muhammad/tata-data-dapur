@@ -4,9 +4,13 @@ import Image from "next/image";
 import TdLogo from "../../../public/td-logo.png";
 import { cn } from "@/lib/utils";
 import { useAuth, useCurrentUser } from "@/hooks/useAuth";
+import { isFeatureEnabled } from "@/lib/features/entitlements";
+import { getTenantConfig } from "@/lib/tenant/config";
+import type { FeatureId } from "@/lib/features/registry";
 import {
   BarChart3,
   BookOpen,
+  Calculator,
   Factory,
   LayoutDashboard,
   LogOut,
@@ -19,15 +23,21 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const ALL_NAV = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/items", label: "Bahan Baku", icon: Package },
-  { href: "/purchases", label: "Pembelian", icon: ShoppingCart },
-  { href: "/expenses", label: "Pengeluaran", icon: Receipt },
-  { href: "/recipes", label: "Produk", icon: BookOpen },
-  { href: "/produksi", label: "Produksi", icon: Factory },
-  { href: "/sales", label: "Penjualan", icon: TrendingUp },
-  { href: "/reports", label: "Laporan", icon: BarChart3 },
+const ALL_NAV: {
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  feature: FeatureId;
+}[] = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, feature: "dashboard" },
+  { href: "/items", label: "Bahan Baku", icon: Package, feature: "items" },
+  { href: "/purchases", label: "Pembelian", icon: ShoppingCart, feature: "purchases" },
+  { href: "/expenses", label: "Pengeluaran", icon: Receipt, feature: "expenses" },
+  { href: "/recipes", label: "Produk", icon: BookOpen, feature: "recipes" },
+  { href: "/produksi", label: "Produksi", icon: Factory, feature: "produksi" },
+  { href: "/sales", label: "Penjualan", icon: TrendingUp, feature: "sales" },
+  { href: "/kasir", label: "Kasir", icon: Calculator, feature: "kasir" },
+  { href: "/reports", label: "Laporan", icon: BarChart3, feature: "reports" },
 ];
 
 interface SidebarProps {
@@ -40,7 +50,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const { signOut } = useAuth();
   const { data: user } = useCurrentUser();
   const storeName = (user?.user_metadata?.store_name as string | undefined) || null;
-  const nav = ALL_NAV;
+  const appName = getTenantConfig().name;
+  const nav = ALL_NAV.filter((item) => isFeatureEnabled(item.feature));
 
   return (
     <>
@@ -75,7 +86,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             />
             <div className="min-w-0">
               <span className="text-[#E9DFC6] font-bold text-lg tracking-tight block leading-tight">
-                Tata Data Dapur
+                {appName}
               </span>
               {storeName && (
                 <span className="text-[#E9DFC6]/55 text-xs truncate block leading-tight">

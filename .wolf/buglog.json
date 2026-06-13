@@ -452,6 +452,38 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-06-11T13:37:21.657Z"
+    },
+    {
+      "id": "bug-029",
+      "timestamp": "2026-06-13T02:58:08.511Z",
+      "error_message": "CSS fix: href",
+      "file": "src/components/layout/Sidebar.tsx",
+      "root_cause": "href: \"/reports\", label: \"Laporan\", icon: BarChart3 → \"/reports\", label: \"Laporan\", icon: BarChart3, feature: \"reports\"",
+      "fix": "Changed href: \"/reports\", label: \"Laporan\", icon: BarChart3 → \"/reports\", label: \"Laporan\", icon: BarChart3, feature: \"reports\"",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-13T02:58:08.511Z"
+    },
+    {
+      "id": "bug-030",
+      "timestamp": "2026-06-13T02:59:54.298Z",
+      "error_message": "CSS fix: title",
+      "file": "src/app/layout.tsx",
+      "root_cause": "title: \"Tata Data Dapur\", → appName,",
+      "fix": "Changed title: \"Tata Data Dapur\", → appName,",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-13T02:59:54.299Z"
     }
   ]
 }

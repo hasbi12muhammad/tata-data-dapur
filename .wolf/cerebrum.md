@@ -7,6 +7,8 @@
 ## User Preferences
 
 <!-- How the user likes things done. Code style, tools, patterns, communication. -->
+- **Communication:** User writes in Indonesian (casual). Respond in Indonesian.
+- **Product direction (2026-06-13):** Project is becoming a multi-tenant "base app" sold as feature packages. Wants per-client deployment + per-client database, but base updates must auto-propagate to all clients.
 
 ## Key Learnings
 
@@ -33,5 +35,6 @@
 ## Decision Log
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
+- [2026-06-13] **Multi-tenant SaaS architecture ("base app + paket fitur").** Chosen model: **per-client deployment + per-client database (Supabase project) + single shared codebase**. Differences between clients live ONLY in env vars (Supabase creds + enabled features + branding) — NEVER in code branches. All client deployments build from the same repo/branch, so pushing to base auto-redeploys every client (Cloudflare Pages git auto-deploy) = "update base → all clients update". Rejected: (a) shared-DB+RLS pool (user wants physical DB isolation), (b) control-plane dynamic DB routing (user wants 1 deployment per client because add-on features differ). Feature gating = env-driven flags (`NEXT_PUBLIC_ENABLED_FEATURES`, `NEXT_PUBLIC_DISABLED_FEATURES`) read by a feature registry/entitlement layer (`src/lib/features/`). First add-on package planned: Kasir/POS. Build order: foundation (registry + entitlement + nav/route gating + provisioning docs) FIRST, then Kasir module.
 - [2026-05-16] Security fix for SECURITY DEFINER RPCs: chose Option A (add auth.uid() guard, keep p_user_id param) over Option B (remove param, use auth.uid() directly) to avoid client-side changes. Guard uses `IS DISTINCT FROM` instead of `!=` to handle NULL safely. All 7 affected functions: record_purchase, update_purchase, delete_purchase, produce_sub_recipe, deduct_sub_recipe_stock, delete_production, update_production.
 - [2026-05-28] Finished goods inventory: produk jadi (is_ingredient=false) sekarang punya stok via recipes.stock. Sale flow berubah: deduct recipes.stock (via deduct_sub_recipe_stock reused) bukan deduct ingredients langsung. Produksi via produce_recipe RPC baru. Modal konfirmasi muncul jika stok kurang saat jual — opsi "Produksi & Jual" (atomic) atau "Jual Tetap" (stok negatif). Banner peringatan tampil jika ada stok negatif. sub_recipe_deductions dihapus dari ItemInput karena bahan kini dideduct di produksi bukan di penjualan.

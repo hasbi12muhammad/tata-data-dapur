@@ -510,3 +510,33 @@
 | 20:37 | Edited src/app/sales/page.tsx | 3→3 lines | ~109 |
 | 10:10 | Added item bahan baku pre-check (all shortfalls at once) + formatNumber in shortfall modals | produksi/page.tsx, sales/page.tsx, useRecipes.ts | done | ~600 |
 | 20:38 | Session end: 8 writes across 2 files (useRecipes.ts, page.tsx) | 4 reads | ~34389 tok |
+
+## Session: 2026-06-12 11:25
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-12 12:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 02:55
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 02:57 | Created src/lib/features/registry.ts | — | ~737 |
+| 02:57 | Created src/lib/features/entitlements.ts | — | ~745 |
+| 02:57 | Created src/lib/tenant/config.ts | — | ~255 |
+| 02:58 | Edited src/components/layout/Sidebar.tsx | expanded (+10 lines) | ~388 |
+| 02:58 | Edited src/components/layout/Sidebar.tsx | 3→4 lines | ~69 |
+| 02:58 | Edited src/components/layout/Sidebar.tsx | 3→3 lines | ~43 |
+| 02:58 | Edited src/middleware.ts | added 1 import(s) | ~50 |
+| 02:58 | Edited src/middleware.ts | modified if() | ~224 |
+| 02:59 | Created docs/ARCHITECTURE.md | — | ~811 |
+| 02:59 | Created docs/PROVISIONING.md | — | ~763 |
+| 02:59 | Edited src/app/layout.tsx | 16→19 lines | ~164 |
+| 02:59 | Edited src/app/login/page.tsx | added 1 import(s) | ~70 |
+| 03:00 | Edited src/app/login/page.tsx | inline fix | ~22 |
+| 03:00 | Multi-tenant foundation: feature registry + entitlements + tenant config; gated Sidebar/middleware; provisioning docs | src/lib/features/*, src/lib/tenant/config.ts, Sidebar.tsx, middleware.ts, layout.tsx, login, docs/*, .env.example | done | ~6k |
+| 03:00 | Edited .gitignore | 2→3 lines | ~19 |
