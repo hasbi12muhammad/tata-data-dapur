@@ -1,11 +1,15 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-13T03:00:57.878Z
-> Files: 80 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-13T04:54:12.868Z
+> Files: 82 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
 - `commitmsg.txt` (~141 tok)
+
+## ../../../root/.claude/plans/
+
+- `continue-from-where-you-dazzling-squirrel.md` — Rencana: Multi-Tenant Base App + Paket Fitur (mulai dari Modul Kasir) (~2149 tok)
 
 ## ../../.claude/plans/
 
@@ -40,6 +44,7 @@
 ## docs/
 
 - `ARCHITECTURE.md` — Arsitektur Multi-Tenant (Base App + Paket Fitur) (~761 tok)
+- `PLAN-MULTI-TENANT-KASIR.md` — Rencana Dasar: Multi-Tenant Base App + Paket Fitur (mulai dari Modul Kasir) (~1898 tok)
 - `PROVISIONING.md` — Playbook: Onboarding Klien Baru (~715 tok)
 
 ## public/
