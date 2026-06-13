@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-13T04:54:12.868Z
-> Files: 82 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-13T14:48:22.509Z
+> Files: 85 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -20,6 +20,7 @@
 - `.env.example` — Per-deployment env reference (Supabase creds, tenant branding, feature flags) (~180 tok)
 - `.gitignore` — Git ignore rules (~132 tok)
 - `AGENTS.md` — This is NOT the Next.js you know (~82 tok)
+- `BRAINSTORM-CONTEXT.md` — Tata Data Dapur — Dokumen Konteks untuk Brainstorm (~5791 tok)
 - `CLAUDE.md` — OpenWolf (~60 tok)
 - `eslint.config.mjs` — ESLint flat configuration (~109 tok)
 - `next-env.d.ts` — / <reference types="next" /> (~71 tok)
@@ -44,7 +45,7 @@
 ## docs/
 
 - `ARCHITECTURE.md` — Arsitektur Multi-Tenant (Base App + Paket Fitur) (~761 tok)
-- `PLAN-MULTI-TENANT-KASIR.md` — Rencana Dasar: Multi-Tenant Base App + Paket Fitur (mulai dari Modul Kasir) (~1898 tok)
+- `PLAN-MULTI-TENANT-KASIR.md` — Rencana Dasar: Multi-Tenant Base App + Paket Fitur (mulai dari Modul Kasir) (~3579 tok)
 - `PROVISIONING.md` — Playbook: Onboarding Klien Baru (~715 tok)
 
 ## public/
@@ -179,6 +180,8 @@
 - `016_fix_record_purchase_prev_avg_price.sql` — Root cause: there are two overloaded record_purchase functions. (~675 tok)
 - `019_fix_delete_production_sub_recipe.sql` — Migration 019: Fix delete_production + update_production sub-recipe stock restoration (~3137 tok)
 - `020_fix_adjust_item_stock_guard.sql` — Migration 020: Add negative-stock guard to adjust_item_stock (~313 tok)
+- `021_production_items_snapshot.sql` — Migration 021: Production BOM snapshot (production_items) (~3963 tok)
+- `022_update_production_stock_guard.sql` — Migration 022: Add negative-stock guard to update_production (~1747 tok)
 
 ## supabase/seeds/
 

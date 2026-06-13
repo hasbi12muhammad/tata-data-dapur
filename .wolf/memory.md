@@ -574,3 +574,35 @@
 |------|--------|---------|---------|--------|
 | 04:54 | Created docs/PLAN-MULTI-TENANT-KASIR.md | — | ~2025 |
 | 04:54 | Tulis dokumen dasar multi-tenant + katalog paket A/B/C/D + rencana Modul Kasir (untuk dijalankan di Claude Code) | docs/PLAN-MULTI-TENANT-KASIR.md | done | ~2k |
+| 11:57 | Session end: 1 writes across 1 files (PLAN-MULTI-TENANT-KASIR.md) | 0 reads | ~2170 tok |
+| 12:04 | Session end: 1 writes across 1 files (PLAN-MULTI-TENANT-KASIR.md) | 0 reads | ~2170 tok |
+
+## Session: 2026-06-13 20:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 21:05
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 21:10 | Created BRAINSTORM-CONTEXT.md | — | ~5703 |
+| 21:11 | Session end: 1 writes across 1 files (BRAINSTORM-CONTEXT.md) | 0 reads | ~6111 tok |
+| 21:15 | Edited docs/PLAN-MULTI-TENANT-KASIR.md | modified base() | ~1864 |
+| 21:15 | Session end: 2 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 1 reads | ~10006 tok |
+| 21:18 | Session end: 2 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 1 reads | ~10006 tok |
+| 21:20 | Session end: 2 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 2 reads | ~16888 tok |
+| 21:25 | Edited BRAINSTORM-CONTEXT.md | 2→7 lines | ~144 |
+| 21:25 | Edited BRAINSTORM-CONTEXT.md | 1→3 lines | ~54 |
+| 21:25 | Session end: 4 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 3 reads | ~22447 tok |
+| 21:29 | Session end: 4 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 3 reads | ~22447 tok |
+| 21:29 | Session end: 4 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 3 reads | ~22447 tok |
+| 21:34 | Created supabase/migrations/021_production_items_snapshot.sql | — | ~3963 |
+| 21:38 | Edited BRAINSTORM-CONTEXT.md | expanded (+8 lines) | ~207 |
+| 21:38 | Migrasi 021 BOM snapshot (production_items) — fix restore stok produksi salah saat resep diedit; applied ke tata-data-dapur + my-kitchen-book (+020 guard) | supabase/migrations/021_production_items_snapshot.sql | both DB success | ~6000 |
+| 21:38 | Session end: 6 writes across 3 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql) | 3 reads | ~26915 tok |
+| 21:41 | Created supabase/migrations/022_update_production_stock_guard.sql | — | ~1747 |
+| 21:43 | Migrasi 022: guard stok-negatif di update_production (saat naik batch); applied ke tata-data-dapur + my-kitchen-book | supabase/migrations/022_update_production_stock_guard.sql | both DB success | ~2500 |
+| 21:43 | Session end: 7 writes across 4 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql) | 3 reads | ~28787 tok |
+| 21:48 | Edited BRAINSTORM-CONTEXT.md | modified check() | ~156 |
+| 21:48 | Edited BRAINSTORM-CONTEXT.md | 2→6 lines | ~119 |
