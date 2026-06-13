@@ -28,11 +28,54 @@ import { useMemo, useState } from "react";
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
 
+// ─── Metric unit conversion ─────────────────────────────────────────────────
+// Maps common kitchen units to a canonical base (gram for mass, ml for volume).
+// Lets users buy in kg/liter/ons while stock, avg_price & recipes stay in the
+// item's own unit. Conversion happens only at purchase input — DB stays in base.
+const UNIT_TABLE: Record<string, { factor: number; family: "mass" | "volume"; canonical: string }> = {
+  mg:    { factor: 0.001, family: "mass",   canonical: "mg" },
+  g:     { factor: 1,     family: "mass",   canonical: "gram" },
+  gr:    { factor: 1,     family: "mass",   canonical: "gram" },
+  gram:  { factor: 1,     family: "mass",   canonical: "gram" },
+  ons:   { factor: 100,   family: "mass",   canonical: "ons" },
+  kg:    { factor: 1000,  family: "mass",   canonical: "kg" },
+  ml:    { factor: 1,     family: "volume", canonical: "ml" },
+  cc:    { factor: 1,     family: "volume", canonical: "ml" },
+  l:     { factor: 1000,  family: "volume", canonical: "liter" },
+  ltr:   { factor: 1000,  family: "volume", canonical: "liter" },
+  liter: { factor: 1000,  family: "volume", canonical: "liter" },
+  litre: { factor: 1000,  family: "volume", canonical: "liter" },
+};
+const MASS_UNITS = ["mg", "gram", "ons", "kg"];
+const VOL_UNITS = ["ml", "liter"];
+
+function unitInfo(u?: string) {
+  return u ? UNIT_TABLE[u.trim().toLowerCase()] : undefined;
+}
+// Sibling units the user can buy in, given the item's own unit. Empty = no metric family.
+function metricOptions(itemUnit?: string): string[] {
+  const info = unitInfo(itemUnit);
+  if (!info) return [];
+  return info.family === "mass" ? MASS_UNITS : VOL_UNITS;
+}
+function unitFactor(u?: string): number {
+  return unitInfo(u)?.factor ?? 1;
+}
+function canonicalUnit(u?: string): string {
+  return unitInfo(u)?.canonical ?? "";
+}
+// How many base units one buy-unit equals (e.g. kg→gram = 1000).
+function convFactor(buyUnit?: string, itemUnit?: string): number {
+  const f = unitFactor(buyUnit) / unitFactor(itemUnit);
+  return f > 0 && isFinite(f) ? f : 1;
+}
+
 interface PurchaseItemRow {
   _key: string;
   itemId: string;
   quantity: string;
   pricePerUnit: string;
+  buyUnit: string;
   usePkg: boolean;
   pkgTypeId: string;
   pkgQty: string;
@@ -46,7 +89,7 @@ interface PurchaseItemRow {
 function emptyItemRow(): PurchaseItemRow {
   return {
     _key: crypto.randomUUID(),
-    itemId: "", quantity: "", pricePerUnit: "",
+    itemId: "", quantity: "", pricePerUnit: "", buyUnit: "",
     usePkg: false, pkgTypeId: "", pkgQty: "", sizePerPkg: "",
     pkgPriceMode: "per_unit", pricePerPkg: "",
     addingPkgType: false, newPkgTypeName: "",
@@ -111,6 +154,7 @@ export default function PurchasesPage() {
   const [itemId, setItemId] = useState("");
   const [quantity, setQuantity] = useState("");
   const [pricePerUnit, setPricePerUnit] = useState("");
+  const [buyUnit, setBuyUnit] = useState("");
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [usePkg, setUsePkg] = useState(false);
   const [pkgTypeId, setPkgTypeId] = useState("");
@@ -126,6 +170,7 @@ export default function PurchasesPage() {
     setItemId("");
     setQuantity(String(p.quantity));
     setPricePerUnit(String(p.price_per_unit));
+    setBuyUnit(canonicalUnit((p.item as any)?.unit));
     setDate(new Date(p.created_at).toISOString().slice(0, 10));
     setUsePkg(!!(p.pkg_type_id));
     setPkgTypeId(p.pkg_type_id ?? "");
@@ -179,13 +224,16 @@ export default function PurchasesPage() {
     ? items?.find((i) => i.id === editing.item_id)
     : items?.find((i) => i.id === itemId);
 
+  // Base units per buy-unit (e.g. kg→gram = 1000). Only applies in non-pkg mode.
+  const buyFactor = !usePkg ? convFactor(buyUnit, selectedItem?.unit) : 1;
+
   const effectiveQty = usePkg
     ? pkgQty && sizePerPkg ? Number(pkgQty) * Number(sizePerPkg) : 0
     : Number(quantity) || 0;
 
   const resolvedPricePerUnit = usePkg && pkgPriceMode === "per_pkg" && sizePerPkg && Number(sizePerPkg) > 0
     ? (pricePerPkg ? Number(pricePerPkg) / Number(sizePerPkg) : 0)
-    : Number(pricePerUnit) || 0;
+    : (Number(pricePerUnit) || 0) / buyFactor;
 
   const computedTotal = usePkg && pkgPriceMode === "per_pkg"
     ? (pkgQty && pricePerPkg ? Number(pkgQty) * Number(pricePerPkg) : 0)
@@ -208,7 +256,7 @@ export default function PurchasesPage() {
         if (!quantity || Number(quantity) <= 0) return;
         if (!pricePerUnit || Number(pricePerUnit) <= 0) return;
       }
-      const finalQtyEdit = usePkg ? Number(pkgQty) * Number(sizePerPkg) : Number(quantity);
+      const finalQtyEdit = usePkg ? Number(pkgQty) * Number(sizePerPkg) : Number(quantity) * buyFactor;
       await updatePurchase.mutateAsync({
         id: editing.id,
         quantity: finalQtyEdit,
@@ -255,12 +303,14 @@ export default function PurchasesPage() {
       }
 
       for (const row of validRows) {
+        const ri = items?.find((i) => i.id === row.itemId);
+        const rf = row.usePkg ? 1 : convFactor(row.buyUnit || canonicalUnit(ri?.unit), ri?.unit);
         const rowPPU = row.usePkg && row.pkgPriceMode === "per_pkg" && row.sizePerPkg && Number(row.sizePerPkg) > 0
           ? Number(row.pricePerPkg) / Number(row.sizePerPkg)
-          : Number(row.pricePerUnit) || 0;
+          : (Number(row.pricePerUnit) || 0) / rf;
         const finalQty = row.usePkg
           ? Number(row.pkgQty) * Number(row.sizePerPkg)
-          : Number(row.quantity);
+          : Number(row.quantity) * rf;
         await createPurchase.mutateAsync({
           item_id: row.itemId,
           quantity: finalQty,
@@ -671,7 +721,14 @@ export default function PurchasesPage() {
                   {pkgQty && sizePerPkg && <p className="text-xs text-[#5C4535]">→ Total qty: <span className="font-semibold">{Number(pkgQty) * Number(sizePerPkg)} {selectedItem?.unit}</span></p>}
                 </div>
               ) : (
-                <Input label={`Jumlah (${selectedItem?.unit ?? "unit"})`} type="number" min="0.01" step="0.01" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+                <>
+                  {metricOptions(selectedItem?.unit).length > 0 && (
+                    <Select label="Satuan beli" value={buyUnit} onChange={(e) => setBuyUnit(e.target.value)}>
+                      {metricOptions(selectedItem?.unit).map((u) => <option key={u} value={u}>{u}</option>)}
+                    </Select>
+                  )}
+                  <Input label={`Jumlah (${buyUnit || selectedItem?.unit || "unit"})`} type="number" min="0.01" step="0.01" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+                </>
               )}
               {usePkg && (
                 <div className="flex gap-1 rounded-lg border border-[#D9CCAF] bg-[#F5EFE0] p-1">
@@ -682,12 +739,13 @@ export default function PurchasesPage() {
               {usePkg && pkgPriceMode === "per_pkg" ? (
                 <Input label="Harga per kemasan (Rp)" type="text" inputMode="numeric" value={formatThousands(pricePerPkg)} onChange={(e) => setPricePerPkg(e.target.value.replace(/\./g, ""))} required />
               ) : (
-                <Input label={`Harga per ${selectedItem?.unit ?? "unit"}`} type="text" inputMode="numeric" value={formatThousands(pricePerUnit)} onChange={(e) => setPricePerUnit(e.target.value.replace(/\./g, ""))} required />
+                <Input label={`Harga per ${usePkg ? (selectedItem?.unit ?? "unit") : (buyUnit || selectedItem?.unit || "unit")}`} type="text" inputMode="numeric" value={formatThousands(pricePerUnit)} onChange={(e) => setPricePerUnit(e.target.value.replace(/\./g, ""))} required />
               )}
               {computedTotal > 0 && (
                 <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5 space-y-1">
                   <p className="text-xs text-[#5C6B38] font-medium">Total: <span className="font-bold">{formatCurrency(computedTotal)}</span></p>
                   {usePkg && pkgPriceMode === "per_pkg" && resolvedPricePerUnit > 0 && <p className="text-xs text-[#5C6B38]">= <span className="font-semibold">{formatCurrency(resolvedPricePerUnit)}</span> per {selectedItem?.unit ?? "unit"}</p>}
+                  {!usePkg && buyFactor !== 1 && resolvedPricePerUnit > 0 && <p className="text-xs text-[#5C6B38]">= <span className="font-semibold">{formatCurrency(resolvedPricePerUnit)}</span> per {selectedItem?.unit} · {effectiveQty * buyFactor} {selectedItem?.unit}</p>}
                   {priceDiff !== null && pricePct !== null && <p className={`text-xs font-medium ${priceDiff > 0 ? "text-red-600" : "text-green-700"}`}>{priceDiff > 0 ? "▲" : "▼"} {formatCurrency(Math.abs(priceDiff))} ({pricePct > 0 ? "+" : ""}{pricePct.toFixed(1)}%) vs avg harga</p>}
                 </div>
               )}
@@ -711,8 +769,11 @@ export default function PurchasesPage() {
               <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-0.5">
                 {itemRows.map((row, idx) => {
                   const rowItem = items?.find((i) => i.id === row.itemId);
+                  const rowBuyUnit = row.buyUnit || canonicalUnit(rowItem?.unit);
+                  const rowF = row.usePkg ? 1 : convFactor(rowBuyUnit, rowItem?.unit);
+                  const rowMetric = metricOptions(rowItem?.unit);
                   const rowEffQty = row.usePkg ? (row.pkgQty && row.sizePerPkg ? Number(row.pkgQty) * Number(row.sizePerPkg) : 0) : Number(row.quantity) || 0;
-                  const rowPPU = row.usePkg && row.pkgPriceMode === "per_pkg" && row.sizePerPkg && Number(row.sizePerPkg) > 0 ? (row.pricePerPkg ? Number(row.pricePerPkg) / Number(row.sizePerPkg) : 0) : Number(row.pricePerUnit) || 0;
+                  const rowPPU = row.usePkg && row.pkgPriceMode === "per_pkg" && row.sizePerPkg && Number(row.sizePerPkg) > 0 ? (row.pricePerPkg ? Number(row.pricePerPkg) / Number(row.sizePerPkg) : 0) : (Number(row.pricePerUnit) || 0) / rowF;
                   const rowTotal = row.usePkg && row.pkgPriceMode === "per_pkg" ? (row.pkgQty && row.pricePerPkg ? Number(row.pkgQty) * Number(row.pricePerPkg) : 0) : (rowEffQty > 0 && row.pricePerUnit ? rowEffQty * Number(row.pricePerUnit) : 0);
                   const rowAvg = rowItem?.avg_price ?? 0;
                   const rowDiff = rowPPU > 0 && rowAvg > 0 ? rowPPU - rowAvg : null;
@@ -758,7 +819,7 @@ export default function PurchasesPage() {
                           <button type="button" onClick={() => removeRow(row._key)} className="text-[#B88D6A] hover:text-red-500 p-0.5 transition-colors"><X className="w-4 h-4" /></button>
                         )}
                       </div>
-                      <Select label="Bahan" value={row.itemId} onChange={(e) => u({ itemId: e.target.value, pricePerUnit: "", pricePerPkg: "" })} required>
+                      <Select label="Bahan" value={row.itemId} onChange={(e) => u({ itemId: e.target.value, pricePerUnit: "", pricePerPkg: "", buyUnit: canonicalUnit(items?.find((i) => i.id === e.target.value)?.unit) })} required>
                         <option value="">Pilih bahan...</option>
                         {items?.map((i) => <option key={i.id} value={i.id}>{i.name} ({i.unit})</option>)}
                       </Select>
@@ -803,7 +864,14 @@ export default function PurchasesPage() {
                           {row.pkgQty && row.sizePerPkg && <p className="text-xs text-[#5C4535]">→ Total qty: <span className="font-semibold">{Number(row.pkgQty) * Number(row.sizePerPkg)} {rowItem?.unit}</span></p>}
                         </div>
                       ) : (
-                        <Input label={`Jumlah (${rowItem?.unit ?? "unit"})`} type="number" min="0.01" step="0.01" value={row.quantity} onChange={(e) => u({ quantity: e.target.value })} required />
+                        <>
+                          {rowMetric.length > 0 && (
+                            <Select label="Satuan beli" value={rowBuyUnit} onChange={(e) => u({ buyUnit: e.target.value })}>
+                              {rowMetric.map((mu) => <option key={mu} value={mu}>{mu}</option>)}
+                            </Select>
+                          )}
+                          <Input label={`Jumlah (${rowBuyUnit || rowItem?.unit || "unit"})`} type="number" min="0.01" step="0.01" value={row.quantity} onChange={(e) => u({ quantity: e.target.value })} required />
+                        </>
                       )}
                       {row.usePkg && (
                         <div className="flex gap-1 rounded-lg border border-[#D9CCAF] bg-[#F5EFE0] p-1">
@@ -814,12 +882,13 @@ export default function PurchasesPage() {
                       {row.usePkg && row.pkgPriceMode === "per_pkg" ? (
                         <Input label="Harga per kemasan (Rp)" type="text" inputMode="numeric" value={formatThousands(row.pricePerPkg)} onChange={(e) => u({ pricePerPkg: e.target.value.replace(/\./g, "") })} required />
                       ) : (
-                        <Input label={`Harga per ${rowItem?.unit ?? "unit"}`} type="text" inputMode="numeric" value={formatThousands(row.pricePerUnit)} onChange={(e) => u({ pricePerUnit: e.target.value.replace(/\./g, "") })} required />
+                        <Input label={`Harga per ${row.usePkg ? (rowItem?.unit ?? "unit") : (rowBuyUnit || rowItem?.unit || "unit")}`} type="text" inputMode="numeric" value={formatThousands(row.pricePerUnit)} onChange={(e) => u({ pricePerUnit: e.target.value.replace(/\./g, "") })} required />
                       )}
                       {rowTotal > 0 && (
                         <div className="rounded-lg bg-[#737B4C]/10 border border-[#737B4C]/20 px-4 py-2.5 space-y-1">
                           <p className="text-xs text-[#5C6B38] font-medium">Total: <span className="font-bold">{formatCurrency(rowTotal)}</span></p>
                           {row.usePkg && row.pkgPriceMode === "per_pkg" && rowPPU > 0 && <p className="text-xs text-[#5C6B38]">= <span className="font-semibold">{formatCurrency(rowPPU)}</span> per {rowItem?.unit ?? "unit"}</p>}
+                          {!row.usePkg && rowF !== 1 && rowPPU > 0 && <p className="text-xs text-[#5C6B38]">= <span className="font-semibold">{formatCurrency(rowPPU)}</span> per {rowItem?.unit} · {rowEffQty * rowF} {rowItem?.unit}</p>}
                           {rowDiff !== null && rowPct !== null && <p className={`text-xs font-medium ${rowDiff > 0 ? "text-red-600" : "text-green-700"}`}>{rowDiff > 0 ? "▲" : "▼"} {formatCurrency(Math.abs(rowDiff))} ({rowPct > 0 ? "+" : ""}{rowPct.toFixed(1)}%) vs avg harga</p>}
                         </div>
                       )}
