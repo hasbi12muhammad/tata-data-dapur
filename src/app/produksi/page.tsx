@@ -100,7 +100,10 @@ export default function ProduksiPage() {
 
   const estimatedHpp = useMemo(() => {
     if (!selectedRecipe || !quantity) return null;
-    return (selectedRecipe.hpp ?? 0) * Number(quantity);
+    // Bulatkan HPP per unit ke atas DULU, baru dikali jumlah — agar
+    // (HPP/unit ditampilkan) × jumlah selalu = total estimasi.
+    const perUnit = Math.ceil(selectedRecipe.hpp ?? 0);
+    return Math.ceil(perUnit * Number(quantity));
   }, [selectedRecipe, quantity]);
 
   const filteredProductions = useMemo(() => {
@@ -431,7 +434,7 @@ export default function ProduksiPage() {
                 const pool = mode === "jadi" ? finishedRecipes : subRecipes;
                 const r = pool.find((x) => x.id === newId);
                 if (r && quantity) {
-                  setTotalCost(String(Math.round((r.hpp ?? 0) * Number(quantity))));
+                  setTotalCost(String(Math.ceil(Math.ceil(r.hpp ?? 0) * Number(quantity))));
                 } else {
                   setTotalCost("");
                 }
@@ -456,7 +459,7 @@ export default function ProduksiPage() {
               const qty = e.target.value;
               setQuantity(qty);
               if (selectedRecipe && qty) {
-                setTotalCost(String(Math.round((selectedRecipe.hpp ?? 0) * Number(qty))));
+                setTotalCost(String(Math.ceil(Math.ceil(selectedRecipe.hpp ?? 0) * Number(qty))));
               } else {
                 setTotalCost("");
               }
@@ -489,9 +492,9 @@ export default function ProduksiPage() {
             />
             {estimatedHpp !== null && (
               <p className="mt-1 text-xs text-amber-700 font-medium">
-                Estimasi HPP: <span className="font-bold">{formatCurrency(Math.ceil(estimatedHpp))}</span>
+                Estimasi HPP: <span className="font-bold">{formatCurrency(estimatedHpp)}</span>
                 {selectedRecipe && (
-                  <> · HPP/unit: <span className="font-bold">{formatCurrency(selectedRecipe.hpp ?? 0)}</span></>
+                  <> · HPP/unit: <span className="font-bold">{formatCurrency(Math.ceil(selectedRecipe.hpp ?? 0))}</span></>
                 )}
               </p>
             )}
