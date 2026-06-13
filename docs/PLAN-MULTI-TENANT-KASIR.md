@@ -145,3 +145,125 @@ menu/route Kasir tersembunyi & terblokir otomatis.
 2. Bangun Modul Kasir v1 + route + `docs/PACKAGES.md`.
 3. (opsional) migrasi kolom pembayaran.
 4. Tier berikutnya: Branding → WhatsApp/Alert stok → Pelanggan → Toko Online.
+
+---
+
+# Integrasi dengan TataData Admin (kontrol aktivasi fitur per klien)
+
+> Ditambahkan 2026-06-13. Keputusan: **fitur dibaca runtime dari Supabase tiap klien**
+> (bukan rebuild), **env = nilai default cadangan**. Admin nulis ke DB klien pakai
+> `serviceKey` yang sudah dipunya. Hasil diskusi perencanaan, bukan kode jadi.
+
+## Yang sudah ada di TataData Admin (`/home/hasbi/Proyek/tata-data-admin`)
+
+App terpisah: **React (Vite) + Cloudflare Worker (Hono)**. Sudah jalan:
+- **Roster klien** via env worker: `PROJ_<n>_NAME / _URL / _SERVICE_KEY / _APP_URL / _CLEANUP_TABLES`
+  (`worker/projects.ts`). Tiap klien = satu Supabase project; admin pegang `serviceKey`-nya.
+- **User per klien** (`worker/supabase-admin.ts`): list/create/update/delete/ban.
+- **Subscription per user** (`worker/subscription.ts`): pause / resume / extend / expired,
+  disimpan di **`user.metadata`** Supabase klien (`subscription_ends_at`, `subscription_paused_at`,
+  `subscription_notified_14d`) + email reminder (`worker/email.ts`).
+- **Analytics** + **cleanup data** per project.
+- Auth admin: password + JWT (`worker/auth.ts`).
+
+**Belum ada:** pengaturan **fitur/paket** per klien. Itu yang ditambah di bawah. Karena admin
+**sudah rutin nulis ke DB klien via serviceKey** (untuk subscription), fitur "nebeng" jalur sama
+— tanpa mekanisme/infra baru.
+
+## Model data — di Supabase TIAP klien
+
+Tabel singleton baru (satu baris per deployment klien) di migrasi base (jadi semua klien punya):
+
+```sql
+-- supabase/migrations/0XX_tenant_settings.sql
+create table if not exists tenant_settings (
+  id              int primary key default 1 check (id = 1),  -- paksa satu baris
+  plan            text,                                      -- 'A' | 'B' | ... (informasi)
+  enabled_features text[] not null default '{}',             -- add-on yang nyala, mis. {'kasir'}
+  disabled_features text[] not null default '{}',            -- core yang dimatikan
+  updated_at      timestamptz not null default now()
+);
+insert into tenant_settings (id) values (1) on conflict do nothing;
+
+alter table tenant_settings enable row level security;
+-- Klien BOLEH baca (buat gating UI). HANYA service role (admin) yang boleh tulis.
+create policy tenant_settings_read on tenant_settings for select to authenticated using (true);
+-- (tanpa policy insert/update untuk authenticated → tulis hanya lewat service role)
+```
+
+Kenapa tabel singleton, bukan `user.metadata`: fitur itu **se-deployment** (berlaku buat seluruh
+klien), bukan per-user. Subscription tetap di metadata (per akun pemilik) — dua urusan beda,
+jangan dicampur.
+
+## Perubahan di Base App (`TataData-Dapur`)
+
+`entitlements.ts` sekarang **build-time + cached dari env** (`entitlements.ts:36`). Ubah jadi
+**resolver runtime** yang gabung DB + env:
+
+1. **Sumber utama:** baca `tenant_settings` (id=1) dari Supabase klien.
+2. **Cadangan:** kalau DB kosong/gagal dibaca → pakai `NEXT_PUBLIC_ENABLED_FEATURES` /
+   `NEXT_PUBLIC_DISABLED_FEATURES` (perilaku lama). **App tak boleh rusak** kalau DB unreachable.
+3. Resolusi tetap lewat `registry` (`core` vs add-on) seperti sekarang.
+
+Implikasi teknis:
+- `getEnabledFeatureIds()` jadi **async** (baca DB). Sediakan `getEnabledFeatureIdsSync()` (env-only)
+  untuk fallback awal render bila perlu, plus cache pendek per-request.
+- **`middleware.ts`** sudah query DB klien (version gating `user_profiles`) → tambah baca
+  `tenant_settings` di sini sekaligus, satu round-trip. Hasilnya boleh ditempel ke response
+  header / cookie ringan supaya client tak query ulang.
+- **`Sidebar.tsx`** & gating route ikut hasil resolver runtime (bukan env statis).
+- Tambah endpoint publik kecil **`/api/features`** (baca dari `registry`) supaya admin bisa
+  ambil katalog fitur (id + label + core) tanpa duplikasi manual. (Opsional; v1 boleh hardcode
+  katalog di admin.)
+
+## Perubahan di TataData Admin
+
+**Worker (`worker/`):**
+- Endpoint baru, pola sama seperti subscription:
+  - `GET  /api/projects/:projectId/features` → baca `tenant_settings` dari Supabase klien.
+  - `PUT  /api/projects/:projectId/features` → tulis `enabled_features` / `disabled_features`
+    (service role). Validasi id fitur terhadap katalog.
+- Helper di `worker/supabase-admin.ts` untuk `select/upsert tenant_settings` via serviceKey.
+- (Opsional) ambil katalog dari `PROJ_<n>_APP_URL` + `/api/features`; fallback katalog hardcode.
+
+**UI (`src/pages/`):**
+- Halaman per klien: **daftar fitur dengan toggle** (checkbox dari katalog registry), tampilkan
+  paket aktif + status subscription. Simpan → panggil `PUT .../features`.
+- Tampilkan **peringatan kopling DB**: kalau fitur butuh migrasi (mis. Kasir → kolom pembayaran),
+  kasih catatan "pastikan migrasi klien sudah jalan" sebelum/saat mengaktifkan.
+
+## Alur end-to-end (toggle Kasir untuk 1 klien)
+
+```
+Admin UI: centang "Kasir" untuk Klien X
+        ↓  PUT /api/projects/X/features
+Worker: pakai serviceKey Klien X → upsert tenant_settings.enabled_features = {'kasir'}
+        ↓
+App Klien X (next request): middleware baca tenant_settings → 'kasir' nyala
+        ↓
+Sidebar munculin menu Kasir, /kasir lolos gating  — TANPA rebuild
+```
+
+## Keamanan & integritas
+- Flag fitur = **kontrol UX lunak** (tetap NEXT_PUBLIC-friendly). **Tembok keras = DB per-klien
+  + RLS**: walau seseorang maksa flag nyala, tanpa data/izin di DB klien fitur tak berfungsi.
+- `tenant_settings`: authenticated boleh **baca**, tulis **hanya service role** (admin).
+- **Kopling fitur ↔ migrasi:** mengaktifkan fitur yang butuh skema (Kasir → kolom pembayaran)
+  HARUS dibarengi migrasi ke DB klien itu. v1: checklist manual di admin. Nanti: admin trigger
+  migrasi `supabase/custom/<klien>/` otomatis.
+- **Subscription vs fitur = dua lapis berbeda:** subscription (per akun) ngatur boleh login/akses
+  (expired → ban/blokir); fitur (se-deployment) ngatur modul mana yang tampil. Pertimbangkan:
+  saat subscription `expired/paused`, gating bisa otomatis matiin add-on (kebijakan menyusul).
+
+## Urutan kerja integrasi admin
+1. Base app: migrasi `tenant_settings` + ubah `entitlements.ts` jadi resolver runtime (DB→env fallback)
+   + baca di `middleware.ts` + endpoint `/api/features`.
+2. Admin worker: endpoint `GET/PUT features` + helper `tenant_settings` via serviceKey.
+3. Admin UI: halaman toggle fitur per klien (+ peringatan kopling migrasi).
+4. Uji end-to-end: toggle Kasir di admin → muncul di app klien tanpa rebuild; matikan → hilang.
+5. (Nanti) Lifecycle: auto-gate add-on saat subscription expired; otomasi migrasi per klien.
+
+## Item terbuka (dibahas lagi)
+- Kebijakan persis saat subscription expired/paused terhadap fitur add-on.
+- Katalog fitur: endpoint `/api/features` vs hardcode di admin (v1).
+- Otomasi migrasi per-klien saat mengaktifkan fitur ber-skema.
