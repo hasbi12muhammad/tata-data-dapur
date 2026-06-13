@@ -536,9 +536,9 @@ export default function PurchasesPage() {
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-[10px] text-[#B88D6A]">{(p.item as any)?.unit}</span>
                         <span className="text-[10px] text-[#B88D6A]">·</span>
-                        <span className="text-[10px] text-[#B88D6A]">{p.quantity} unit</span>
+                        <span className="text-[10px] text-[#B88D6A]">{p.quantity} {(p.item as any)?.unit}</span>
                         <span className="text-[10px] text-[#B88D6A]">·</span>
-                        <span className="text-[10px] text-[#B88D6A]">{formatCurrency(p.price_per_unit)}/unit</span>
+                        <span className="text-[10px] text-[#B88D6A]">{formatCurrency(p.price_per_unit)}/{(p.item as any)?.unit}</span>
                       </div>
                       <p className="text-[10px] text-[#B88D6A] mt-0.5">
                         {format(new Date(p.created_at), "dd MMM yyyy")}
