@@ -8,6 +8,7 @@ import {
   BarChart3,
   BookOpen,
   Factory,
+  HelpCircle,
   LayoutDashboard,
   LogOut,
   Package,
@@ -117,8 +118,22 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           })}
         </nav>
 
-        {/* Sign out */}
-        <div className="px-3 py-4 border-t border-white/10">
+        {/* Help + Sign out */}
+        <div className="px-3 py-4 border-t border-white/10 space-y-0.5">
+          <Link
+            href="/help"
+            onClick={onClose}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+              pathname === "/help" || pathname.startsWith("/help/")
+                ? "bg-[#E9DFC6]/20 text-[#E9DFC6]"
+                : "text-[#E9DFC6]/65 hover:bg-[#E9DFC6]/10 hover:text-[#E9DFC6]",
+            )}
+            aria-current={pathname === "/help" ? "page" : undefined}
+          >
+            <HelpCircle className="w-5 h-5 flex-shrink-0" />
+            Bantuan
+          </Link>
           <button
             onClick={signOut}
             className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#E9DFC6]/65 hover:bg-[#E9DFC6]/10 hover:text-[#E9DFC6] transition-colors cursor-pointer"

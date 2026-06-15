@@ -39,7 +39,7 @@ export function TutorialBanner() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <Link
-          href="/tutorial"
+          href="/help"
           className="bg-white text-[#7C563D] text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-[#E9DFC6] transition-colors whitespace-nowrap"
         >
           Lihat Tutorial →
@@ -62,7 +62,7 @@ export function TutorialButton() {
 
   return (
     <Link
-      href="/tutorial"
+      href="/help"
       className="flex items-center gap-1.5 bg-[#F5EFE0] border border-[#C4956A] text-[#7C563D] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-[#EDE4CF] transition-colors whitespace-nowrap"
     >
       📹 Tutorial
