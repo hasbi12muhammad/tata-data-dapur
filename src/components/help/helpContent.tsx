@@ -52,11 +52,12 @@ export const TOUR: TourSection[] = [
       { type: "shot", label: "Screenshot Dashboard", src: "/help/dashboard-desktop.png" },
       { type: "features", items: [
         { emoji: "💰", title: "Total Penjualan", body: "Total uang masuk dari semua transaksi di tanggal yang dipilih." },
-        { emoji: "📉", title: "Total HPP", body: "Total biaya bahan baku yang terpakai untuk semua produk yang terjual." },
-        { emoji: "📈", title: "Total Profit & Margin", body: "Penjualan dikurangi HPP — ini laba kotor kamu. Margin-nya menunjukkan berapa persen untung dari total penjualan." },
-        { emoji: "🧾", title: "Transaksi Terbaru", body: "Daftar penjualan paling baru — produk apa yang laku, berapa qty, revenue, dan profit tiap barisnya." },
+        { emoji: "📉", title: "Total Pengeluaran", body: "Total biaya operasional yang tercatat — listrik, gas, gaji, kemasan, dan lainnya." },
+        { emoji: "🛒", title: "Total Pembelian", body: "Total uang keluar untuk pembelian bahan baku di tanggal yang dipilih." },
+        { emoji: "✅", title: "Laba Bersih", body: "Penjualan dikurangi total pengeluaran dan pembelian bahan baku — angka ini yang paling mencerminkan untung bersih hari itu." },
       ] },
-      { type: "callout", variant: "tip", node: <>Dashboard belum memperhitungkan pengeluaran operasional (listrik, gas, gaji). Kalau mau lihat laba bersih setelah pengeluaran, buka menu <strong>Laporan</strong>.</> },
+      { type: "p", node: <>Di bawah kartu ringkasan ada tiga daftar aktivitas: <strong>Penjualan terbaru</strong>, <strong>Pengeluaran terbaru</strong>, dan <strong>Pembelian terbaru</strong> — semua entri hari itu langsung tampil di sini.</> },
+      { type: "callout", variant: "tip", node: <>Mau lihat performa per periode (minggu, bulan, custom)? Buka menu <strong>Laporan</strong> — lebih lengkap dengan grafik tren dan daftar top produk.</> },
     ],
   },
   {
@@ -102,11 +103,11 @@ export const TOUR: TourSection[] = [
       { type: "p", node: <>Pengeluaran adalah semua biaya buat menjalankan usaha, tapi <strong>bukan buat beli bahan baku</strong>. Data ini yang dipakai buat menghitung <em>laba bersih</em> di halaman Laporan.</> },
       { type: "shot", label: "Screenshot halaman Pengeluaran", src: "/help/expenses-desktop.png" },
       { type: "features", items: [
-        { emoji: "⚡", title: "Utilitas", body: "Listrik, air, gas LPG, internet, pulsa." },
-        { emoji: "👷", title: "Gaji & Tenaga Kerja", body: "Gaji karyawan harian atau bulanan, upah lembur." },
-        { emoji: "🏠", title: "Sewa & Tempat", body: "Biaya sewa dapur, kios, atau ruko." },
-        { emoji: "📦", title: "Packaging & Perlengkapan", body: "Plastik, stiker label, kotak, pita, dan sejenisnya." },
-        { emoji: "🚗", title: "Transport & Lain-lain", body: "Ongkos antar, bensin, biaya tak terduga." },
+        { emoji: "👷", title: "Gaji & Upah", body: "Gaji karyawan harian atau bulanan, upah lembur, honor asisten dapur." },
+        { emoji: "📦", title: "Kemasan & Perlengkapan", body: "Plastik, stiker label, kotak, pita, dan semua perlengkapan packaging." },
+        { emoji: "⛽", title: "Bahan Bakar & Gas", body: "Gas LPG, bensin, bahan bakar operasional dapur." },
+        { emoji: "⚡", title: "Listrik & Air", body: "Tagihan listrik, air, dan utilitas dapur lainnya." },
+        { emoji: "🔧", title: "Perawatan & Lainnya", body: "Perbaikan alat, biaya tak terduga, dan pengeluaran lain yang belum masuk kategori di atas." },
       ] },
       { type: "callout", variant: "tip", node: <>Bingung sesuatu masuk Pembelian atau Pengeluaran? Patokannya gampang: kalau itu <strong>bahan yang dipakai buat bikin produk</strong>, masuk Pembelian. Kalau itu <strong>biaya menjalankan usaha</strong>, masuk Pengeluaran.</> },
     ],
@@ -178,9 +179,9 @@ export const TOUR: TourSection[] = [
         { emoji: "📅", title: "Pilih Periode", body: "Ada Hari ini, 7 Hari, 30 Hari, Bulan ini, Bulan lalu, dan Custom (pilih sendiri tanggal mulai & selesai)." },
         { emoji: "📈", title: "Grafik Tren", body: "Grafik bar nunjukin revenue dan profit per hari. Arahkan kursor ke bar mana pun buat lihat angka detail hari itu." },
         { emoji: "🏆", title: "Top Produk", body: "Daftar produk yang paling banyak ngasih profit di periode itu. Berguna buat tahu mana produk andalan." },
-        { emoji: "📥", title: "Export ke Excel & Gambar", body: "Laporan bisa diunduh sebagai Excel (.xlsx) buat diolah lagi, atau sebagai gambar (.png) buat dibagikan atau diarsipkan." },
+        { emoji: "📥", title: "Unduh PDF & Excel", body: "Laporan bisa diunduh sebagai PDF buat dibagikan atau diarsipkan, atau sebagai Excel (.xlsx) buat diolah lagi di spreadsheet." },
       ] },
-      { type: "callout", variant: "info", node: <>Laporan menampilkan <strong>laba bersih</strong> (setelah dipotong pengeluaran operasional) — beda dengan Dashboard yang cuma menampilkan laba kotor.</> },
+      { type: "callout", variant: "info", node: <>Laporan cocok buat analisis per periode dan lihat tren. Dashboard lebih ke <strong>rekap harian cepat</strong> — Laporan ke <strong>gambar besar bisnis</strong> mingguan/bulanan.</> },
     ],
   },
   {
@@ -312,11 +313,11 @@ Waste = 10% → HPP per roti dihitung dari 9 roti yang berhasil, bukan 10.`}</pr
         a: (
           <>
             Semuanya masuk ke menu <strong>Pengeluaran</strong>. Pilih atau buat kategori yang sesuai:
-            <pre className="help-example">{`Gaji karyawan → Kategori: Gaji & Tenaga Kerja
-Gas LPG → Kategori: Utilitas / Bahan Bakar
-Listrik → Kategori: Utilitas
-Ongkos kirim bahan → Kategori: Transport
-Plastik kemasan → Kategori: Packaging`}</pre>
+            <pre className="help-example">{`Gaji karyawan → Kategori: Gaji & Upah
+Gas LPG → Kategori: Bahan Bakar & Gas
+Listrik → Kategori: Listrik & Air
+Plastik kemasan → Kategori: Kemasan & Perlengkapan
+Servis alat / tak terduga → Kategori: Perawatan & Lainnya`}</pre>
             Semua pengeluaran ini otomatis dipotong dari profit kotor di halaman <strong>Laporan</strong> buat menghasilkan angka laba bersih.
           </>
         ),
@@ -345,11 +346,11 @@ Plastik kemasan → Kategori: Packaging`}</pre>
         q: "Gimana cara print / export laporan?",
         a: (
           <>
-            Buka menu <strong>Laporan</strong>, pilih periode yang kamu mau, scroll ke bawah, klik tombol <strong>Download Excel</strong> atau <strong>Download Gambar</strong>.
+            Buka menu <strong>Laporan</strong>, pilih periode yang kamu mau, scroll ke bawah, klik tombol <strong>Unduh PDF</strong> atau <strong>Unduh Excel</strong>.
             <br /><br />
-            <strong>Excel (.xlsx)</strong> — buat diolah lagi di spreadsheet, dibagikan ke akuntan, atau diarsipkan.
+            <strong>PDF</strong> — buat dibagikan lewat WhatsApp, dikirim ke akuntan, atau diarsipkan sebagai dokumen siap cetak.
             <br />
-            <strong>Gambar (.png)</strong> — buat dibagikan lewat WhatsApp, disimpan sebagai arsip visual, atau dicetak langsung.
+            <strong>Excel (.xlsx)</strong> — buat diolah lagi di spreadsheet, buat pivot table, atau dianalisis lebih lanjut.
           </>
         ),
       },
