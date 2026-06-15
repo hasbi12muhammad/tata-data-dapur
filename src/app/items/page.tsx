@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
+import { HelpTip } from "@/components/help/HelpTip";
 import { UnitSelect, HARDCODED_UNITS } from "@/components/ui/UnitSelect";
 import { Modal } from "@/components/ui/Modal";
 import {
@@ -405,15 +406,18 @@ export default function ItemsPage() {
             placeholder="mis. Tepung Terigu"
           />
           <UnitSelect label="Unit" value={unit} onChange={setUnit} required />
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isAddon}
-              onChange={(e) => setIsAddon(e.target.checked)}
-              className="w-4 h-4 rounded accent-[#A05035]"
-            />
-            <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
-          </label>
+          <div className="flex items-center gap-1">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isAddon}
+                onChange={(e) => setIsAddon(e.target.checked)}
+                className="w-4 h-4 rounded accent-[#A05035]"
+              />
+              <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
+            </label>
+            <HelpTip fieldId="item.isAddon" />
+          </div>
           <div className="flex gap-2 pt-1">
             <Button
               type="button"

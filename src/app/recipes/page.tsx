@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
+import { HelpTip } from "@/components/help/HelpTip";
 import { UnitSelect } from "@/components/ui/UnitSelect";
 import { Modal } from "@/components/ui/Modal";
 import { useItems } from "@/hooks/useItems";
@@ -425,26 +426,32 @@ export default function RecipesPage() {
           />
 
           {/* is_ingredient checkbox + unit selector */}
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isIngredient}
-              onChange={(e) => setIsIngredient(e.target.checked)}
-              className="w-4 h-4 rounded accent-[#A05035]"
-            />
-            <span className="text-sm font-medium text-[#4A3728]">
-              Jadikan Bahan Setengah Jadi
-            </span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isAddon}
-              onChange={(e) => setIsAddon(e.target.checked)}
-              className="w-4 h-4 rounded accent-[#A05035]"
-            />
-            <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
-          </label>
+          <div className="flex items-center gap-1">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isIngredient}
+                onChange={(e) => setIsIngredient(e.target.checked)}
+                className="w-4 h-4 rounded accent-[#A05035]"
+              />
+              <span className="text-sm font-medium text-[#4A3728]">
+                Jadikan Bahan Setengah Jadi
+              </span>
+            </label>
+            <HelpTip fieldId="recipe.isIngredient" />
+          </div>
+          <div className="flex items-center gap-1">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isAddon}
+                onChange={(e) => setIsAddon(e.target.checked)}
+                className="w-4 h-4 rounded accent-[#A05035]"
+              />
+              <span className="text-sm text-[#4A3728]">Bisa dijadikan Add-On penjualan</span>
+            </label>
+            <HelpTip fieldId="recipe.isAddon" />
+          </div>
           {(isIngredient || isAddon) && (
             <UnitSelect value={unit ?? "pcs"} onChange={setUnit} required={isIngredient} />
           )}
@@ -452,6 +459,7 @@ export default function RecipesPage() {
           <div className="grid grid-cols-2 gap-3">
             <Input
               label={`Hasil per Batch (${unit ?? "pcs"})`}
+              help={<HelpTip fieldId="recipe.batchYield" />}
               type="number"
               min="1"
               step="1"
@@ -461,6 +469,7 @@ export default function RecipesPage() {
             />
             <Input
               label="Estimasi Waste (%)"
+              help={<HelpTip fieldId="recipe.wastePct" />}
               type="number"
               min="0"
               max="99"

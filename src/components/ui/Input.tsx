@@ -5,21 +5,25 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helper?: string;
+  help?: React.ReactNode;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helper, className, id, ...props }, ref) => {
+  ({ label, error, helper, help, className, id, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, "-");
     return (
       <div className="flex flex-col gap-1">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium text-[#4A3728]"
-          >
-            {label}
-            {props.required && <span className="text-[#C0392B] ml-1">*</span>}
-          </label>
+          <span className="flex items-center gap-1">
+            <label
+              htmlFor={inputId}
+              className="text-sm font-medium text-[#4A3728]"
+            >
+              {label}
+              {props.required && <span className="text-[#C0392B] ml-1">*</span>}
+            </label>
+            {help}
+          </span>
         )}
         <input
           ref={ref}
@@ -45,22 +49,26 @@ Input.displayName = "Input";
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
+  help?: React.ReactNode;
   children: React.ReactNode;
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, className, id, children, ...props }, ref) => {
+  ({ label, error, help, className, id, children, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, "-");
     return (
       <div className="flex flex-col gap-1">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium text-[#4A3728]"
-          >
-            {label}
-            {props.required && <span className="text-[#C0392B] ml-1">*</span>}
-          </label>
+          <span className="flex items-center gap-1">
+            <label
+              htmlFor={inputId}
+              className="text-sm font-medium text-[#4A3728]"
+            >
+              {label}
+              {props.required && <span className="text-[#C0392B] ml-1">*</span>}
+            </label>
+            {help}
+          </span>
         )}
         <select
           ref={ref}
