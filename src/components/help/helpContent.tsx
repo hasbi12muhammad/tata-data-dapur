@@ -80,7 +80,7 @@ export const TOUR: TourSection[] = [
       },
       { type: "features", items: [
         { icon: "circle-plus", title: "Tambah Bahan Manual", body: "Isi nama bahan, pilih satuan (gr, ml, pcs, kg, liter), simpan. Selesai. Harga dan stok kosong dulu, nanti terisi pas pembelian pertama dicatat." },
-        { icon: "clipboard-list", title: "Import via Template Excel", body: "Bahannya banyak? Download template, isi di Excel, upload sekaligus. Enak buat setup awal biar nggak input satu-satu." },
+        { icon: "clipboard-list", title: "Import via Template Excel", body: <>Bahannya banyak? Download template (kolom: <strong>nama</strong> dan <strong>unit</strong>), isi di Excel, upload sekaligus. Enak buat setup awal biar nggak input satu-satu.</> },
         { icon: "line-chart", title: "Harga Rata-rata Otomatis", body: <>Kolom AVG PRICE dihitung sendiri dari riwayat pembelian pakai metode <em>weighted average</em>. Harga inilah yang dipakai buat menghitung HPP resep.</> },
         { icon: "cake", title: "Add-on Penjualan", body: "Bahan seperti topper kue, lilin ulang tahun, atau kemasan khusus bisa ditandai sebagai add-on. Nanti bisa dipilih sebagai tambahan pas mencatat penjualan produk." },
       ] },
@@ -105,7 +105,9 @@ export const TOUR: TourSection[] = [
       { type: "features", items: [
         { icon: "ruler", title: "Beli per Satuan Dasar", body: "Misal beli Tepung Terigu 5 kg seharga Rp 65.000. Pilih bahan, isi qty (5) dan satuan (kg), isi total harga, simpan." },
         { icon: "package", title: "Beli per Kemasan", body: "Belinya per dus atau pack? Isi jumlah kemasan dan isi per kemasan — app yang konversi ke satuan dasar. Misal: 2 dus × 24 botol." },
+        { icon: "circle-plus", title: "Beberapa Bahan Sekaligus", body: 'Satu transaksi bisa isi banyak bahan — klik "+ Tambah Item" buat nambah baris baru. Jadi nggak perlu input satu per satu kalau belanjanya banyak jenis.' },
         { icon: "calendar", title: "Backdate Pembelian", body: "Lupa catat kemarin? Tinggal pilih tanggal yang lewat pas input. Stok dan harga rata-rata menyesuaikan urutan tanggalnya." },
+        { icon: "clipboard-list", title: "Import via Template Excel", body: <>Mau input banyak riwayat pembelian sekaligus? Download template (kolom: <strong>nama_item</strong>, <strong>quantity</strong>, <strong>total_harga</strong>), isi di Excel, upload — semua langsung tercatat dan stok bahan ikut bertambah otomatis.</> },
       ] },
       { type: "callout", variant: "info", node: <>Yang dicatat di sini cuma <strong>pembelian bahan baku</strong>. Buat biaya operasional seperti gas, listrik, atau ongkir, catatnya di menu <strong>Pengeluaran</strong>.</> },
     ],
@@ -156,6 +158,7 @@ export const TOUR: TourSection[] = [
       { type: "features", items: [
         { icon: "bar-chart", title: "Hasil per Batch & Estimasi Waste", body: <>Kalau 1 resep menghasilkan beberapa porsi (misal 1 resep = 12 cupcake), isi <em>Hasil per Batch</em>. Kalau ada bahan yang menyusut waktu dimasak, isi <em>estimasi waste</em> dalam persen. Dua-duanya bikin HPP per unit lebih akurat.</> },
         { icon: "cake", title: "Add-on Produk", body: "Produk bisa ditandai sebagai add-on — artinya bisa dipilih sebagai tambahan pas pelanggan beli produk lain. Contoh: topper kue, lilin ulang tahun, kotak khusus." },
+        { icon: "clipboard-list", title: "Import via Template Excel", body: <>Produknya banyak? Download template (kolom: <strong>nama_resep</strong>, <strong>nama_item</strong>, <strong>quantity_used</strong>), isi satu baris per bahan — kalau 1 produk punya 5 bahan, berarti 5 baris dengan nama produk yang sama. Upload sekaligus dan semua resep langsung terbuat lengkap.</> },
       ] },
       { type: "callout", variant: "tip", node: <>HPP di produk <strong>otomatis berubah</strong> kalau harga bahan baku berubah gara-gara pembelian baru. Nggak perlu update resep manual.</> },
     ],
