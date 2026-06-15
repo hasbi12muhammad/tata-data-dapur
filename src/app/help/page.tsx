@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Modal } from "@/components/ui/Modal";
-import { cn } from "@/lib/utils";
 import {
   FAQ_GROUPS,
   TOUR,
@@ -23,6 +22,27 @@ import {
   Video,
 } from "lucide-react";
 
+/* ── Palette + type (mirrors the landing-page Help Center) ── */
+const C = {
+  bg: "#F4EDE0",
+  paper: "#FBF6EC",
+  ink: "#1B1208",
+  inkSoft: "#3D2A18",
+  muted: "#876A4E",
+  line: "#D9C9AE",
+  terra: "#B5532A",
+  gold: "#C49A3F",
+  goldSoft: "#FDF0D9",
+  blue: "#2D6A9F",
+  blueSoft: "#E0EBF5",
+  navBg: "#2A1A0E",
+};
+const SERIF = "Fraunces, Georgia, serif";
+const BODY = 'Inter, "Open Sans", system-ui, sans-serif';
+const MONO = '"DM Mono", monospace';
+const NOISE =
+  "data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.7 0 0 0 0 0.55 0 0 0 0 0.3 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E";
+
 type TabId = "tour" | "faq" | "video";
 const TABS: { id: TabId; label: string; icon: typeof Map }[] = [
   { id: "tour", label: "Tur Menu", icon: Map },
@@ -30,30 +50,56 @@ const TABS: { id: TabId; label: string; icon: typeof Map }[] = [
   { id: "video", label: "Video Tutorial", icon: Video },
 ];
 
-/* ── shared pieces ── */
+/* ════════ shared pieces ════════ */
 
 function Shot({ label }: { label: string }) {
   return (
-    <div className="my-5 flex aspect-video flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[#D9CCAF] bg-[#F2EBD9] text-[#7C6352]">
-      <ImageIcon className="h-7 w-7 opacity-50" />
-      <span className="font-mono text-[11px] uppercase tracking-wider">{label}</span>
+    <div
+      style={{
+        background: C.bg,
+        border: `1.5px dashed ${C.line}`,
+        borderRadius: 10,
+        aspectRatio: "16 / 9",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        margin: "20px 0",
+        color: C.muted,
+      }}
+    >
+      <ImageIcon className="h-[30px] w-[30px]" style={{ opacity: 0.55 }} />
+      <span style={{ fontFamily: MONO, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em" }}>
+        {label}
+      </span>
     </div>
   );
 }
 
 function FeatureList({ items }: { items: Feature[] }) {
   return (
-    <ul className="mt-4 flex flex-col gap-2.5">
+    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, margin: "16px 0 0", padding: 0 }}>
       {items.map((it, i) => (
         <li
           key={i}
-          className="flex items-start gap-3 rounded-lg border border-[#E5DACA] bg-[#F2EBD9] px-4 py-3 text-sm text-[#4A3526]"
+          style={{
+            display: "flex",
+            gap: 12,
+            fontSize: 14,
+            color: C.inkSoft,
+            alignItems: "flex-start",
+            padding: "12px 16px",
+            background: C.bg,
+            borderRadius: 8,
+            border: `1px solid ${C.line}`,
+          }}
         >
-          <span className="mt-0.5 shrink-0 text-base leading-tight" aria-hidden>
+          <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1, lineHeight: 1.4 }} aria-hidden>
             {it.emoji}
           </span>
-          <span className="leading-relaxed">
-            <strong className="mb-0.5 block font-semibold text-[#2C1810]">{it.title}</strong>
+          <span style={{ lineHeight: 1.6 }}>
+            <strong style={{ display: "block", color: C.ink, fontWeight: 600, marginBottom: 2 }}>{it.title}</strong>
             {it.body}
           </span>
         </li>
@@ -66,17 +112,24 @@ function Callout({ variant, children }: { variant: "tip" | "info"; children: Rea
   const tip = variant === "tip";
   return (
     <div
-      className={cn(
-        "mt-4 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm leading-relaxed",
-        tip
-          ? "border-[#C4956A]/60 bg-[#F5EFE0] text-[#6E4A2E]"
-          : "border-[#737B4C]/40 bg-[#EEF1E5] text-[#54592F]",
-      )}
+      style={{
+        background: tip ? C.goldSoft : C.blueSoft,
+        border: `1px solid ${tip ? "rgba(196,154,63,0.3)" : "rgba(45,106,159,0.2)"}`,
+        borderRadius: 10,
+        padding: "14px 18px",
+        fontSize: 14,
+        color: tip ? "#7A5C10" : C.blue,
+        display: "flex",
+        gap: 12,
+        alignItems: "flex-start",
+        marginTop: 16,
+        lineHeight: 1.6,
+      }}
     >
       {tip ? (
-        <Lightbulb className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#A05035]" />
+        <Lightbulb className="h-[18px] w-[18px] shrink-0" style={{ marginTop: 1, color: "#B5862A" }} />
       ) : (
-        <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#737B4C]" />
+        <Info className="h-[18px] w-[18px] shrink-0" style={{ marginTop: 1, color: C.blue }} />
       )}
       <div>{children}</div>
     </div>
@@ -86,11 +139,11 @@ function Callout({ variant, children }: { variant: "tip" | "info"; children: Rea
 function Block({ block }: { block: TourBlock }) {
   switch (block.type) {
     case "p":
-      return <p className="mb-4 text-[15px] leading-relaxed text-[#4A3526]">{block.node}</p>;
+      return <p style={{ fontSize: 15, color: C.inkSoft, lineHeight: 1.7, margin: "0 0 16px" }}>{block.node}</p>;
     case "shot":
       return <Shot label={block.label} />;
     case "subhead":
-      return <p className="mt-4 text-[15px] text-[#4A3526]">{block.node}</p>;
+      return <p style={{ fontSize: 15, color: C.inkSoft, margin: "16px 0 0" }}>{block.node}</p>;
     case "features":
       return <FeatureList items={block.items} />;
     case "callout":
@@ -100,47 +153,92 @@ function Block({ block }: { block: TourBlock }) {
   }
 }
 
-/* ── Tab 1: Tur Menu ── */
+/* ════════ Tab 1 — Tur Menu ════════ */
 
 function TourTab() {
   return (
-    <div className="grid items-start gap-8 lg:grid-cols-[200px_1fr]">
-      {/* sticky in-page nav (desktop) */}
-      <nav className="sticky top-0 hidden self-start rounded-xl border border-[#D9CCAF] bg-[#FBF8F2] p-4 lg:block">
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[#7C6352]">Menu</p>
-        <div className="space-y-0.5">
-          {TOUR.map((s) => {
-            const Icon = s.icon;
-            return (
-              <a
-                key={s.id}
-                href={`#${s.id}`}
-                className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] text-[#4A3526] transition-colors hover:bg-[#F2EBD9] hover:text-[#A05035]"
-              >
-                <Icon className="h-[15px] w-[15px] shrink-0" />
-                {s.title}
-              </a>
-            );
-          })}
+    <div className="help-tour-layout">
+      <nav
+        className="help-tour-nav"
+        style={{
+          position: "sticky",
+          top: 64,
+          background: C.paper,
+          border: `1px solid ${C.line}`,
+          borderRadius: 12,
+          padding: 16,
+          alignSelf: "start",
+        }}
+      >
+        <div style={{ fontFamily: MONO, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.15em", color: C.muted, marginBottom: 12 }}>
+          Menu
         </div>
+        {TOUR.map((s) => {
+          const Icon = s.icon;
+          return (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              className="help-nav-link"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "8px 10px",
+                borderRadius: 8,
+                textDecoration: "none",
+                fontSize: 13,
+                color: C.inkSoft,
+              }}
+            >
+              <Icon className="h-[15px] w-[15px] shrink-0" />
+              {s.title}
+            </a>
+          );
+        })}
       </nav>
 
       <div>
         {TOUR.map((s) => {
           const Icon = s.icon;
           return (
-            <section key={s.id} id={s.id} className="mb-14 scroll-mt-4 last:mb-0">
-              <div className="overflow-hidden rounded-2xl border border-[#D9CCAF] bg-[#FBF8F2] shadow-sm">
-                <header className="flex items-start gap-4 border-b border-[#E5DACA] bg-[#F2EBD9] px-6 py-5">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#7C563D] text-[#E9DFC6]">
-                    <Icon className="h-[22px] w-[22px]" />
+            <section key={s.id} id={s.id} style={{ marginBottom: 56, scrollMarginTop: 72 }}>
+              <div style={{ background: C.paper, border: `1px solid ${C.line}`, borderRadius: 16, overflow: "hidden" }}>
+                <header
+                  style={{
+                    padding: "24px 28px 20px",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 18,
+                    borderBottom: `1px solid ${C.line}`,
+                    background: C.bg,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 12,
+                      background: C.navBg,
+                      color: C.gold,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon className="h-[22px] w-[22px]" style={{ color: C.gold }} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-[#2C1810]">{s.title}</h3>
-                    <p className="font-mono text-[11px] uppercase tracking-wide text-[#7C6352]">{s.route}</p>
+                    <h3 style={{ fontFamily: SERIF, fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em", margin: "0 0 4px", color: C.ink }}>
+                      {s.title}
+                    </h3>
+                    <div style={{ fontFamily: MONO, fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                      {s.route}
+                    </div>
                   </div>
                 </header>
-                <div className="px-6 py-5">
+                <div style={{ padding: "24px 28px" }}>
                   {s.blocks.map((b, i) => (
                     <Block key={i} block={b} />
                   ))}
@@ -154,7 +252,7 @@ function TourTab() {
   );
 }
 
-/* ── Tab 2: FAQ ── */
+/* ════════ Tab 2 — FAQ ════════ */
 
 function FaqRow({
   id,
@@ -170,33 +268,49 @@ function FaqRow({
   onToggle: () => void;
 }) {
   return (
-    <div className="mb-2.5 overflow-hidden rounded-xl border border-[#D9CCAF] bg-[#FBF8F2]">
+    <div style={{ border: `1px solid ${C.line}`, borderRadius: 12, overflow: "hidden", marginBottom: 10, background: C.paper }}>
       <button
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={`${id}-a`}
-        className={cn(
-          "flex w-full cursor-pointer items-center justify-between gap-5 px-5 py-4 text-left transition-colors",
-          open ? "bg-[#F2EBD9]" : "hover:bg-[#F2EBD9]",
-        )}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+          padding: "18px 22px",
+          gap: 20,
+          cursor: "pointer",
+          background: open ? C.bg : "transparent",
+          border: "none",
+          textAlign: "left",
+          fontFamily: BODY,
+        }}
       >
-        <span className="flex-1 text-[15px] font-medium leading-snug text-[#2C1810]">{q}</span>
+        <span style={{ fontSize: 15, fontWeight: 500, color: C.ink, flex: 1, lineHeight: 1.4 }}>{q}</span>
         <span
-          className={cn(
-            "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[#FBF8F2] transition-all duration-300",
-            open ? "rotate-45 bg-[#A05035]" : "bg-[#2C1810]",
-          )}
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: "50%",
+            background: open ? C.terra : C.ink,
+            color: C.paper,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            transition: "all 0.3s",
+            transform: open ? "rotate(45deg)" : "none",
+          }}
         >
           <Plus className="h-4 w-4" />
         </span>
       </button>
-      <div
-        id={`${id}-a`}
-        className="grid transition-all duration-300 ease-out"
-        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
-      >
-        <div className="overflow-hidden">
-          <div className="border-t border-[#E5DACA] px-5 py-4 text-sm leading-relaxed text-[#4A3526]">{a}</div>
+      <div id={`${id}-a`} style={{ display: "grid", gridTemplateRows: open ? "1fr" : "0fr", transition: "grid-template-rows 0.3s ease" }}>
+        <div style={{ overflow: "hidden" }}>
+          <div style={{ padding: "16px 22px 20px", fontSize: 14, color: C.inkSoft, lineHeight: 1.7, borderTop: `1px solid ${C.line}` }}>
+            {a}
+          </div>
         </div>
       </div>
     </div>
@@ -206,27 +320,32 @@ function FaqRow({
 function FaqTab() {
   const [openId, setOpenId] = useState<string | null>(null);
   return (
-    <div className="mx-auto max-w-3xl">
-      <p className="mb-8 text-base leading-relaxed text-[#4A3526]">
+    <div style={{ maxWidth: 760, margin: "0 auto" }}>
+      <p style={{ fontSize: 16, color: C.inkSoft, marginBottom: 32, lineHeight: 1.7 }}>
         Pertanyaan yang sering ditanyakan pengguna Tata Data Dapur. Klik pertanyaannya buat lihat jawaban.
       </p>
       {FAQ_GROUPS.map((g, gi) => (
-        <div key={gi} className="mb-10">
-          <div className="mb-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-[#A05035]">
+        <div key={gi} style={{ marginBottom: 40 }}>
+          <div
+            style={{
+              fontFamily: MONO,
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.18em",
+              color: C.terra,
+              marginBottom: 16,
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
             {g.title}
-            <span className="h-px flex-1 bg-[#D9CCAF]" />
+            <span style={{ flex: 1, height: 1, background: C.line }} />
           </div>
           {g.items.map((it, ii) => {
             const id = `faq-${gi}-${ii}`;
             return (
-              <FaqRow
-                key={id}
-                id={id}
-                q={it.q}
-                a={it.a}
-                open={openId === id}
-                onToggle={() => setOpenId(openId === id ? null : id)}
-              />
+              <FaqRow key={id} id={id} q={it.q} a={it.a} open={openId === id} onToggle={() => setOpenId(openId === id ? null : id)} />
             );
           })}
         </div>
@@ -235,58 +354,128 @@ function FaqTab() {
   );
 }
 
-/* ── Tab 3: Video ── */
+/* ════════ Tab 3 — Video ════════ */
 
 function VideoThumb({ card, onPlay }: { card: VideoCard; onPlay: () => void }) {
   const ready = Boolean(card.src);
+  const [hover, setHover] = useState(false);
   return (
     <button
       type="button"
       disabled={!ready}
       onClick={ready ? onPlay : undefined}
-      className={cn(
-        "group overflow-hidden rounded-xl border text-left transition-all",
-        ready
-          ? "cursor-pointer border-[#D9CCAF] bg-[#FBF8F2] hover:-translate-y-0.5 hover:shadow-lg"
-          : "cursor-default border-dashed border-[#D9CCAF] bg-transparent opacity-60",
-      )}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        background: ready ? C.paper : "transparent",
+        border: ready ? `1px solid ${C.line}` : `1.5px dashed ${C.line}`,
+        borderRadius: 12,
+        overflow: "hidden",
+        cursor: ready ? "pointer" : "default",
+        opacity: ready ? 1 : 0.62,
+        textAlign: "left",
+        padding: 0,
+        transform: ready && hover ? "translateY(-3px)" : "none",
+        boxShadow: ready && hover ? "0 12px 32px rgba(27,18,8,0.1)" : "none",
+        transition: "transform 0.2s, box-shadow 0.2s",
+      }}
     >
       <div
-        className={cn(
-          "relative flex aspect-video items-center justify-center bg-gradient-to-br from-[#3A2415] to-[#7C563D]",
-          !ready && "opacity-50",
-        )}
+        style={{
+          aspectRatio: "16 / 9",
+          background: C.navBg,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          overflow: "hidden",
+          opacity: ready ? 1 : 0.5,
+        }}
       >
+        <div style={{ position: "absolute", inset: 0, backgroundImage: `url("${NOISE}")`, pointerEvents: "none" }} />
         {ready && card.badge && (
-          <span className="absolute left-2.5 top-2.5 rounded-full bg-[#C4956A] px-2 py-0.5 font-mono text-[9px] font-medium uppercase tracking-wider text-[#2C1810]">
+          <span
+            style={{
+              position: "absolute",
+              top: 10,
+              left: 10,
+              background: C.gold,
+              color: C.navBg,
+              fontFamily: MONO,
+              fontSize: 9,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              padding: "3px 8px",
+              borderRadius: 100,
+              fontWeight: 500,
+              zIndex: 1,
+            }}
+          >
             {card.badge}
           </span>
         )}
         {!ready && (
-          <span className="absolute left-2.5 top-2.5 rounded-full border border-white/25 bg-white/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-white/70">
+          <span
+            style={{
+              position: "absolute",
+              top: 10,
+              left: 10,
+              background: "rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              fontFamily: MONO,
+              fontSize: 9,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              padding: "3px 8px",
+              borderRadius: 100,
+              zIndex: 1,
+            }}
+          >
             Segera hadir
           </span>
         )}
         <span
-          className={cn(
-            "flex items-center justify-center rounded-full border-2 transition-colors",
-            ready
-              ? "border-white/40 bg-white/15 text-white group-hover:border-[#C4956A] group-hover:bg-[#A05035]"
-              : "border-white/30 bg-white/10 text-white/80",
-          )}
-          style={{ height: 52, width: 52 }}
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: "50%",
+            background: ready && hover ? C.terra : "rgba(255,255,255,0.15)",
+            border: `2px solid ${ready && hover ? C.terra : "rgba(255,255,255,0.4)"}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
+            position: "relative",
+            transition: "all 0.2s",
+            paddingLeft: 4,
+          }}
         >
-          <Play className="ml-0.5 h-5 w-5 fill-current" />
+          <Play className="h-[18px] w-[18px] fill-current" />
         </span>
         {card.duration && (
-          <span className="absolute bottom-2.5 right-2.5 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[11px] text-white">
+          <span
+            style={{
+              position: "absolute",
+              bottom: 10,
+              right: 10,
+              background: "rgba(0,0,0,0.6)",
+              color: "#fff",
+              fontFamily: MONO,
+              fontSize: 11,
+              padding: "2px 7px",
+              borderRadius: 4,
+            }}
+          >
             {card.duration}
           </span>
         )}
       </div>
-      <div className="px-4 py-3.5">
-        <h4 className="mb-1 text-sm font-medium leading-snug text-[#2C1810]">{card.title}</h4>
-        <p className="font-mono text-[11px] uppercase tracking-wide text-[#7C6352]">{card.meta}</p>
+      <div style={{ padding: "14px 16px" }}>
+        <h4 style={{ fontWeight: 500, fontSize: 14, margin: "0 0 4px", color: C.ink, lineHeight: 1.4 }}>{card.title}</h4>
+        <div style={{ fontFamily: MONO, fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          {card.meta}
+        </div>
       </div>
     </button>
   );
@@ -294,21 +483,29 @@ function VideoThumb({ card, onPlay }: { card: VideoCard; onPlay: () => void }) {
 
 function VideoTab({ onPlay }: { onPlay: (c: VideoCard) => void }) {
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-10 rounded-2xl bg-gradient-to-br from-[#7C563D] to-[#A05035] p-8 text-white">
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[#E9DFC6]">Video Tutorial</p>
-        <h2 className="mb-3 text-2xl font-semibold tracking-tight">Halo, pengguna Tata Data Dapur! 👋</h2>
-        <p className="leading-relaxed text-white/80">
-          Selamat datang di halaman tutorial. Di sini kami siapkan video panduan buat bantu kamu memaksimalkan tiap
-          fitur app — dari setup awal sampai baca laporan bisnis. Tonton urut biar paling nyantol, atau langsung pilih
-          topik yang kamu butuhkan.
-        </p>
+    <div style={{ maxWidth: 860, margin: "0 auto" }}>
+      <div style={{ background: C.navBg, borderRadius: 16, padding: 32, marginBottom: 40, position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: `url("${NOISE}")`, pointerEvents: "none" }} />
+        <div style={{ position: "relative" }}>
+          <div style={{ fontFamily: MONO, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.18em", color: C.gold, marginBottom: 12 }}>
+            Video Tutorial
+          </div>
+          <h2 style={{ fontFamily: SERIF, fontSize: 24, color: "#fff", fontWeight: 600, margin: "0 0 12px", letterSpacing: "-0.01em" }}>
+            Halo, pengguna Tata Data Dapur! 👋
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 15, lineHeight: 1.65, margin: 0 }}>
+            Selamat datang di halaman tutorial. Di sini kami siapkan video panduan buat bantu kamu memaksimalkan tiap fitur app —
+            dari setup awal sampai baca laporan bisnis. Tonton urut biar paling nyantol, atau langsung pilih topik yang kamu butuhkan.
+          </p>
+        </div>
       </div>
 
       {VIDEO_SECTIONS.map((sec, si) => (
-        <div key={si} className="mb-10">
-          <h3 className="mb-4 text-lg font-semibold tracking-tight text-[#2C1810]">{sec.title}</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+        <div key={si}>
+          <h3 style={{ fontFamily: SERIF, fontSize: 20, fontWeight: 600, margin: "0 0 16px", letterSpacing: "-0.01em", color: C.ink }}>
+            {sec.title}
+          </h3>
+          <div className="help-video-grid" style={{ marginBottom: 40 }}>
             {sec.cards.map((card, ci) => (
               <VideoThumb key={ci} card={card} onPlay={() => onPlay(card)} />
             ))}
@@ -319,7 +516,7 @@ function VideoTab({ onPlay }: { onPlay: (c: VideoCard) => void }) {
   );
 }
 
-/* ── Page ── */
+/* ════════ Page ════════ */
 
 export default function HelpCenterPage() {
   const [tab, setTab] = useState<TabId>("tour");
@@ -327,61 +524,98 @@ export default function HelpCenterPage() {
 
   return (
     <AppLayout title="Pusat Bantuan">
-      {/* hero */}
-      <div className="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#7C563D] to-[#A05035] px-6 py-10 text-center text-white">
-        <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-[#E9DFC6]">Pusat Bantuan</p>
-        <h2 className="mx-auto mb-3 max-w-md text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-          Halo, ada yang bisa kami <span className="text-[#E9DFC6]">bantu?</span>
-        </h2>
-        <p className="mx-auto max-w-md leading-relaxed text-white/75">
-          Temukan panduan, jawaban pertanyaan umum, dan video tutorial biar kamu makin maksimal pakai Tata Data Dapur.
-        </p>
-      </div>
+      <style>{`
+        .help-shell { font-family: ${BODY}; }
+        .help-tour-layout { display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: start; }
+        .help-video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .help-nav-link:hover { background: ${C.bg}; color: ${C.terra}; }
+        @media (max-width: 760px) {
+          .help-tour-layout { grid-template-columns: 1fr; }
+          .help-tour-nav { display: none !important; }
+        }
+        @media (max-width: 600px) { .help-video-grid { grid-template-columns: 1fr; } }
+      `}</style>
 
-      {/* tab bar */}
-      <div
-        role="tablist"
-        aria-label="Pusat Bantuan"
-        className="mb-8 flex gap-1 overflow-x-auto border-b border-[#D9CCAF]"
-      >
-        {TABS.map((t) => {
-          const Icon = t.icon;
-          const active = tab === t.id;
-          return (
-            <button
-              key={t.id}
-              role="tab"
-              aria-selected={active}
-              onClick={() => setTab(t.id)}
-              className={cn(
-                "flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm transition-colors",
-                active
-                  ? "border-[#A05035] font-semibold text-[#A05035]"
-                  : "border-transparent font-medium text-[#7C6352] hover:text-[#2C1810]",
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              {t.label}
-            </button>
-          );
-        })}
-      </div>
+      {/* full-bleed within AppLayout content padding */}
+      <div className="help-shell -mx-4 -mt-4 sm:-mx-6 sm:-mt-6" style={{ background: C.bg, color: C.ink, minHeight: "100%" }}>
+        {/* dark hero */}
+        <header style={{ background: C.navBg, padding: "48px 24px 64px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, backgroundImage: `url("${NOISE}")`, pointerEvents: "none" }} />
+          <div style={{ position: "relative" }}>
+            <div style={{ fontFamily: MONO, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", color: C.gold, marginBottom: 14 }}>
+              Pusat Bantuan
+            </div>
+            <h1 style={{ fontFamily: SERIF, fontSize: "clamp(28px, 5vw, 48px)", color: "#fff", fontWeight: 600, margin: "0 0 12px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+              Halo, ada yang bisa
+              <br />
+              kami <em style={{ fontStyle: "italic", color: C.gold, fontWeight: 400 }}>bantu?</em>
+            </h1>
+            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 16, maxWidth: 480, margin: "0 auto", lineHeight: 1.6 }}>
+              Temukan panduan, jawaban pertanyaan umum, dan video tutorial biar kamu makin maksimal pakai Tata Data Dapur.
+            </p>
+          </div>
+        </header>
 
-      {/* panels */}
-      {tab === "tour" && <TourTab />}
-      {tab === "faq" && <FaqTab />}
-      {tab === "video" && <VideoTab onPlay={setVideo} />}
+        {/* sticky tab bar */}
+        <div
+          role="tablist"
+          aria-label="Pusat Bantuan"
+          style={{
+            background: C.paper,
+            borderBottom: `1px solid ${C.line}`,
+            padding: "0 24px",
+            display: "flex",
+            position: "sticky",
+            top: 0,
+            zIndex: 20,
+            overflowX: "auto",
+          }}
+        >
+          {TABS.map((t) => {
+            const Icon = t.icon;
+            const active = tab === t.id;
+            return (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setTab(t.id)}
+                style={{
+                  padding: "16px 22px",
+                  fontSize: 14,
+                  fontWeight: active ? 600 : 500,
+                  color: active ? C.terra : C.muted,
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  borderBottom: `2px solid ${active ? C.terra : "transparent"}`,
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s",
+                  fontFamily: BODY,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <Icon className="h-4 w-4" />
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* panels */}
+        <div style={{ maxWidth: 860, margin: "0 auto", padding: "48px 24px 80px" }}>
+          {tab === "tour" && <TourTab />}
+          {tab === "faq" && <FaqTab />}
+          {tab === "video" && <VideoTab onPlay={setVideo} />}
+        </div>
+      </div>
 
       {/* video player */}
       <Modal open={Boolean(video)} onClose={() => setVideo(null)} title={video?.title ?? ""} size="lg">
         {video?.src && (
-          <video
-            src={video.src}
-            controls
-            autoPlay
-            preload="metadata"
-            className="w-full rounded-lg"
-          >
+          <video src={video.src} controls autoPlay preload="metadata" className="w-full rounded-lg">
             Maaf, video tidak bisa dimuat.
           </video>
         )}

@@ -209,14 +209,20 @@ export const FAQ_GROUPS: FaqGroup[] = [
         q: "Gimana cara menghitung HPP otomatis?",
         a: (
           <>
-            HPP dihitung sendiri dari komposisi bahan yang kamu isi di menu <strong>Produk</strong>. Caranya: buat produk, tambahkan bahan-bahannya beserta qty, HPP langsung muncul.
+            HPP dihitung sendiri dari komposisi bahan yang kamu isi di menu <strong>Produk</strong>. Caranya gampang: buat produk, masukin bahan-bahannya beserta qty, HPP langsung muncul.
             <pre className="help-example">{`Contoh: Croissant
-- Tepung Terigu 100gr × Rp 12/gr = Rp 1.200
-- Mentega 80gr × Rp 55/gr = Rp 4.400
-- Telur 1 pcs × Rp 2.500/pcs = Rp 2.500
-──────────────────────────
-HPP per pcs = Rp 8.100`}</pre>
-            Kalau 1 resep menghasilkan 6 pcs, isi <em>batch yield = 6</em> → HPP per pcs = Rp 8.100 ÷ 6 = Rp 1.350.
+- Tepung Terigu 100gr × Rp 12/gr  = Rp 1.200
+- Mentega        80gr × Rp 55/gr  = Rp 4.400
+- Telur           1pcs × Rp 2.500 = Rp 2.500
+                        ──────────────────────
+Total biaya 1 resep               = Rp 8.100`}</pre>
+            Nah, di sinilah <strong>Batch Yield</strong> ambil peran. Coba bandingkan dua skenario:
+            <br /><br />
+            <strong>Tanpa Batch Yield:</strong> App nganggep 1 resep = 1 pcs. Jadi HPP-mu tercatat Rp 8.100/pcs — padahal sekali bikin kamu dapat 6 croissant, bukan 1. HPP-nya jadi kelihatan jauh lebih mahal dari kenyataan, dan profit yang tercatat pun ikut lebih kecil dari yang sebenarnya.
+            <br /><br />
+            <strong>Dengan Batch Yield = 6:</strong> Kamu kasih tahu app kalau &ldquo;1 resep ini menghasilkan 6 pcs&rdquo;. App langsung bagi otomatis: Rp 8.100 ÷ 6 = Rp 1.350/pcs — inilah HPP asli per produk yang kamu jual.
+            <br /><br />
+            Intinya: isi Batch Yield sesuai jumlah pcs yang keluar dari sekali masak. Kalau 1 resep cuma menghasilkan 1 pcs, biarin kosong aja (default-nya memang 1).
           </>
         ),
       },
