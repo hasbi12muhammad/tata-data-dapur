@@ -83,4 +83,34 @@ export const FIELD_HELP: Record<string, FieldHelp> = {
     ),
     helpAnchor: { tab: "tour", id: "sales" },
   },
+  "purchase.usePkg": {
+    title: "Beli per Kemasan",
+    short: (
+      <>
+        Centang kalau beli satuan kemasan (dus, karton, pack). App hitung harga per unit otomatis dari
+        harga kemasan ÷ isi kemasan — hasilnya masuk ke Harga Rata-rata bahan.
+      </>
+    ),
+    helpAnchor: { tab: "tour", id: "purchases" },
+  },
+  "purchase.sizePerPkg": {
+    title: "Isi per Kemasan",
+    short: (
+      <>
+        Berapa unit bahan dalam satu kemasan. Misal 1 karton = 1000 gr → isi 1000.
+        App bagi harga kemasan dengan angka ini buat dapat harga per gr/ml/pcs.
+      </>
+    ),
+    helpAnchor: { tab: "tour", id: "purchases" },
+  },
+  "produksi.totalCost": {
+    title: "Total Biaya Produksi",
+    short: (
+      <>
+        Diisi otomatis dari estimasi HPP × jumlah. Kalau biaya aktual beda (bahan mahal tiba-tiba,
+        ada biaya tambahan), ganti manual — angka ini yang dipakai buat update HPP bahan setengah jadi.
+      </>
+    ),
+    helpAnchor: { tab: "tour", id: "produksi" },
+  },
 };

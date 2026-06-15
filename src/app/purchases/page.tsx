@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
+import { HelpTip } from "@/components/help/HelpTip";
 import { Modal } from "@/components/ui/Modal";
 import { useItems } from "@/hooks/useItems";
 import {
@@ -635,6 +636,7 @@ export default function PurchasesPage() {
                   onChange={(e) => { setUsePkg(e.target.checked); if (!e.target.checked) { setPkgTypeId(""); setPkgQty(""); setSizePerPkg(""); setAddingPkgType(false); setNewPkgTypeName(""); } }}
                   className="rounded border-[#D9CCAF] text-[#A05035] focus:ring-[#A05035]" />
                 <label htmlFor="usePkg" className="text-sm text-[#4A3728] cursor-pointer">Beli per kemasan?</label>
+                <HelpTip fieldId="purchase.usePkg" />
               </div>
               {usePkg ? (
                 <div className="rounded-lg border border-[#D9CCAF] bg-[#F5EFE0] p-3 space-y-3">
@@ -666,7 +668,7 @@ export default function PurchasesPage() {
                   <div className="flex gap-2 items-end">
                     <div className="flex-1"><label className="block text-xs font-medium text-[#7C6352] mb-1">Jumlah kemasan</label><input type="number" min="0.01" step="0.01" className="h-9 w-full rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] focus:outline-none focus:ring-2 focus:ring-[#A05035]" value={pkgQty} onChange={(e) => setPkgQty(e.target.value)} placeholder="5" /></div>
                     <span className="text-[#B88D6A] pb-2">×</span>
-                    <div className="flex-1"><label className="block text-xs font-medium text-[#7C6352] mb-1">Isi per kemasan ({selectedItem?.unit ?? "unit"})</label><input type="number" min="0.01" step="0.01" className="h-9 w-full rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] focus:outline-none focus:ring-2 focus:ring-[#A05035]" value={sizePerPkg} onChange={(e) => setSizePerPkg(e.target.value)} placeholder="1000" /></div>
+                    <div className="flex-1"><span className="flex items-center gap-1 mb-1"><label className="text-xs font-medium text-[#7C6352]">Isi per kemasan ({selectedItem?.unit ?? "unit"})</label><HelpTip fieldId="purchase.sizePerPkg" /></span><input type="number" min="0.01" step="0.01" className="h-9 w-full rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] focus:outline-none focus:ring-2 focus:ring-[#A05035]" value={sizePerPkg} onChange={(e) => setSizePerPkg(e.target.value)} placeholder="1000" /></div>
                   </div>
                   {pkgQty && sizePerPkg && <p className="text-xs text-[#5C4535]">→ Total qty: <span className="font-semibold">{Number(pkgQty) * Number(sizePerPkg)} {selectedItem?.unit}</span></p>}
                 </div>
@@ -767,6 +769,7 @@ export default function PurchasesPage() {
                           onChange={(e) => u({ usePkg: e.target.checked, pkgTypeId: "", pkgQty: "", sizePerPkg: "", addingPkgType: false, newPkgTypeName: "" })}
                           className="rounded border-[#D9CCAF] text-[#A05035] focus:ring-[#A05035]" />
                         <label htmlFor={`pkg-${row._key}`} className="text-sm text-[#4A3728] cursor-pointer">Beli per kemasan?</label>
+                        <HelpTip fieldId="purchase.usePkg" />
                       </div>
                       {row.usePkg ? (
                         <div className="rounded-lg border border-[#D9CCAF] bg-[#F5EFE0] p-3 space-y-3">
@@ -798,7 +801,7 @@ export default function PurchasesPage() {
                           <div className="flex gap-2 items-end">
                             <div className="flex-1"><label className="block text-xs font-medium text-[#7C6352] mb-1">Jumlah kemasan</label><input type="number" min="0.01" step="0.01" className="h-9 w-full rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] focus:outline-none focus:ring-2 focus:ring-[#A05035]" value={row.pkgQty} onChange={(e) => u({ pkgQty: e.target.value })} placeholder="5" /></div>
                             <span className="text-[#B88D6A] pb-2">×</span>
-                            <div className="flex-1"><label className="block text-xs font-medium text-[#7C6352] mb-1">Isi per kemasan ({rowItem?.unit ?? "unit"})</label><input type="number" min="0.01" step="0.01" className="h-9 w-full rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] focus:outline-none focus:ring-2 focus:ring-[#A05035]" value={row.sizePerPkg} onChange={(e) => u({ sizePerPkg: e.target.value })} placeholder="1000" /></div>
+                            <div className="flex-1"><span className="flex items-center gap-1 mb-1"><label className="text-xs font-medium text-[#7C6352]">Isi per kemasan ({rowItem?.unit ?? "unit"})</label><HelpTip fieldId="purchase.sizePerPkg" /></span><input type="number" min="0.01" step="0.01" className="h-9 w-full rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] focus:outline-none focus:ring-2 focus:ring-[#A05035]" value={row.sizePerPkg} onChange={(e) => u({ sizePerPkg: e.target.value })} placeholder="1000" /></div>
                           </div>
                           {row.pkgQty && row.sizePerPkg && <p className="text-xs text-[#5C4535]">→ Total qty: <span className="font-semibold">{Number(row.pkgQty) * Number(row.sizePerPkg)} {rowItem?.unit}</span></p>}
                         </div>

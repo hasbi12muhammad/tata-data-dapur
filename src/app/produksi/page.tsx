@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
+import { HelpTip } from "@/components/help/HelpTip";
 import { Modal } from "@/components/ui/Modal";
 import {
   useProductions,
@@ -469,9 +470,12 @@ export default function ProduksiPage() {
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-sm font-medium text-[#4A3728]">
-                Total biaya produksi (Rp) <span className="text-red-500">*</span>
-              </label>
+              <span className="flex items-center gap-1">
+                <label className="text-sm font-medium text-[#4A3728]">
+                  Total biaya produksi (Rp) <span className="text-red-500">*</span>
+                </label>
+                <HelpTip fieldId="produksi.totalCost" />
+              </span>
               {estimatedHpp !== null && totalCost !== "" &&
                 Number(totalCost) !== estimatedHpp && (
                 <button

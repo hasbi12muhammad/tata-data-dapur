@@ -333,7 +333,10 @@ export default function ItemsPage() {
                       Satuan
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      Harga Rata-rata
+                      <span className="inline-flex items-center justify-end gap-1">
+                        Harga Rata-rata
+                        <HelpTip fieldId="item.avgPrice" />
+                      </span>
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Stok
