@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input, Select } from "@/components/ui/Input";
+import { HelpTip } from "@/components/help/HelpTip";
 import { Modal } from "@/components/ui/Modal";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useAddonItems } from "@/hooks/useItems";
@@ -1403,7 +1404,10 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
           {/* Kategori */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-sm font-medium text-[#4A3728]">Kategori</label>
+              <span className="flex items-center gap-1">
+                <label className="text-sm font-medium text-[#4A3728]">Kategori</label>
+                <HelpTip fieldId="sales.category" />
+              </span>
               {!addingCat && (
                 <button
                   type="button"

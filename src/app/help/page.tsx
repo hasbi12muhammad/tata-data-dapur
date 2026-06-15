@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Modal } from "@/components/ui/Modal";
 import {
@@ -268,7 +268,7 @@ function FaqRow({
   onToggle: () => void;
 }) {
   return (
-    <div style={{ border: `1px solid ${C.line}`, borderRadius: 12, overflow: "hidden", marginBottom: 10, background: C.paper }}>
+    <div id={id} style={{ border: `1px solid ${C.line}`, borderRadius: 12, overflow: "hidden", marginBottom: 10, background: C.paper, scrollMarginTop: 72 }}>
       <button
         onClick={onToggle}
         aria-expanded={open}
@@ -317,8 +317,8 @@ function FaqRow({
   );
 }
 
-function FaqTab() {
-  const [openId, setOpenId] = useState<string | null>(null);
+function FaqTab({ initialOpen }: { initialOpen?: string | null }) {
+  const [openId, setOpenId] = useState<string | null>(initialOpen ?? null);
   return (
     <div style={{ maxWidth: 760, margin: "0 auto" }}>
       <p style={{ fontSize: 16, color: C.inkSoft, marginBottom: 32, lineHeight: 1.7 }}>
@@ -521,6 +521,20 @@ function VideoTab({ onPlay }: { onPlay: (c: VideoCard) => void }) {
 export default function HelpCenterPage() {
   const [tab, setTab] = useState<TabId>("tour");
   const [video, setVideo] = useState<VideoCard | null>(null);
+  const [faqOpen, setFaqOpen] = useState<string | null>(null);
+
+  // Deep-link support: /help?tab=faq#faq-0-0 (from field HelpTip "Pelajari selengkapnya")
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("tab");
+    if (t === "tour" || t === "faq" || t === "video") setTab(t);
+    const hash = decodeURIComponent(window.location.hash.replace("#", ""));
+    if (hash) {
+      if (hash.startsWith("faq-")) setFaqOpen(hash);
+      window.setTimeout(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+  }, []);
 
   return (
     <AppLayout title="Pusat Bantuan">
@@ -596,7 +610,7 @@ export default function HelpCenterPage() {
         {/* panels */}
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "48px 24px 80px" }}>
           {tab === "tour" && <TourTab />}
-          {tab === "faq" && <FaqTab />}
+          {tab === "faq" && <FaqTab initialOpen={faqOpen} />}
           {tab === "video" && <VideoTab onPlay={setVideo} />}
         </div>
       </div>
