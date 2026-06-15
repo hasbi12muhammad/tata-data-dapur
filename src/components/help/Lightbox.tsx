@@ -135,6 +135,7 @@ export type GalleryImage = { src: string; caption: string };
 export function TourCarousel({ images }: { images: GalleryImage[] }) {
   const [idx, setIdx] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const touchX = useRef<number | null>(null);
   const current = images[idx];
 
   const prev = () => setIdx((i) => (i - 1 + images.length) % images.length);
@@ -154,10 +155,22 @@ export function TourCarousel({ images }: { images: GalleryImage[] }) {
     return <TourImage src={images[0].src} alt={images[0].caption} />;
   }
 
+  const onTouchStart = (e: React.TouchEvent) => { touchX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
+    touchX.current = null;
+  };
+
   return (
     <div className="mt-3 rounded-xl border border-[#D9CCAF] overflow-hidden bg-[#F4EDE0]">
       {/* image area */}
-      <div className="relative group">
+      <div
+        className="relative"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <button
           type="button"
           onClick={() => setLightbox(idx)}
@@ -168,17 +181,17 @@ export function TourCarousel({ images }: { images: GalleryImage[] }) {
             key={current.src}
             src={current.src}
             alt={current.caption}
-            className="w-full h-auto block transition-opacity duration-200"
+            className="w-full h-auto block"
             loading="lazy"
           />
         </button>
 
-        {/* prev / next arrows */}
+        {/* arrows — always visible (semi-transparent) */}
         <button
           type="button"
           onClick={prev}
           aria-label="Sebelumnya"
-          className="absolute left-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 focus:outline-none focus-visible:opacity-100"
+          className="absolute left-2 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -186,7 +199,7 @@ export function TourCarousel({ images }: { images: GalleryImage[] }) {
           type="button"
           onClick={next}
           aria-label="Berikutnya"
-          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 focus:outline-none focus-visible:opacity-100"
+          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
