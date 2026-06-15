@@ -81,7 +81,7 @@ export function HelpTip({ fieldId, className = "" }: { fieldId: string; classNam
         <span
           role="tooltip"
           style={{ ...tipStyle, cursor: "default" }}
-          className="rounded-xl border border-[#D9CCAF] bg-[#FBF8F2] p-3 text-left shadow-xl"
+          className="rounded-xl border border-[#D9CCAF] bg-[#FBF8F2] p-3 text-left shadow-xl normal-case tracking-normal"
           onClick={(e) => e.stopPropagation()}
         >
           <span className="mb-1 block text-[13px] font-semibold text-[#2C1810]">{entry.title}</span>
