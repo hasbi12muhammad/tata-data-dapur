@@ -32,9 +32,9 @@ export function TutorialBanner() {
   return (
     <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-[#7C563D] to-[#A05035] text-white rounded-xl px-4 py-3 mb-5">
       <div>
-        <p className="font-bold text-sm">📹 Video Tutorial</p>
+        <p className="font-bold text-sm">💡 Pusat Bantuan</p>
         <p className="text-xs text-white/80 mt-0.5">
-          Pelajari cara pakai aplikasi ini langkah demi langkah
+          Tur menu, FAQ, dan video tutorial ada di sini
         </p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -42,11 +42,11 @@ export function TutorialBanner() {
           href="/help"
           className="bg-white text-[#7C563D] text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-[#E9DFC6] transition-colors whitespace-nowrap"
         >
-          Lihat Tutorial →
+          Buka Bantuan →
         </Link>
         <button
           onClick={dismissBanner}
-          aria-label="Tutup banner tutorial"
+          aria-label="Tutup banner bantuan"
           className="bg-white/20 hover:bg-white/30 rounded-lg p-1.5 transition-colors cursor-pointer"
         >
           <X className="w-3.5 h-3.5" />
@@ -65,7 +65,7 @@ export function TutorialButton() {
       href="/help"
       className="flex items-center gap-1.5 bg-[#F5EFE0] border border-[#C4956A] text-[#7C563D] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-[#EDE4CF] transition-colors whitespace-nowrap"
     >
-      📹 Tutorial
+      💡 Bantuan
     </Link>
   );
 }
