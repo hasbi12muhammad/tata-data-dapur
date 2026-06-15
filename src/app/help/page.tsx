@@ -13,15 +13,70 @@ import {
 } from "@/components/help/helpContent";
 import { TourCarousel, TourImage } from "@/components/help/Lightbox";
 import {
+  Banknote,
+  BarChart2,
+  Cake,
+  Calendar,
+  CheckCircle,
+  CirclePlus,
+  ClipboardList,
+  Download,
+  Factory,
+  Flame,
+  HardHat,
   HelpCircle,
   Image as ImageIcon,
   Info,
+  Key,
   Lightbulb,
+  LineChart,
+  Mail,
   Map,
+  Package,
+  Pencil,
   Play,
   Plus,
+  Repeat,
+  Ruler,
+  ShoppingCart,
+  Store,
+  Tag,
+  TrendingDown,
+  TrendingUp,
+  Trophy,
   Video,
+  Wrench,
+  Zap,
 } from "lucide-react";
+
+const FEATURE_ICONS: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  "banknote": Banknote,
+  "bar-chart": BarChart2,
+  "cake": Cake,
+  "calendar": Calendar,
+  "check-circle": CheckCircle,
+  "circle-plus": CirclePlus,
+  "clipboard-list": ClipboardList,
+  "download": Download,
+  "factory": Factory,
+  "flame": Flame,
+  "hard-hat": HardHat,
+  "key": Key,
+  "line-chart": LineChart,
+  "mail": Mail,
+  "package": Package,
+  "pencil": Pencil,
+  "repeat": Repeat,
+  "ruler": Ruler,
+  "shopping-cart": ShoppingCart,
+  "store": Store,
+  "tag": Tag,
+  "trending-down": TrendingDown,
+  "trending-up": TrendingUp,
+  "trophy": Trophy,
+  "wrench": Wrench,
+  "zap": Zap,
+};
 
 /* ── Palette + type (mirrors the landing-page Help Center) ── */
 const C = {
@@ -98,8 +153,8 @@ function FeatureList({ items }: { items: Feature[] }) {
             border: `1px solid ${C.line}`,
           }}
         >
-          <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1, lineHeight: 1.4 }} aria-hidden>
-            {it.emoji}
+          <span style={{ flexShrink: 0, marginTop: 2, color: C.terra }} aria-hidden>
+            {(() => { const I = FEATURE_ICONS[it.icon]; return I ? <I className="h-[18px] w-[18px]" /> : null; })()}
           </span>
           <span style={{ lineHeight: 1.6 }}>
             <strong style={{ display: "block", color: C.ink, fontWeight: 600, marginBottom: 2 }}>{it.title}</strong>
@@ -542,17 +597,20 @@ export default function HelpCenterPage() {
   return (
     <AppLayout title="Pusat Bantuan">
       <style>{`
-        .help-shell { font-family: ${BODY}; }
-        .help-tour-layout { display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: start; }
+        .help-shell { font-family: ${BODY}; overflow-x: hidden; }
+        .help-tour-layout { display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 40px; align-items: start; }
+        .help-tour-layout > * { min-width: 0; }
         .help-video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .help-nav-link:hover { background: ${C.bg}; color: ${C.terra}; }
-        .help-tabbar { position: sticky; top: -16px; z-index: 20; display: flex; overflow-x: auto; background: ${C.paper}; border-bottom: 1px solid ${C.line}; padding: 16px 24px 0; }
+        .help-tabbar { position: sticky; top: -16px; z-index: 20; display: flex; overflow-x: auto; width: 100%; background: ${C.paper}; border-bottom: 1px solid ${C.line}; padding: 16px 24px 0; }
         @media (min-width: 640px) { .help-tabbar { top: -24px; padding: 24px 24px 0; } }
-        @media (max-width: 760px) {
-          .help-tour-layout { grid-template-columns: 1fr; }
+        @media (max-width: 900px) {
+          .help-tour-layout { grid-template-columns: minmax(0,1fr); gap: 0; }
           .help-tour-nav { display: none !important; }
+          .help-video-grid { grid-template-columns: 1fr; }
         }
-        @media (max-width: 600px) { .help-video-grid { grid-template-columns: 1fr; } }
+        img { max-width: 100%; height: auto; }
+        p, span, h1, h2, h3, h4 { overflow-wrap: break-word; word-break: break-word; }
       `}</style>
 
       {/* full-bleed within AppLayout content padding */}
