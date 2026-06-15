@@ -11,7 +11,7 @@ import {
   type TourBlock,
   type VideoCard,
 } from "@/components/help/helpContent";
-import { TourImage } from "@/components/help/Lightbox";
+import { TourCarousel, TourImage } from "@/components/help/Lightbox";
 import {
   HelpCircle,
   Image as ImageIcon,
@@ -53,7 +53,8 @@ const TABS: { id: TabId; label: string; icon: typeof Map }[] = [
 
 /* ════════ shared pieces ════════ */
 
-function Shot({ label, src }: { label: string; src?: string }) {
+function Shot({ label, src, gallery }: { label: string; src?: string; gallery?: import("@/components/help/Lightbox").GalleryImage[] }) {
+  if (gallery && gallery.length > 0) return <TourCarousel images={gallery} />;
   if (src) return <TourImage src={src} alt={label} />;
   return (
     <div
@@ -143,7 +144,7 @@ function Block({ block }: { block: TourBlock }) {
     case "p":
       return <p style={{ fontSize: 15, color: C.inkSoft, lineHeight: 1.7, margin: "0 0 16px" }}>{block.node}</p>;
     case "shot":
-      return <Shot label={block.label} src={block.src} />;
+      return <Shot label={block.label} src={block.src} gallery={block.gallery} />;
     case "subhead":
       return <p style={{ fontSize: 15, color: C.inkSoft, margin: "16px 0 0" }}>{block.node}</p>;
     case "features":

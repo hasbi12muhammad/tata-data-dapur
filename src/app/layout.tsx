@@ -1,16 +1,19 @@
 import type { Metadata, Viewport } from "next";
 import { Providers } from "@/lib/providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { getTenantConfig } from "@/lib/tenant/config";
 import "./globals.css";
 
+const appName = getTenantConfig().name;
+
 export const metadata: Metadata = {
-  title: "Tata Data Dapur",
+  title: appName,
   description: "Kelola HPP, resep, dan laporan bisnis F&B kamu",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Tata Data Dapur",
+    title: appName,
   },
   formatDetection: { telephone: false },
 };

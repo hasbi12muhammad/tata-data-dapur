@@ -510,3 +510,99 @@
 | 20:37 | Edited src/app/sales/page.tsx | 3→3 lines | ~109 |
 | 10:10 | Added item bahan baku pre-check (all shortfalls at once) + formatNumber in shortfall modals | produksi/page.tsx, sales/page.tsx, useRecipes.ts | done | ~600 |
 | 20:38 | Session end: 8 writes across 2 files (useRecipes.ts, page.tsx) | 4 reads | ~34389 tok |
+
+## Session: 2026-06-12 11:25
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-12 12:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 02:55
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 02:57 | Created src/lib/features/registry.ts | — | ~737 |
+| 02:57 | Created src/lib/features/entitlements.ts | — | ~745 |
+| 02:57 | Created src/lib/tenant/config.ts | — | ~255 |
+| 02:58 | Edited src/components/layout/Sidebar.tsx | expanded (+10 lines) | ~388 |
+| 02:58 | Edited src/components/layout/Sidebar.tsx | 3→4 lines | ~69 |
+| 02:58 | Edited src/components/layout/Sidebar.tsx | 3→3 lines | ~43 |
+| 02:58 | Edited src/middleware.ts | added 1 import(s) | ~50 |
+| 02:58 | Edited src/middleware.ts | modified if() | ~224 |
+| 02:59 | Created docs/ARCHITECTURE.md | — | ~811 |
+| 02:59 | Created docs/PROVISIONING.md | — | ~763 |
+| 02:59 | Edited src/app/layout.tsx | 16→19 lines | ~164 |
+| 02:59 | Edited src/app/login/page.tsx | added 1 import(s) | ~70 |
+| 03:00 | Edited src/app/login/page.tsx | inline fix | ~22 |
+| 03:00 | Multi-tenant foundation: feature registry + entitlements + tenant config; gated Sidebar/middleware; provisioning docs | src/lib/features/*, src/lib/tenant/config.ts, Sidebar.tsx, middleware.ts, layout.tsx, login, docs/*, .env.example | done | ~6k |
+| 03:00 | Edited .gitignore | 2→3 lines | ~19 |
+| 03:01 | Session end: 14 writes across 10 files (registry.ts, entitlements.ts, config.ts, Sidebar.tsx, middleware.ts) | 5 reads | ~7619 tok |
+
+## Session: 2026-06-13 03:48
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 03:54
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 04:15
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 04:21
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 04:34
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 04:36 | Created ../../../root/.claude/plans/continue-from-where-you-dazzling-squirrel.md | — | ~2293 |
+
+## Session: 2026-06-13 04:53
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 04:54 | Created docs/PLAN-MULTI-TENANT-KASIR.md | — | ~2025 |
+| 04:54 | Tulis dokumen dasar multi-tenant + katalog paket A/B/C/D + rencana Modul Kasir (untuk dijalankan di Claude Code) | docs/PLAN-MULTI-TENANT-KASIR.md | done | ~2k |
+| 11:57 | Session end: 1 writes across 1 files (PLAN-MULTI-TENANT-KASIR.md) | 0 reads | ~2170 tok |
+| 12:04 | Session end: 1 writes across 1 files (PLAN-MULTI-TENANT-KASIR.md) | 0 reads | ~2170 tok |
+
+## Session: 2026-06-13 20:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-13 21:05
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 21:10 | Created BRAINSTORM-CONTEXT.md | — | ~5703 |
+| 21:11 | Session end: 1 writes across 1 files (BRAINSTORM-CONTEXT.md) | 0 reads | ~6111 tok |
+| 21:15 | Edited docs/PLAN-MULTI-TENANT-KASIR.md | modified base() | ~1864 |
+| 21:15 | Session end: 2 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 1 reads | ~10006 tok |
+| 21:18 | Session end: 2 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 1 reads | ~10006 tok |
+| 21:20 | Session end: 2 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 2 reads | ~16888 tok |
+| 21:25 | Edited BRAINSTORM-CONTEXT.md | 2→7 lines | ~144 |
+| 21:25 | Edited BRAINSTORM-CONTEXT.md | 1→3 lines | ~54 |
+| 21:25 | Session end: 4 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 3 reads | ~22447 tok |
+| 21:29 | Session end: 4 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 3 reads | ~22447 tok |
+| 21:29 | Session end: 4 writes across 2 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md) | 3 reads | ~22447 tok |
+| 21:34 | Created supabase/migrations/021_production_items_snapshot.sql | — | ~3963 |
+| 21:38 | Edited BRAINSTORM-CONTEXT.md | expanded (+8 lines) | ~207 |
+| 21:38 | Migrasi 021 BOM snapshot (production_items) — fix restore stok produksi salah saat resep diedit; applied ke tata-data-dapur + my-kitchen-book (+020 guard) | supabase/migrations/021_production_items_snapshot.sql | both DB success | ~6000 |
+| 21:38 | Session end: 6 writes across 3 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql) | 3 reads | ~26915 tok |
+| 21:41 | Created supabase/migrations/022_update_production_stock_guard.sql | — | ~1747 |
+| 21:43 | Migrasi 022: guard stok-negatif di update_production (saat naik batch); applied ke tata-data-dapur + my-kitchen-book | supabase/migrations/022_update_production_stock_guard.sql | both DB success | ~2500 |
+| 21:43 | Session end: 7 writes across 4 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql) | 3 reads | ~28787 tok |
+| 21:48 | Edited BRAINSTORM-CONTEXT.md | modified check() | ~156 |
+| 21:48 | Edited BRAINSTORM-CONTEXT.md | 2→6 lines | ~119 |

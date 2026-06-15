@@ -14,9 +14,10 @@ import {
 
 /* ── Types ── */
 export type Feature = { emoji: string; title: string; body: ReactNode };
+export type GalleryImage = { src: string; caption: string };
 export type TourBlock =
   | { type: "p"; node: ReactNode }
-  | { type: "shot"; label: string; src?: string }
+  | { type: "shot"; label: string; src?: string; gallery?: GalleryImage[] }
   | { type: "subhead"; node: ReactNode }
   | { type: "features"; items: Feature[] }
   | { type: "callout"; variant: "tip" | "info"; node: ReactNode };
@@ -49,14 +50,19 @@ export const TOUR: TourSection[] = [
     blocks: [
       { type: "p", node: <>Dashboard halaman pertama yang kamu lihat tiap buka app. Di sini langsung ketahuan kondisi bisnis hari ini — tanpa hitung manual.</> },
       { type: "p", node: <>Standarnya Dashboard menampilkan data <strong>hari ini</strong>. Tapi kamu bisa pilih tanggal lain buat lihat rekap hari kemarin. Pas banget kalau lupa input dan mau cek semua sudah tercatat.</> },
-      { type: "shot", label: "Screenshot Dashboard", src: "/help/dashboard-desktop.png" },
+      { type: "shot", label: "Screenshot Dashboard", src: "/help/dashboard-desktop.png",
+        gallery: [
+          { src: "/help/dashboard-desktop.png", caption: "Dashboard — ringkasan hari ini" },
+        ],
+      },
       { type: "features", items: [
         { emoji: "💰", title: "Total Penjualan", body: "Total uang masuk dari semua transaksi di tanggal yang dipilih." },
-        { emoji: "📉", title: "Total HPP", body: "Total biaya bahan baku yang terpakai untuk semua produk yang terjual." },
-        { emoji: "📈", title: "Total Profit & Margin", body: "Penjualan dikurangi HPP — ini laba kotor kamu. Margin-nya menunjukkan berapa persen untung dari total penjualan." },
-        { emoji: "🧾", title: "Transaksi Terbaru", body: "Daftar penjualan paling baru — produk apa yang laku, berapa qty, revenue, dan profit tiap barisnya." },
+        { emoji: "📉", title: "Total Pengeluaran", body: "Total biaya operasional yang tercatat — listrik, gas, gaji, kemasan, dan lainnya." },
+        { emoji: "🛒", title: "Total Pembelian", body: "Total uang keluar untuk pembelian bahan baku di tanggal yang dipilih." },
+        { emoji: "✅", title: "Laba Bersih", body: "Penjualan dikurangi total pengeluaran dan pembelian bahan baku — angka ini yang paling mencerminkan untung bersih hari itu." },
       ] },
-      { type: "callout", variant: "tip", node: <>Dashboard belum memperhitungkan pengeluaran operasional (listrik, gas, gaji). Kalau mau lihat laba bersih setelah pengeluaran, buka menu <strong>Laporan</strong>.</> },
+      { type: "p", node: <>Di bawah kartu ringkasan ada tiga daftar aktivitas: <strong>Penjualan terbaru</strong>, <strong>Pengeluaran terbaru</strong>, dan <strong>Pembelian terbaru</strong> — semua entri hari itu langsung tampil di sini.</> },
+      { type: "callout", variant: "tip", node: <>Mau lihat performa per periode (minggu, bulan, custom)? Buka menu <strong>Laporan</strong> — lebih lengkap dengan grafik tren dan daftar top produk.</> },
     ],
   },
   {
@@ -66,7 +72,12 @@ export const TOUR: TourSection[] = [
     route: "Setup awal — isi ini dulu sebelum yang lain",
     blocks: [
       { type: "p", node: <>Bahan Baku adalah daftar semua bahan mentah yang kamu pakai buat produksi. Di sini kamu cukup daftarkan nama dan satuannya — <strong>harga dan stok nggak perlu diisi manual</strong>, dua-duanya terisi sendiri begitu kamu catat pembelian.</> },
-      { type: "shot", label: "Screenshot halaman Bahan Baku", src: "/help/items-desktop.png" },
+      { type: "shot", label: "Screenshot halaman Bahan Baku", src: "/help/items-desktop.png",
+        gallery: [
+          { src: "/help/items-desktop.png", caption: "Halaman Bahan Baku — daftar semua bahan" },
+          { src: "/help/items-modal-desktop.png", caption: "Form Tambah Bahan — nama, satuan, tandai add-on" },
+        ],
+      },
       { type: "features", items: [
         { emoji: "➕", title: "Tambah Bahan Manual", body: "Isi nama bahan, pilih satuan (gr, ml, pcs, kg, liter), simpan. Selesai. Harga dan stok kosong dulu, nanti terisi pas pembelian pertama dicatat." },
         { emoji: "📋", title: "Import via Template Excel", body: "Bahannya banyak? Download template, isi di Excel, upload sekaligus. Enak buat setup awal biar nggak input satu-satu." },
@@ -84,7 +95,12 @@ export const TOUR: TourSection[] = [
     blocks: [
       { type: "p", node: <>Tiap kali beli bahan baku — entah di pasar, supplier, atau toko — catat di sini. Pembelian bukan sekadar catatan keluar uang; dia punya dua peran penting:</> },
       { type: "p", node: <>Pertama, <strong>nambah stok</strong> bahan baku otomatis. Kedua, <strong>memperbarui harga rata-rata</strong> bahan pakai weighted average — jadi HPP resep selalu ikut harga beli terbaru, bukan harga lama.</> },
-      { type: "shot", label: "Screenshot halaman Pembelian", src: "/help/purchases-desktop.png" },
+      { type: "shot", label: "Screenshot halaman Pembelian", src: "/help/purchases-desktop.png",
+        gallery: [
+          { src: "/help/purchases-desktop.png", caption: "Halaman Pembelian — riwayat pembelian bahan" },
+          { src: "/help/purchases-modal-desktop.png", caption: "Form Tambah Pembelian — beli per satuan atau per kemasan" },
+        ],
+      },
       { type: "features", items: [
         { emoji: "📏", title: "Beli per Satuan Dasar", body: "Misal beli Tepung Terigu 5 kg seharga Rp 65.000. Pilih bahan, isi qty (5) dan satuan (kg), isi total harga, simpan." },
         { emoji: "📦", title: "Beli per Kemasan", body: "Belinya per dus atau pack? Isi jumlah kemasan dan isi per kemasan — app yang konversi ke satuan dasar. Misal: 2 dus × 24 botol." },
@@ -100,13 +116,18 @@ export const TOUR: TourSection[] = [
     route: "Biaya operasional di luar bahan baku",
     blocks: [
       { type: "p", node: <>Pengeluaran adalah semua biaya buat menjalankan usaha, tapi <strong>bukan buat beli bahan baku</strong>. Data ini yang dipakai buat menghitung <em>laba bersih</em> di halaman Laporan.</> },
-      { type: "shot", label: "Screenshot halaman Pengeluaran", src: "/help/expenses-desktop.png" },
+      { type: "shot", label: "Screenshot halaman Pengeluaran", src: "/help/expenses-desktop.png",
+        gallery: [
+          { src: "/help/expenses-desktop.png", caption: "Halaman Pengeluaran — riwayat biaya operasional" },
+          { src: "/help/expenses-modal-desktop.png", caption: "Form Tambah Pengeluaran — pilih kategori, isi nominal" },
+        ],
+      },
       { type: "features", items: [
-        { emoji: "⚡", title: "Utilitas", body: "Listrik, air, gas LPG, internet, pulsa." },
-        { emoji: "👷", title: "Gaji & Tenaga Kerja", body: "Gaji karyawan harian atau bulanan, upah lembur." },
-        { emoji: "🏠", title: "Sewa & Tempat", body: "Biaya sewa dapur, kios, atau ruko." },
-        { emoji: "📦", title: "Packaging & Perlengkapan", body: "Plastik, stiker label, kotak, pita, dan sejenisnya." },
-        { emoji: "🚗", title: "Transport & Lain-lain", body: "Ongkos antar, bensin, biaya tak terduga." },
+        { emoji: "👷", title: "Gaji & Upah", body: "Gaji karyawan harian atau bulanan, upah lembur, honor asisten dapur." },
+        { emoji: "📦", title: "Kemasan & Perlengkapan", body: "Plastik, stiker label, kotak, pita, dan semua perlengkapan packaging." },
+        { emoji: "⛽", title: "Bahan Bakar & Gas", body: "Gas LPG, bensin, bahan bakar operasional dapur." },
+        { emoji: "⚡", title: "Listrik & Air", body: "Tagihan listrik, air, dan utilitas dapur lainnya." },
+        { emoji: "🔧", title: "Perawatan & Lainnya", body: "Perbaikan alat, biaya tak terduga, dan pengeluaran lain yang belum masuk kategori di atas." },
       ] },
       { type: "callout", variant: "tip", node: <>Bingung sesuatu masuk Pembelian atau Pengeluaran? Patokannya gampang: kalau itu <strong>bahan yang dipakai buat bikin produk</strong>, masuk Pembelian. Kalau itu <strong>biaya menjalankan usaha</strong>, masuk Pengeluaran.</> },
     ],
@@ -118,13 +139,18 @@ export const TOUR: TourSection[] = [
     route: "Tempat mendefinisikan semua produk yang kamu jual",
     blocks: [
       { type: "p", node: <>Di sini kamu mendefinisikan produk yang kamu jual beserta komposisi bahannya. Begitu komposisi diisi, <strong>HPP (Harga Pokok Produksi) terhitung sendiri dan real-time</strong> — tanpa perlu kalkulator.</> },
-      { type: "shot", label: "Screenshot halaman Produk", src: "/help/recipes-desktop.png" },
+      { type: "shot", label: "Screenshot halaman Produk", src: "/help/recipes-desktop.png",
+        gallery: [
+          { src: "/help/recipes-desktop.png", caption: "Halaman Produk — daftar semua produk + HPP" },
+          { src: "/help/recipes-modal-desktop.png", caption: "Form Produk Baru — komposisi bahan & HPP real-time" },
+        ],
+      },
       { type: "subhead", node: <strong>Ada dua tipe produk:</strong> },
       { type: "features", items: [
         { emoji: "✅", title: "Produk Jadi", body: "Produk yang langsung dijual ke pelanggan. Contoh: Croissant, Kue Ulang Tahun, Brownies Panggang. HPP-nya dihitung dari bahan baku yang dipakai." },
         { emoji: "🔄", title: "Produk Setengah Jadi", body: "Produk yang diproses dulu sebelum jadi produk akhir, dan bisa jadi bahan di produk lain. Contoh: Strawberry Jam yang dipakai di Strawberry Cake, atau Adonan Dasar Croissant buat berbagai varian croissant. Punya stok sendiri yang diatur lewat menu Produksi." },
       ] },
-      { type: "shot", label: "Screenshot form tambah produk — HPP real-time", src: "/help/recipes-desktop.png" },
+      { type: "shot", label: "Screenshot form tambah produk — HPP real-time", src: "/help/recipes-modal-desktop.png" },
       { type: "features", items: [
         { emoji: "📊", title: "Batch Yield & Estimasi Waste", body: <>Kalau 1 resep menghasilkan beberapa porsi (misal 1 resep = 12 cupcake), isi <em>batch yield</em>. Kalau ada bahan yang menyusut waktu dimasak, isi <em>estimasi waste</em> dalam persen. Dua-duanya bikin HPP per unit lebih akurat.</> },
         { emoji: "🎂", title: "Add-on Produk", body: "Produk bisa ditandai sebagai add-on — artinya bisa dipilih sebagai tambahan pas pelanggan beli produk lain. Contoh: topper kue, lilin ulang tahun, kotak khusus." },
@@ -140,7 +166,12 @@ export const TOUR: TourSection[] = [
     blocks: [
       { type: "p", node: <>Produksi dipakai pas kamu bikin produk dalam jumlah tertentu buat disimpan jadi stok — bukan langsung jual. Misal bakery yang tiap pagi bikin 50 pcs roti, atau dapur yang tiap minggu bikin stok selai.</> },
       { type: "p", node: <>Pas kamu catat produksi, dua hal terjadi sendiri: <strong>stok produk nambah</strong> sesuai batch yang dibuat, dan <strong>stok bahan baku berkurang</strong> sesuai komposisi resep.</> },
-      { type: "shot", label: "Screenshot halaman Produksi", src: "/help/produksi-desktop.png" },
+      { type: "shot", label: "Screenshot halaman Produksi", src: "/help/produksi-desktop.png",
+        gallery: [
+          { src: "/help/produksi-desktop.png", caption: "Halaman Produksi — log produksi stok" },
+          { src: "/help/produksi-modal-desktop.png", caption: "Form Tambah Produksi — pilih produk, jumlah batch" },
+        ],
+      },
       { type: "features", items: [
         { emoji: "🏭", title: "Produksi Produk Jadi", body: "Catat berapa batch produk jadi yang kamu buat hari ini. Stok produk naik, stok bahan turun." },
         { emoji: "🔄", title: "Produksi Bahan Setengah Jadi", body: "Misal hari ini bikin 3 batch Strawberry Jam. Stok selai naik, stok stroberi dan gula turun. Selai ini lalu bisa dipakai di produk lain." },
@@ -156,7 +187,12 @@ export const TOUR: TourSection[] = [
     route: "Catat tiap transaksi penjualan",
     blocks: [
       { type: "p", node: <>Tiap ada penjualan, catat di sini. Satu transaksi bisa berisi beberapa produk sekaligus. HPP otomatis diambil dari data resep saat itu — kamu tinggal isi harga jual dan qty.</> },
-      { type: "shot", label: "Screenshot halaman Penjualan", src: "/help/sales-desktop.png" },
+      { type: "shot", label: "Screenshot halaman Penjualan", src: "/help/sales-desktop.png",
+        gallery: [
+          { src: "/help/sales-desktop.png", caption: "Halaman Penjualan — riwayat transaksi" },
+          { src: "/help/sales-modal-desktop.png", caption: "Form Tambah Penjualan — pilih produk, qty, harga jual" },
+        ],
+      },
       { type: "features", items: [
         { emoji: "💰", title: "Harga Jual Diingat Otomatis", body: "Pernah jual produk ini sebelumnya? Harga jualnya muncul sendiri di transaksi berikutnya. Tetap bisa kamu ubah kalau ada kenaikan harga atau alasan lain." },
         { emoji: "🏷️", title: "Kategori Penjualan", body: "Tiap transaksi bisa ditandai kategori: Offline, GoFood, GrabFood, ShopeeFood, dan lainnya. Berguna buat analisis channel penjualan di Laporan." },
@@ -178,9 +214,9 @@ export const TOUR: TourSection[] = [
         { emoji: "📅", title: "Pilih Periode", body: "Ada Hari ini, 7 Hari, 30 Hari, Bulan ini, Bulan lalu, dan Custom (pilih sendiri tanggal mulai & selesai)." },
         { emoji: "📈", title: "Grafik Tren", body: "Grafik bar nunjukin revenue dan profit per hari. Arahkan kursor ke bar mana pun buat lihat angka detail hari itu." },
         { emoji: "🏆", title: "Top Produk", body: "Daftar produk yang paling banyak ngasih profit di periode itu. Berguna buat tahu mana produk andalan." },
-        { emoji: "📥", title: "Export ke Excel & Gambar", body: "Laporan bisa diunduh sebagai Excel (.xlsx) buat diolah lagi, atau sebagai gambar (.png) buat dibagikan atau diarsipkan." },
+        { emoji: "📥", title: "Unduh PDF & Excel", body: "Laporan bisa diunduh sebagai PDF buat dibagikan atau diarsipkan, atau sebagai Excel (.xlsx) buat diolah lagi di spreadsheet." },
       ] },
-      { type: "callout", variant: "info", node: <>Laporan menampilkan <strong>laba bersih</strong> (setelah dipotong pengeluaran operasional) — beda dengan Dashboard yang cuma menampilkan laba kotor.</> },
+      { type: "callout", variant: "info", node: <>Laporan cocok buat analisis per periode dan lihat tren. Dashboard lebih ke <strong>rekap harian cepat</strong> — Laporan ke <strong>gambar besar bisnis</strong> mingguan/bulanan.</> },
     ],
   },
   {
@@ -312,11 +348,11 @@ Waste = 10% → HPP per roti dihitung dari 9 roti yang berhasil, bukan 10.`}</pr
         a: (
           <>
             Semuanya masuk ke menu <strong>Pengeluaran</strong>. Pilih atau buat kategori yang sesuai:
-            <pre className="help-example">{`Gaji karyawan → Kategori: Gaji & Tenaga Kerja
-Gas LPG → Kategori: Utilitas / Bahan Bakar
-Listrik → Kategori: Utilitas
-Ongkos kirim bahan → Kategori: Transport
-Plastik kemasan → Kategori: Packaging`}</pre>
+            <pre className="help-example">{`Gaji karyawan → Kategori: Gaji & Upah
+Gas LPG → Kategori: Bahan Bakar & Gas
+Listrik → Kategori: Listrik & Air
+Plastik kemasan → Kategori: Kemasan & Perlengkapan
+Servis alat / tak terduga → Kategori: Perawatan & Lainnya`}</pre>
             Semua pengeluaran ini otomatis dipotong dari profit kotor di halaman <strong>Laporan</strong> buat menghasilkan angka laba bersih.
           </>
         ),
@@ -345,11 +381,11 @@ Plastik kemasan → Kategori: Packaging`}</pre>
         q: "Gimana cara print / export laporan?",
         a: (
           <>
-            Buka menu <strong>Laporan</strong>, pilih periode yang kamu mau, scroll ke bawah, klik tombol <strong>Download Excel</strong> atau <strong>Download Gambar</strong>.
+            Buka menu <strong>Laporan</strong>, pilih periode yang kamu mau, scroll ke bawah, klik tombol <strong>Unduh PDF</strong> atau <strong>Unduh Excel</strong>.
             <br /><br />
-            <strong>Excel (.xlsx)</strong> — buat diolah lagi di spreadsheet, dibagikan ke akuntan, atau diarsipkan.
+            <strong>PDF</strong> — buat dibagikan lewat WhatsApp, dikirim ke akuntan, atau diarsipkan sebagai dokumen siap cetak.
             <br />
-            <strong>Gambar (.png)</strong> — buat dibagikan lewat WhatsApp, disimpan sebagai arsip visual, atau dicetak langsung.
+            <strong>Excel (.xlsx)</strong> — buat diolah lagi di spreadsheet, buat pivot table, atau dianalisis lebih lanjut.
           </>
         ),
       },

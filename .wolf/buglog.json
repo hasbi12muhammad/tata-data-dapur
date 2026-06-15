@@ -452,6 +452,50 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-06-11T13:37:21.657Z"
+    },
+    {
+      "id": "bug-029",
+      "timestamp": "2026-06-13T02:58:08.511Z",
+      "error_message": "CSS fix: href",
+      "file": "src/components/layout/Sidebar.tsx",
+      "root_cause": "href: \"/reports\", label: \"Laporan\", icon: BarChart3 → \"/reports\", label: \"Laporan\", icon: BarChart3, feature: \"reports\"",
+      "fix": "Changed href: \"/reports\", label: \"Laporan\", icon: BarChart3 → \"/reports\", label: \"Laporan\", icon: BarChart3, feature: \"reports\"",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-13T02:58:08.511Z"
+    },
+    {
+      "id": "bug-030",
+      "timestamp": "2026-06-13T02:59:54.298Z",
+      "error_message": "CSS fix: title",
+      "file": "src/app/layout.tsx",
+      "root_cause": "title: \"Tata Data Dapur\", → appName,",
+      "fix": "Changed title: \"Tata Data Dapur\", → appName,",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-13T02:59:54.299Z"
+    },
+    {
+      "id": "bug-031",
+      "timestamp": "2026-06-13T14:40:00.000Z",
+      "error_message": "Hapus/edit produksi mengembalikan stok bahan baku/setengah jadi dengan jumlah SALAH bila resep diedit setelah produksi dicatat (BOM tidak di-snapshot). Juga my-kitchen-book DB ketinggalan migrasi 017/019/020.",
+      "file": "supabase/migrations/021_production_items_snapshot.sql",
+      "root_cause": "delete_production/update_production merekonstruksi qty konsumsi dari recipe_items LIVE, bukan dari yang benar-benar dipakai saat produksi. Edit resep di antara produksi & penghapusan -> restore stok salah/tidak sama sekali.",
+      "fix": "Migrasi 021: tabel production_items menyimpan snapshot per-batch quantity_used saat produce_recipe/produce_sub_recipe. delete/update restore dari snapshot (fallback ke recipe_items live untuk produksi lama tanpa snapshot). Apply ke tata-data-dapur + my-kitchen-book (plus 020 guard ke my-kitchen-book).",
+      "tags": ["produksi", "stock", "snapshot", "BOM", "rpc", "migration", "multi-tenant"],
+      "related_bugs": ["bug-019"],
+      "occurrences": 1,
+      "last_seen": "2026-06-13T14:40:00.000Z"
     }
   ]
 }

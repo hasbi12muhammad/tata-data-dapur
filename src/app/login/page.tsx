@@ -7,10 +7,12 @@ import TdLogo from "../../../public/td-logo.png";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
+import { getTenantConfig } from "@/lib/tenant/config";
 import { useState } from "react";
 
 export default function LoginPage() {
   const { signIn } = useAuth();
+  const appName = getTenantConfig().name;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,7 +33,7 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-2xl bg-[#7C563D] flex items-center justify-center mb-3">
             <Image src={TdLogo} alt="TD" width={36} height={36} className="object-contain" />
           </div>
-          <h1 className="text-2xl font-bold text-[#2C1810]">Tata Data Dapur</h1>
+          <h1 className="text-2xl font-bold text-[#2C1810]">{appName}</h1>
           <p className="text-sm text-[#7C6352] mt-1">
             Kelola HPP & laporan bisnis dapur kamu
           </p>

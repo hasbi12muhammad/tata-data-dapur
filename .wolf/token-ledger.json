@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-20T14:13:02.073Z",
   "lifetime": {
-    "total_tokens_estimated": 993048,
-    "total_reads": 206,
-    "total_writes": 448,
-    "total_sessions": 19,
-    "anatomy_hits": 172,
+    "total_tokens_estimated": 1000667,
+    "total_reads": 211,
+    "total_writes": 462,
+    "total_sessions": 28,
+    "anatomy_hits": 177,
     "anatomy_misses": 34,
     "repeated_reads_blocked": 303,
-    "estimated_savings_vs_bare_cli": 2510199
+    "estimated_savings_vs_bare_cli": 2511199
   },
   "sessions": [
     {
@@ -3994,6 +3994,123 @@
         "writes_count": 2,
         "repeated_reads_blocked": 0,
         "anatomy_lookups": 0
+      }
+    },
+    {
+      "id": "session-2026-06-13-0255",
+      "started": "2026-06-13T02:55:09.646Z",
+      "ended": "2026-06-13T03:01:35.025Z",
+      "reads": [
+        {
+          "file": "/home/user/tata-data-dapur/src/components/layout/Sidebar.tsx",
+          "tokens_estimated": 1209,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/types/index.ts",
+          "tokens_estimated": 793,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/layout.tsx",
+          "tokens_estimated": 244,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/login/page.tsx",
+          "tokens_estimated": 771,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/tata-data-dapur/.gitignore",
+          "tokens_estimated": 128,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/user/tata-data-dapur/src/lib/features/registry.ts",
+          "tokens_estimated": 737,
+          "action": "create"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/lib/features/entitlements.ts",
+          "tokens_estimated": 745,
+          "action": "create"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/lib/tenant/config.ts",
+          "tokens_estimated": 255,
+          "action": "create"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/components/layout/Sidebar.tsx",
+          "tokens_estimated": 388,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/components/layout/Sidebar.tsx",
+          "tokens_estimated": 69,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/components/layout/Sidebar.tsx",
+          "tokens_estimated": 43,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/middleware.ts",
+          "tokens_estimated": 50,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/middleware.ts",
+          "tokens_estimated": 224,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/docs/ARCHITECTURE.md",
+          "tokens_estimated": 869,
+          "action": "create"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/docs/PROVISIONING.md",
+          "tokens_estimated": 818,
+          "action": "create"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/layout.tsx",
+          "tokens_estimated": 164,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/login/page.tsx",
+          "tokens_estimated": 70,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/src/app/login/page.tsx",
+          "tokens_estimated": 22,
+          "action": "edit"
+        },
+        {
+          "file": "/home/user/tata-data-dapur/.gitignore",
+          "tokens_estimated": 20,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 3145,
+        "output_tokens_estimated": 4474,
+        "reads_count": 5,
+        "writes_count": 14,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 5
       }
     }
   ],
