@@ -529,6 +529,8 @@ export default function HelpCenterPage() {
         .help-tour-layout { display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: start; }
         .help-video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .help-nav-link:hover { background: ${C.bg}; color: ${C.terra}; }
+        .help-tabbar { position: sticky; top: -16px; z-index: 20; display: flex; overflow-x: auto; background: ${C.paper}; border-bottom: 1px solid ${C.line}; padding: 16px 24px 0; }
+        @media (min-width: 640px) { .help-tabbar { top: -24px; padding: 24px 24px 0; } }
         @media (max-width: 760px) {
           .help-tour-layout { grid-template-columns: 1fr; }
           .help-tour-nav { display: none !important; }
@@ -557,20 +559,7 @@ export default function HelpCenterPage() {
         </header>
 
         {/* sticky tab bar */}
-        <div
-          role="tablist"
-          aria-label="Pusat Bantuan"
-          style={{
-            background: C.paper,
-            borderBottom: `1px solid ${C.line}`,
-            padding: "0 24px",
-            display: "flex",
-            position: "sticky",
-            top: 0,
-            zIndex: 20,
-            overflowX: "auto",
-          }}
-        >
+        <div role="tablist" aria-label="Pusat Bantuan" className="help-tabbar">
           {TABS.map((t) => {
             const Icon = t.icon;
             const active = tab === t.id;
