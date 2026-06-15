@@ -9,12 +9,12 @@ import { FIELD_HELP, helpHref } from "./fieldHelp";
  * Contextual help affordance for form fields. Renders a small "?" button that
  * reveals a popover with the same explanation shown in Pusat Bantuan.
  * Opens on hover/focus (desktop) and tap (mobile); closes on Escape or
- * outside click. Content + deep-link come from the shared FIELD_HELP registry.
+ * outside click. Uses position:fixed so it escapes modal overflow clipping.
  */
 export function HelpTip({ fieldId, className = "" }: { fieldId: string; className?: string }) {
   const entry = FIELD_HELP[fieldId];
   const [open, setOpen] = useState(false);
-  const [above, setAbove] = useState(false);
+  const [tipStyle, setTipStyle] = useState<React.CSSProperties>({});
   const wrapRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -35,7 +35,26 @@ export function HelpTip({ fieldId, className = "" }: { fieldId: string; classNam
 
   const reveal = () => {
     const rect = wrapRef.current?.getBoundingClientRect();
-    if (rect) setAbove(rect.bottom > window.innerHeight - 200);
+    if (rect) {
+      const TIP_W = Math.min(260, window.innerWidth * 0.78);
+      const GAP = 8;
+      const above = rect.bottom > window.innerHeight - 200;
+
+      // Center tooltip on button, clamped to viewport
+      let left = rect.left + rect.width / 2 - TIP_W / 2;
+      left = Math.max(GAP, Math.min(left, window.innerWidth - TIP_W - GAP));
+
+      const style: React.CSSProperties = {
+        position: "fixed",
+        width: TIP_W,
+        left,
+        zIndex: 9999,
+      };
+      if (above) style.bottom = window.innerHeight - rect.top + GAP;
+      else style.top = rect.bottom + GAP;
+
+      setTipStyle(style);
+    }
     setOpen(true);
   };
 
@@ -61,10 +80,8 @@ export function HelpTip({ fieldId, className = "" }: { fieldId: string; classNam
       {open && (
         <span
           role="tooltip"
-          className={`absolute left-1/2 z-50 w-[min(260px,78vw)] -translate-x-1/2 rounded-xl border border-[#D9CCAF] bg-[#FBF8F2] p-3 text-left shadow-xl ${
-            above ? "bottom-full mb-2" : "top-full mt-2"
-          }`}
-          style={{ cursor: "default" }}
+          style={{ ...tipStyle, cursor: "default" }}
+          className="rounded-xl border border-[#D9CCAF] bg-[#FBF8F2] p-3 text-left shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           <span className="mb-1 block text-[13px] font-semibold text-[#2C1810]">{entry.title}</span>
