@@ -11,6 +11,7 @@ import {
   type TourBlock,
   type VideoCard,
 } from "@/components/help/helpContent";
+import { TourImage } from "@/components/help/Lightbox";
 import {
   HelpCircle,
   Image as ImageIcon,
@@ -52,7 +53,8 @@ const TABS: { id: TabId; label: string; icon: typeof Map }[] = [
 
 /* ════════ shared pieces ════════ */
 
-function Shot({ label }: { label: string }) {
+function Shot({ label, src }: { label: string; src?: string }) {
+  if (src) return <TourImage src={src} alt={label} />;
   return (
     <div
       style={{
@@ -141,7 +143,7 @@ function Block({ block }: { block: TourBlock }) {
     case "p":
       return <p style={{ fontSize: 15, color: C.inkSoft, lineHeight: 1.7, margin: "0 0 16px" }}>{block.node}</p>;
     case "shot":
-      return <Shot label={block.label} />;
+      return <Shot label={block.label} src={block.src} />;
     case "subhead":
       return <p style={{ fontSize: 15, color: C.inkSoft, margin: "16px 0 0" }}>{block.node}</p>;
     case "features":
