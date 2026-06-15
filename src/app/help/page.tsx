@@ -137,7 +137,7 @@ function Shot({ label, src, gallery }: { label: string; src?: string; gallery?: 
 
 function FeatureList({ items }: { items: Feature[] }) {
   return (
-    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, margin: "16px 0 0", padding: 0 }}>
+    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, margin: "16px 0 24px", padding: 0 }}>
       {items.map((it, i) => (
         <li
           key={i}
