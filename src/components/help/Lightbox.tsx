@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from "lucide-react";
 
 interface LightboxProps {
   src: string;
@@ -111,7 +111,7 @@ export function Lightbox({ src, alt, onClose }: LightboxProps) {
   );
 }
 
-/** Thumbnail yang buka Lightbox saat diklik */
+/** Thumbnail tunggal yang buka Lightbox saat diklik */
 export function TourImage({ src, alt }: { src: string; alt: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -122,14 +122,105 @@ export function TourImage({ src, alt }: { src: string; alt: string }) {
         className="mt-3 w-full overflow-hidden rounded-xl border border-[#D9CCAF] cursor-zoom-in hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05035]"
         aria-label={`Lihat ${alt} lebih besar`}
       >
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-auto block"
-          loading="lazy"
-        />
+        <img src={src} alt={alt} className="w-full h-auto block" loading="lazy" />
       </button>
       {open && <Lightbox src={src} alt={alt} onClose={() => setOpen(false)} />}
     </>
+  );
+}
+
+export type GalleryImage = { src: string; caption: string };
+
+/** Carousel dengan multiple screenshot — click gambar buat zoom lightbox */
+export function TourCarousel({ images }: { images: GalleryImage[] }) {
+  const [idx, setIdx] = useState(0);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const current = images[idx];
+
+  const prev = () => setIdx((i) => (i - 1 + images.length) % images.length);
+  const next = () => setIdx((i) => (i + 1) % images.length);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (lightbox !== null) return;
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  });
+
+  if (images.length === 1) {
+    return <TourImage src={images[0].src} alt={images[0].caption} />;
+  }
+
+  return (
+    <div className="mt-3 rounded-xl border border-[#D9CCAF] overflow-hidden bg-[#F4EDE0]">
+      {/* image area */}
+      <div className="relative group">
+        <button
+          type="button"
+          onClick={() => setLightbox(idx)}
+          className="w-full block cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05035]"
+          aria-label={`Lihat ${current.caption} lebih besar`}
+        >
+          <img
+            key={current.src}
+            src={current.src}
+            alt={current.caption}
+            className="w-full h-auto block transition-opacity duration-200"
+            loading="lazy"
+          />
+        </button>
+
+        {/* prev / next arrows */}
+        <button
+          type="button"
+          onClick={prev}
+          aria-label="Sebelumnya"
+          className="absolute left-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 focus:outline-none focus-visible:opacity-100"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={next}
+          aria-label="Berikutnya"
+          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 focus:outline-none focus-visible:opacity-100"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* caption + dots */}
+      <div className="flex items-center justify-between px-4 py-2.5 gap-3">
+        <span className="text-xs text-[#7C6352] leading-snug flex-1 min-w-0 truncate">
+          {current.caption}
+        </span>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIdx(i)}
+              aria-label={`Slide ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all focus:outline-none ${
+                i === idx
+                  ? "w-4 bg-[#A05035]"
+                  : "w-1.5 bg-[#D9CCAF] hover:bg-[#B88D6A]"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {lightbox !== null && (
+        <Lightbox
+          src={images[lightbox].src}
+          alt={images[lightbox].caption}
+          onClose={() => setLightbox(null)}
+        />
+      )}
+    </div>
   );
 }
