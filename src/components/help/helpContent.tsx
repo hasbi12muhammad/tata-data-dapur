@@ -414,21 +414,21 @@ export const VIDEO_SECTIONS: VideoSection[] = [
   {
     title: "Ikut tur fitur aplikasi kami ✨",
     cards: [
-      { title: "Panduan Login & Ganti Password", meta: "Setup Awal · 2 menit", badge: "Mulai di sini", src: "/videos/panduan-login.mp4" },
-      { title: "Tur Singkat Semua Menu App", meta: "Orientasi · 3-4 menit" },
+      { title: "Panduan Login & Ganti Password", meta: "Setup Awal · 1 menit", duration: "0:53", badge: "Mulai di sini", src: "/videos/login-tutorial.mp4" },
+      { title: "Tur Singkat Semua Menu App", meta: "Orientasi · 1-2 menit", duration: "1:18", src: "/videos/tour-tutorial.mp4" },
     ],
   },
   {
     title: "Bagaimana cara...?",
     cards: [
-      { title: "Membuat HPP otomatis untuk produkmu?", meta: "Produk & Resep · 4-5 menit" },
-      { title: "Mengelola bahan baku & menghitung HPP", meta: "Bahan Baku & HPP · 4-5 menit", src: "/videos/panduan-bahan-baku-hpp.mp4" },
-      { title: "Menambahkan pembelian bahan baku", meta: "Pembelian · 3-4 menit", src: "/videos/panduan-pembelian.mp4" },
-      { title: "Mencatat penjualan dan pembelian hari ini?", meta: "Operasional Harian · 3-4 menit" },
-      { title: "Gaji karyawan, gas, dan utilitas masuk ke mana?", meta: "Pengeluaran · 2-3 menit" },
-      { title: "Apa bedanya Produk Jadi dan Setengah Jadi?", meta: "Produk · 3-4 menit" },
-      { title: "Membaca laporan dan export ke Excel?", meta: "Laporan · 3-4 menit" },
-      { title: "Fitur Sub-Recipe: dari Strawberry Jam ke Strawberry Cake", meta: "Fitur Lanjutan · 4-5 menit" },
+      { title: "Membuat HPP otomatis untuk produkmu?", meta: "Produk & Resep · 2 menit", duration: "2:02", src: "/videos/hpp-tutorial.mp4" },
+      { title: "Mencatat stok dan memantaunya?", meta: "Bahan Baku & Pembelian · 2 menit", duration: "2:18", src: "/videos/stock-tutorial.mp4" },
+      { title: "Mencatat penjualan dan pembelian hari ini?", meta: "Operasional Harian · 1 menit", duration: "1:11", src: "/videos/sales-tutorial.mp4" },
+      { title: "Gaji karyawan, gas, dan utilitas masuk ke mana?", meta: "Pengeluaran · 1 menit", duration: "1:02", src: "/videos/expenses-tutorial.mp4" },
+      { title: "Apa bedanya Produk Jadi dan Setengah Jadi?", meta: "Produk · 1 menit", duration: "1:07", src: "/videos/produk-tutorial.mp4" },
+      { title: "Fitur Produksi itu untuk apa?", meta: "Produksi · 2 menit", duration: "1:41", src: "/videos/produksi-tutorial.mp4" },
+      { title: "Membaca laporan dan export ke Excel?", meta: "Laporan · 1 menit", duration: "1:08", src: "/videos/reports-tutorial.mp4" },
+      { title: "Fitur Sub-Recipe: dari Strawberry Jam ke Strawberry Cake", meta: "Fitur Lanjutan · 1 menit", duration: "1:09", src: "/videos/subreq-tutorial.mp4" },
     ],
   },
 ];
