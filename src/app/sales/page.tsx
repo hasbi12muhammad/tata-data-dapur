@@ -477,7 +477,6 @@ export default function SalesPage() {
         const recipe = allRecipes.find((r) => r.id === sf.recipeId);
         const shortfall = sf.needed - sf.currentStock;
         const hppTotal = (recipe?.hpp || recipe?.avg_price || 0) * shortfall;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { error } = sf.isIngredient
           ? await (supabase.rpc as any)("produce_sub_recipe", {
               p_user_id: user!.id, p_recipe_id: sf.recipeId,
