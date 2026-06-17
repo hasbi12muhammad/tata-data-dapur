@@ -463,6 +463,49 @@ export default function SalesPage() {
     }
   }
 
+  async function handleForceProduceAndSell() {
+    if (!stockConfirm) return;
+    setItemConfirm(null);
+    setProducePending(true);
+    let produced = 0;
+    const total = stockConfirm.shortfalls.length;
+    const allRecipes = [...(recipes ?? []), ...(addonSubRecipes ?? []), ...(addonFinishedRecipes ?? [])];
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      for (const sf of stockConfirm.shortfalls) {
+        const recipe = allRecipes.find((r) => r.id === sf.recipeId);
+        const shortfall = sf.needed - sf.currentStock;
+        const hppTotal = (recipe?.hpp || recipe?.avg_price || 0) * shortfall;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = sf.isIngredient
+          ? await (supabase.rpc as any)("produce_sub_recipe", {
+              p_user_id: user!.id, p_recipe_id: sf.recipeId,
+              p_batches: shortfall, p_total_cost: hppTotal, p_force: true,
+            })
+          : await (supabase.rpc as any)("produce_recipe", {
+              p_user_id: user!.id, p_recipe_id: sf.recipeId,
+              p_batches: shortfall, p_total_cost: hppTotal,
+            });
+        if (error) throw error;
+        produced++;
+      }
+      const payload = stockConfirm.payload;
+      setStockConfirm(null);
+      await executeSale(payload);
+    } catch (e: unknown) {
+      const msg = produced > 0 && produced < total
+        ? `Produksi sebagian berhasil (${produced}/${total} resep). Penjualan dibatalkan.`
+        : ((e as Error).message ?? "Gagal produksi");
+      toast.error(msg, { duration: 6000 });
+    } finally {
+      setProducePending(false);
+      qc.invalidateQueries({ queryKey: ["productions"] });
+      qc.invalidateQueries({ queryKey: ["recipes"] });
+      qc.invalidateQueries({ queryKey: ["items"] });
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -1635,11 +1678,16 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
               ))}
             </div>
             <p className="mb-4 text-sm text-[#7C6352]">
-              Tambahkan stok bahan terlebih dahulu sebelum produksi otomatis.
+              Stok bahan akan minus — catat pembelian bahan setelahnya untuk koreksi.
             </p>
-            <Button variant="ghost" onClick={() => setItemConfirm(null)} className="w-full">
-              Batal
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button onClick={handleForceProduceAndSell} loading={producePending} className="w-full">
+                Tetap Catat (Stok Minus)
+              </Button>
+              <Button variant="ghost" onClick={() => setItemConfirm(null)} disabled={producePending} className="w-full">
+                Batal
+              </Button>
+            </div>
           </div>
         </div>
       )}

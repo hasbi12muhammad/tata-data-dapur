@@ -546,10 +546,100 @@
       "file": "src/app/sales/page.tsx",
       "root_cause": "handleProduceAndSell langsung memanggil RPC produce_recipe/produce_sub_recipe tanpa pre-check stok bahan baku/setengah jadi. Jika bahan kurang, DB exception ditangkap sebagai toast.error, bukan modal informatif.",
       "fix": "Tambah pre-check di handleProduceAndSell sebelum loop RPC: iterasi semua shortfall recipes, cek recipe_items (item_id dan sub_recipe_id) vs stok. Jika ada shortfall, set itemConfirm state dan return. Tambah ItemShortfall interface + itemConfirm state + modal UI (z-[70], info-only, Batal button). Sama dengan fix bug-9a0ad3d di produksi page.",
-      "tags": ["sales", "stock-check", "pre-check", "modal", "bahan-baku", "sub-recipe", "toast-error"],
-      "related_bugs": ["bug-027"],
+      "tags": [
+        "sales",
+        "stock-check",
+        "pre-check",
+        "modal",
+        "bahan-baku",
+        "sub-recipe",
+        "toast-error"
+      ],
+      "related_bugs": [
+        "bug-027"
+      ],
       "occurrences": 1,
       "last_seen": "2026-06-17T00:00:00.000Z"
+    },
+    {
+      "id": "bug-035",
+      "timestamp": "2026-06-17T06:25:29.482Z",
+      "error_message": "CSS fix: Stok",
+      "file": "src/app/items/page.tsx",
+      "root_cause": "Stok: {item.stock → {formatNumber(item.stock, 2)",
+      "fix": "Changed Stok: {item.stock → {formatNumber(item.stock, 2)",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T06:25:29.482Z"
+    },
+    {
+      "id": "bug-036",
+      "timestamp": "2026-06-17T06:42:22.762Z",
+      "error_message": "Missing error handling in function",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block | Also: const createPurchase = useCreatePurchase();; interface RestockRow { item_id: string; name: string; unit: ",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-17T06:44:48.253Z"
+    },
+    {
+      "id": "bug-037",
+      "timestamp": "2026-06-17T06:42:59.513Z",
+      "error_message": "CSS fix: p_user_id, p_batches",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "p_user_id: user!.id, → user!.id, p_recipe_id: sf.recipeId,; p_batches: shortfall, → shortfall, p_total_cost: hppTotal,",
+      "fix": "Changed p_user_id: user!.id, → user!.id, p_recipe_id: sf.recipeId,; p_batches: shortfall, → shortfall, p_total_cost: hppTotal,",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T06:42:59.513Z"
+    },
+    {
+      "id": "bug-038",
+      "timestamp": "2026-06-17T06:43:33.102Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 6→11 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T06:43:33.102Z"
+    },
+    {
+      "id": "bug-039",
+      "timestamp": "2026-06-17T06:45:10.034Z",
+      "error_message": "Type error",
+      "file": "src/app/items/page.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T06:45:10.034Z"
     }
   ]
 }

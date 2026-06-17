@@ -18,12 +18,13 @@ import {
 } from "@/hooks/useItems";
 import { useCustomUnits } from "@/hooks/useUnits";
 import { Item } from "@/types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatNumber } from "@/lib/utils";
 import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
-import { FileUp, Filter, Package, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { AlertTriangle, FileUp, Filter, Package, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useCreatePurchase } from "@/hooks/usePurchases";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -35,6 +36,53 @@ export default function ItemsPage() {
   const deleteItem = useDeleteItem();
   const queryClient = useQueryClient();
   const { data: customUnits = [] } = useCustomUnits();
+  const createPurchase = useCreatePurchase();
+
+  interface RestockRow { item_id: string; name: string; unit: string; qty: string; price: string; }
+  const [restockOpen, setRestockOpen] = useState(false);
+  const [restockRows, setRestockRows] = useState<RestockRow[]>([]);
+  const [restockPending, setRestockPending] = useState(false);
+
+  const negativeItems = useMemo(
+    () => (items ?? []).filter((i) => (i.stock ?? 0) < 0),
+    [items],
+  );
+
+  function openRestock() {
+    setRestockRows(
+      negativeItems.map((i) => ({
+        item_id: i.id,
+        name: i.name,
+        unit: i.unit ?? "",
+        qty: String(Math.abs(i.stock ?? 0)),
+        price: String(i.avg_price ?? 0),
+      })),
+    );
+    setRestockOpen(true);
+  }
+
+  async function handleRestock() {
+    const valid = restockRows.filter((r) => Number(r.qty) > 0 && Number(r.price) >= 0);
+    if (!valid.length) return;
+    setRestockPending(true);
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      for (const r of valid) {
+        await createPurchase.mutateAsync({
+          item_id: r.item_id,
+          quantity: Number(r.qty),
+          price_per_unit: Number(r.price),
+          date: today,
+        });
+      }
+      toast.success(`${valid.length} pembelian bahan dicatat`);
+      setRestockOpen(false);
+    } catch (e: unknown) {
+      toast.error((e as Error).message ?? "Gagal catat pembelian");
+    } finally {
+      setRestockPending(false);
+    }
+  }
 
   const [importOpen, setImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -168,6 +216,19 @@ export default function ItemsPage() {
         </div>
       }
     >
+      {negativeItems.length > 0 && (
+        <button
+          onClick={openRestock}
+          className="w-full mb-3 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left hover:bg-red-100 transition-colors"
+        >
+          <AlertTriangle className="h-4 w-4 shrink-0 text-red-500" />
+          <span className="flex-1 text-sm font-medium text-red-700">
+            {negativeItems.length} bahan stok minus — ketuk untuk catat pembelian
+          </span>
+          <ShoppingCart className="h-4 w-4 shrink-0 text-red-400" />
+        </button>
+      )}
+
       <Card>
         {/* Filter bottom sheet */}
         {filterSheetOpen && (
@@ -353,7 +414,7 @@ export default function ItemsPage() {
                       <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
                         <span className="break-words">{item.name}</span>
                         <span className="sm:hidden block text-xs text-[#B88D6A] font-normal mt-0.5">
-                          Stok: {item.stock} {item.unit}
+                          Stok: {formatNumber(item.stock, 2)} {item.unit}
                         </span>
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3">
@@ -365,7 +426,7 @@ export default function ItemsPage() {
                         {formatCurrency(item.avg_price)}
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs hidden sm:table-cell">
-                        {item.stock} {item.unit}
+                        {formatNumber(item.stock, 2)} {item.unit}
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3">
                         <div className="flex items-center justify-end gap-1">
@@ -440,6 +501,56 @@ export default function ItemsPage() {
           </div>
         </form>
       </Modal>
+
+      {restockOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50" onClick={() => !restockPending && setRestockOpen(false)} />
+          <div className="relative w-full max-w-sm rounded-2xl bg-[#FBF8F2] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+            <div className="mb-4 flex items-center gap-2">
+              <ShoppingCart className="h-5 w-5 shrink-0 text-[#A05035]" />
+              <span className="font-semibold text-[#2C1810]">Catat Pembelian Bahan</span>
+            </div>
+            <p className="mb-4 text-xs text-[#7C6352]">Qty dan harga sudah terisi sesuai kekurangan stok. Edit jika perlu.</p>
+            <div className="space-y-3 overflow-y-auto flex-1 pr-1">
+              {restockRows.map((row, i) => (
+                <div key={row.item_id} className="rounded-lg border border-[#D9CCAF] bg-white p-3">
+                  <p className="text-sm font-medium text-[#2C1810] mb-2">{row.name}</p>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="text-xs text-[#7C6352]">Qty ({row.unit})</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={row.qty}
+                        onChange={(e) => setRestockRows((prev) => prev.map((r, j) => j === i ? { ...r, qty: e.target.value } : r))}
+                        className={cls}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="text-xs text-[#7C6352]">Harga/unit (Rp)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={row.price}
+                        onChange={(e) => setRestockRows((prev) => prev.map((r, j) => j === i ? { ...r, price: e.target.value } : r))}
+                        className={cls}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              <Button onClick={handleRestock} loading={restockPending} className="w-full">
+                Catat {restockRows.filter((r) => Number(r.qty) > 0).length} Pembelian
+              </Button>
+              <Button variant="ghost" onClick={() => setRestockOpen(false)} disabled={restockPending} className="w-full">
+                Batal
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ImportExcelModal
         open={importOpen}
