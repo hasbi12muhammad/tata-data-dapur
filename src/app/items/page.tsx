@@ -55,7 +55,7 @@ export default function ItemsPage() {
         })),
       ),
     );
-    router.push("/purchases?restock=1");
+    router.push("/purchases");
   }
 
   const [importOpen, setImportOpen] = useState(false);

@@ -25,7 +25,6 @@ import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, FileUp, Filter, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -107,7 +106,6 @@ export default function PurchasesPage() {
   const queryClient = useQueryClient();
   const { data: packagingTypes = [] } = usePackagingTypes();
   const createPkgType = useCreatePackagingType();
-  const searchParams = useSearchParams();
 
   const [importOpen, setImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -214,7 +212,6 @@ export default function PurchasesPage() {
 
   // Restock pre-fill: ketika datang dari banner stok minus di halaman Bahan Baku
   useEffect(() => {
-    if (searchParams.get("restock") !== "1") return;
     const raw = sessionStorage.getItem("restock_prefill");
     if (!raw) return;
     sessionStorage.removeItem("restock_prefill");
