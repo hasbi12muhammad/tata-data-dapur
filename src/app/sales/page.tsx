@@ -494,7 +494,7 @@ export default function SalesPage() {
             })
           : await (supabase.rpc as any)("produce_recipe", {
               p_user_id: user!.id, p_recipe_id: sf.recipeId,
-              p_batches: shortfall, p_total_cost: hppTotal,
+              p_batches: shortfall, p_total_cost: hppTotal, p_force: true,
             });
         if (error) throw error;
         produced++;
