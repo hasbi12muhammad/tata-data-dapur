@@ -83,6 +83,7 @@ export const TOUR: TourSection[] = [
         { icon: "clipboard-list", title: "Import via Template Excel", body: <>Bahannya banyak? Download template (kolom: <strong>nama</strong> dan <strong>unit</strong>), isi di Excel, upload sekaligus. Enak buat setup awal biar nggak input satu-satu.</> },
         { icon: "line-chart", title: "Harga Rata-rata Otomatis", body: <>Kolom AVG PRICE dihitung sendiri dari riwayat pembelian pakai metode <em>weighted average</em>. Harga inilah yang dipakai buat menghitung HPP resep.</> },
         { icon: "cake", title: "Add-on Penjualan", body: "Bahan seperti topper kue, lilin ulang tahun, atau kemasan khusus bisa ditandai sebagai add-on. Nanti bisa dipilih sebagai tambahan pas mencatat penjualan produk." },
+        { icon: "alert-triangle", title: "Banner Stok Minus & Restock Cepat", body: "Kalau ada bahan dengan stok negatif — misal setelah catat penjualan hectic sebelum sempat update stok masuk — banner merah muncul di bagian atas halaman ini. Ketuk untuk langsung buka form restock yang sudah ter-isi qty kekurangan dan harga rata-rata terakhir. Semua bahan yang minus bisa dicatat pembeliannya sekaligus dalam satu klik." },
       ] },
       { type: "callout", variant: "tip", node: <><strong>Mulai dari sini.</strong> Sebelum bisa bikin resep atau catat pembelian, kamu perlu daftarkan bahan baku dulu. Ini langkah pertama setup app.</> },
     ],
@@ -204,6 +205,7 @@ export const TOUR: TourSection[] = [
         { icon: "tag", title: "Kategori Penjualan", body: "Tiap transaksi bisa ditandai kategori: Offline, GoFood, GrabFood, ShopeeFood, dan lainnya. Berguna buat analisis channel penjualan di Laporan." },
         { icon: "cake", title: "Add-on per Produk", body: "Pas input item, bisa tambahin add-on (topper, lilin, box khusus) yang stok dan HPP-nya ikut ter-update." },
         { icon: "calendar", title: "Backdate Transaksi", body: "Lupa catat penjualan kemarin? Pilih tanggal yang lewat — datanya masuk ke laporan tanggal yang benar." },
+        { icon: "zap", title: "Tetap Catat saat Lagi Hectic", body: <>Kalau stok produk habis dan bahan baku belum sempat diupdate, app tetap bisa lanjut. Klik <strong>Produksi &amp; Jual</strong> → kalau bahan kurang, ada pilihan <strong>Tetap Catat (Stok Minus)</strong> — penjualan dan produksi dicatat, bahan boleh sementara minus. Banner merah di halaman Bahan Baku akan muncul sebagai pengingat untuk restock.</> },
       ] },
       { type: "callout", variant: "tip", node: <>HPP yang tersimpan di tiap transaksi itu <strong>snapshot saat transaksi terjadi</strong>. Jadi kalau besok harga bahan naik, profit transaksi hari ini nggak ikut berubah — sudah terkunci.</> },
     ],
@@ -329,6 +331,20 @@ Waste = 10% → HPP per roti dihitung dari 9 roti yang berhasil, bukan 10.`}</pr
             <strong>Pembelian</strong> = beli sesuatu yang dipakai buat <em>bikin produk</em>. Masuk ke stok bahan baku, mempengaruhi HPP. Contoh: tepung, telur, gula, mentega, susu.
             <br /><br />
             <strong>Pengeluaran</strong> = biaya <em>menjalankan usaha</em> yang nggak masuk ke produk secara langsung. Contoh: bayar listrik, beli gas LPG buat kompor, gaji karyawan, ongkos kirim, beli kemasan plastik.
+          </>
+        ),
+      },
+      {
+        q: "Stok bahan minus — apa artinya dan harus ngapain?",
+        a: (
+          <>
+            Stok minus terjadi kalau kamu memilih <strong>&ldquo;Tetap Catat (Stok Minus)&rdquo;</strong> saat penjualan — fitur ini muncul ketika bahan baku belum sempat diupdate tapi transaksi sudah harus dicatat (misal lagi hectic).
+            <br /><br />
+            Penjualan dan produksi tetap tercatat normal. Yang minus adalah stok bahan baku di sistem — ini jadi pengingat bahwa ada bahan yang belum diinput pembeliannya.
+            <br /><br />
+            Begitu ada bahan yang minus, <strong>banner merah muncul di halaman Bahan Baku</strong>. Ketuk banner untuk langsung buka form pembelian yang sudah ter-isi qty kekurangan dan harga terakhir — tinggal konfirmasi, stok langsung koreksi ke angka yang benar.
+            <br /><br />
+            HPP transaksi yang sudah tercatat tidak ikut berubah — itu sudah terkunci sebagai snapshot saat transaksi terjadi.
           </>
         ),
       },
