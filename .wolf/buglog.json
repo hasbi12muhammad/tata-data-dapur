@@ -492,10 +492,64 @@
       "file": "supabase/migrations/021_production_items_snapshot.sql",
       "root_cause": "delete_production/update_production merekonstruksi qty konsumsi dari recipe_items LIVE, bukan dari yang benar-benar dipakai saat produksi. Edit resep di antara produksi & penghapusan -> restore stok salah/tidak sama sekali.",
       "fix": "Migrasi 021: tabel production_items menyimpan snapshot per-batch quantity_used saat produce_recipe/produce_sub_recipe. delete/update restore dari snapshot (fallback ke recipe_items live untuk produksi lama tanpa snapshot). Apply ke tata-data-dapur + my-kitchen-book (plus 020 guard ke my-kitchen-book).",
-      "tags": ["produksi", "stock", "snapshot", "BOM", "rpc", "migration", "multi-tenant"],
-      "related_bugs": ["bug-019"],
+      "tags": [
+        "produksi",
+        "stock",
+        "snapshot",
+        "BOM",
+        "rpc",
+        "migration",
+        "multi-tenant"
+      ],
+      "related_bugs": [
+        "bug-019"
+      ],
       "occurrences": 1,
       "last_seen": "2026-06-13T14:40:00.000Z"
+    },
+    {
+      "id": "bug-032",
+      "timestamp": "2026-06-13T16:08:33.178Z",
+      "error_message": "CSS fix: HPP, unit",
+      "file": "src/app/produksi/page.tsx",
+      "root_cause": "HPP: <span className=\"font-bold\">{formatCurrency(Math.ceil(estimatedHpp)) → <span className=\"font-bold\">{formatCurrency(estimatedHpp); unit: <span className=\"font-bold\">{formatCurrency(selectedRecipe.hpp ?? 0) → <span className=\"font-bold\">{formatCurrency(Math.ceil(selectedRecipe.hpp ?? 0))",
+      "fix": "Changed HPP: <span className=\"font-bold\">{formatCurrency(Math.ceil(estimatedHpp)) → <span className=\"font-bold\">{formatCurrency(estimatedHpp); unit: <span className=\"font-bold\">{formatCurrency(selectedRecipe.hpp ?? 0) → <span className=\"font-bold\">{formatCurrency(Math.ceil(selectedRecipe.hpp ?? 0))",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-13T16:08:33.178Z"
+    },
+    {
+      "id": "bug-033",
+      "timestamp": "2026-06-17T04:24:41.665Z",
+      "error_message": "Type error",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation | Also: {itemConfirm && (; <div className=\"fixed inset-0 z-[70] flex items-center justi",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-17T04:25:07.002Z"
+    },
+    {
+      "id": "bug-034",
+      "timestamp": "2026-06-17T00:00:00.000Z",
+      "error_message": "Stok bahan \"Tepung\" tidak cukup: tersedia 600.0000, dibutuhkan 3000 — toast error muncul di background saat klik Produksi & Jual di halaman penjualan",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "handleProduceAndSell langsung memanggil RPC produce_recipe/produce_sub_recipe tanpa pre-check stok bahan baku/setengah jadi. Jika bahan kurang, DB exception ditangkap sebagai toast.error, bukan modal informatif.",
+      "fix": "Tambah pre-check di handleProduceAndSell sebelum loop RPC: iterasi semua shortfall recipes, cek recipe_items (item_id dan sub_recipe_id) vs stok. Jika ada shortfall, set itemConfirm state dan return. Tambah ItemShortfall interface + itemConfirm state + modal UI (z-[70], info-only, Batal button). Sama dengan fix bug-9a0ad3d di produksi page.",
+      "tags": ["sales", "stock-check", "pre-check", "modal", "bahan-baku", "sub-recipe", "toast-error"],
+      "related_bugs": ["bug-027"],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T00:00:00.000Z"
     }
   ]
 }

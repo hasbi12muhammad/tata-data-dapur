@@ -139,11 +139,18 @@ export default function SalesPage() {
       name_at_sale: string;
     }>;
   };
+  interface ItemShortfall {
+    name: string;
+    unit: string;
+    currentStock: number;
+    needed: number;
+  }
   const [stockConfirm, setStockConfirm] = useState<{
     shortfalls: StockShortfall[];
     payload: SalePayloadItem[];
   } | null>(null);
   const [producePending, setProducePending] = useState(false);
+  const [itemConfirm, setItemConfirm] = useState<ItemShortfall[] | null>(null);
 
   // ─── Modal state ───────────────────────────────────────────────────────────
   const [modalOpen, setModalOpen] = useState(false);
@@ -394,6 +401,33 @@ export default function SalesPage() {
 
   async function handleProduceAndSell() {
     if (!stockConfirm) return;
+
+    // Pre-check bahan baku dan sub-recipe untuk semua shortfall sebelum RPC
+    const allRecipes = [...(recipes ?? []), ...(addonSubRecipes ?? []), ...(addonFinishedRecipes ?? [])];
+    const batchItemShortfalls: ItemShortfall[] = [];
+    for (const sf of stockConfirm.shortfalls) {
+      const recipe = allRecipes.find((r) => r.id === sf.recipeId);
+      if (!recipe) continue;
+      const batchesNeeded = sf.needed - sf.currentStock;
+      for (const ri of (recipe as any).recipe_items ?? []) {
+        if (ri.item_id && ri.item) {
+          const needed = ri.quantity_used * batchesNeeded;
+          if ((ri.item.stock ?? 0) < needed) {
+            batchItemShortfalls.push({ name: ri.item.name, unit: ri.item.unit ?? "pcs", currentStock: ri.item.stock ?? 0, needed });
+          }
+        } else if (ri.sub_recipe_id && ri.sub_recipe) {
+          const needed = ri.quantity_used * batchesNeeded;
+          if ((ri.sub_recipe.stock ?? 0) < needed) {
+            batchItemShortfalls.push({ name: ri.sub_recipe.name, unit: ri.sub_recipe.unit ?? "pcs", currentStock: ri.sub_recipe.stock ?? 0, needed });
+          }
+        }
+      }
+    }
+    if (batchItemShortfalls.length > 0) {
+      setItemConfirm(batchItemShortfalls);
+      return;
+    }
+
     setProducePending(true);
     let produced = 0;
     const total = stockConfirm.shortfalls.length;
@@ -401,7 +435,6 @@ export default function SalesPage() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       for (const sf of stockConfirm.shortfalls) {
-        const allRecipes = [...(recipes ?? []), ...(addonSubRecipes ?? []), ...(addonFinishedRecipes ?? [])];
         const recipe = allRecipes.find((r) => r.id === sf.recipeId);
         const shortfall = sf.needed - sf.currentStock;
         const hppTotal = (recipe?.hpp || recipe?.avg_price || 0) * shortfall;
@@ -1577,6 +1610,36 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                 Batal
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {itemConfirm && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setItemConfirm(null)} />
+          <div className="relative w-full max-w-sm rounded-2xl bg-[#FBF8F2] p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-2 text-red-600">
+              <AlertTriangle className="h-5 w-5 shrink-0" />
+              <span className="font-semibold text-[#2C1810]">Bahan tidak cukup untuk produksi</span>
+            </div>
+            <div className="mb-5 space-y-2">
+              {itemConfirm.map((sf) => (
+                <div key={sf.name} className="rounded-lg border border-[#D9CCAF] bg-white px-3 py-2.5 text-sm">
+                  <p className="font-medium text-[#2C1810]">{sf.name}</p>
+                  <p className="mt-0.5 text-[#7C6352]">
+                    Stok: <span className="font-medium text-red-600">{formatNumber(sf.currentStock, 2)} {sf.unit}</span>
+                    {" · "}Dibutuhkan: <span className="font-medium">{formatNumber(sf.needed, 2)} {sf.unit}</span>
+                    {" · "}Kurang: <span className="font-medium text-amber-700">{formatNumber(sf.needed - sf.currentStock, 2)} {sf.unit}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mb-4 text-sm text-[#7C6352]">
+              Tambahkan stok bahan terlebih dahulu sebelum produksi otomatis.
+            </p>
+            <Button variant="ghost" onClick={() => setItemConfirm(null)} className="w-full">
+              Batal
+            </Button>
           </div>
         </div>
       )}

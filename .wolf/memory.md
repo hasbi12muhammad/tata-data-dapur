@@ -606,3 +606,25 @@
 | 21:43 | Session end: 7 writes across 4 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql) | 3 reads | ~28787 tok |
 | 21:48 | Edited BRAINSTORM-CONTEXT.md | modified check() | ~156 |
 | 21:48 | Edited BRAINSTORM-CONTEXT.md | 2→6 lines | ~119 |
+| 21:48 | Session end: 9 writes across 4 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql) | 3 reads | ~29357 tok |
+| 21:52 | Session end: 9 writes across 4 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql) | 3 reads | ~29357 tok |
+| 22:54 | Session end: 9 writes across 4 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql) | 3 reads | ~29357 tok |
+| 22:56 | Session end: 9 writes across 4 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql) | 3 reads | ~29357 tok |
+| 22:57 | Created supabase/migrations/023_produce_sub_recipe_nested.sql | — | ~1130 |
+| 23:00 | Session end: 10 writes across 5 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql, 023_produce_sub_recipe_nested.sql) | 3 reads | ~30567 tok |
+| 23:08 | Edited src/app/produksi/page.tsx | 4→7 lines | ~104 |
+| 23:08 | Edited src/app/produksi/page.tsx | inline fix | ~27 |
+| 23:08 | Edited src/app/produksi/page.tsx | inline fix | ~28 |
+| 23:08 | Edited src/app/produksi/page.tsx | 4→4 lines | ~79 |
+| 23:09 | Session end: 14 writes across 6 files (BRAINSTORM-CONTEXT.md, PLAN-MULTI-TENANT-KASIR.md, 021_production_items_snapshot.sql, 022_update_production_stock_guard.sql, 023_produce_sub_recipe_nested.sql) | 6 reads | ~38654 tok |
+
+## Session: 2026-06-17 11:17
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 11:24 | Edited src/app/sales/page.tsx | expanded (+7 lines) | ~113 |
+| 11:24 | Edited src/app/sales/page.tsx | added 6 condition(s) | ~453 |
+| 11:25 | Edited src/app/sales/page.tsx | CSS: Stok, Dibutuhkan, Kurang | ~508 |
+| 11:26 | Fix bug-034: pre-check bahan baku/sub-recipe sebelum Produksi & Jual, tambah itemConfirm modal | src/app/sales/page.tsx | toast error → modal informatif | ~3500 |
+| 11:26 | Session end: 3 writes across 1 files (page.tsx) | 2 reads | ~24787 tok |
+| 11:34 | Session end: 3 writes across 1 files (page.tsx) | 2 reads | ~24787 tok |
