@@ -452,10 +452,20 @@ export default function SalesPage() {
       setStockConfirm(null);
       await executeSale(payload);
     } catch (e: unknown) {
-      const msg = produced > 0 && produced < total
-        ? `Produksi sebagian berhasil (${produced}/${total} resep). Penjualan dibatalkan. Cek halaman Produksi untuk koreksi manual.`
-        : ((e as Error).message ?? "Gagal produksi");
-      toast.error(msg, { duration: 6000 });
+      const rawMsg = (e as Error).message ?? "";
+      if (produced === 0 && /tidak cukup/i.test(rawMsg)) {
+        // Parse "Stok bahan "X" tidak cukup: tersedia Y, dibutuhkan Z" → show itemConfirm
+        const m = rawMsg.match(/Stok bahan(?:\s+setengah jadi)?\s+"([^"]+)"\s+tidak cukup:\s+tersedia ([\d.]+),\s+dibutuhkan ([\d.]+)/i);
+        setItemConfirm(m
+          ? [{ name: m[1], unit: "", currentStock: parseFloat(m[2]), needed: parseFloat(m[3]) }]
+          : [{ name: "Bahan", unit: "", currentStock: 0, needed: 0 }],
+        );
+      } else {
+        const toastMsg = produced > 0 && produced < total
+          ? `Produksi sebagian berhasil (${produced}/${total} resep). Penjualan dibatalkan. Cek halaman Produksi untuk koreksi manual.`
+          : rawMsg || "Gagal produksi";
+        toast.error(toastMsg, { duration: 6000 });
+      }
     } finally {
       setProducePending(false);
       qc.invalidateQueries({ queryKey: ["productions"] });
