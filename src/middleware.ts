@@ -45,7 +45,12 @@ export async function middleware(request: NextRequest) {
     }
 
     // Public routes — no auth or version check needed
-    if (pathname === "/login" || pathname === "/unauthorized") {
+    if (
+      pathname === "/login" ||
+      pathname === "/unauthorized" ||
+      pathname === "/welcome" ||
+      pathname.startsWith("/api/pakasir/")
+    ) {
       if (user && pathname === "/login") {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }
@@ -70,7 +75,9 @@ export async function middleware(request: NextRequest) {
   } catch {
     // Last-resort: never return 500 from middleware
     const { pathname } = request.nextUrl;
-    if (pathname === "/login") return NextResponse.next({ request });
+    if (pathname === "/login" || pathname === "/welcome" || pathname.startsWith("/api/pakasir/")) {
+      return NextResponse.next({ request });
+    }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
