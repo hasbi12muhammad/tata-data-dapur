@@ -1,10 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-13T14:48:22.509Z
-> Files: 85 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-18T08:39:24.217Z
+> Files: 92 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
+- `banner_mock.html` — Banner Stok Minus (~2687 tok)
 - `commitmsg.txt` (~141 tok)
 
 ## ../../../root/.claude/plans/
@@ -14,6 +15,14 @@
 ## ../../.claude/plans/
 
 - `oke-sekarang-aku-mau-curious-creek.md` — Feature: Add-On pada Penjualan (~2558 tok)
+
+## ../Tata-Data-Dapur-Land-Page/src/components/
+
+- `SolutionSection.jsx` — A — renders table (~2831 tok)
+
+## ../Tata-Data-Dapur-Land-Page/src/pages/
+
+- `HelpCenterPage.jsx` — C (~16235 tok)
 
 ## ./
 
@@ -73,7 +82,7 @@
 
 ## src/app/items/
 
-- `page.tsx` — dynamic — renders table (~5036 tok)
+- `page.tsx` — dynamic (~5480 tok)
 
 ## src/app/login/
 
@@ -85,11 +94,11 @@
 
 ## src/app/produksi/
 
-- `page.tsx` — dynamic (~7849 tok)
+- `page.tsx` — dynamic (~7922 tok)
 
 ## src/app/purchases/
 
-- `page.tsx` — dynamic (~11771 tok)
+- `page.tsx` — dynamic (~15366 tok)
 
 ## src/app/recipes/
 
@@ -101,7 +110,7 @@
 
 ## src/app/sales/
 
-- `page.tsx` — dynamic (~23279 tok)
+- `page.tsx` — dynamic (~24946 tok)
 
 ## src/app/settings/
 
@@ -113,11 +122,16 @@
 
 ## src/components/
 
+- `PWAInstallButton.tsx` — PWAInstallButton — listens beforeinstallprompt, shows Install App button, hides if already installed as standalone (~120 tok)
 - `ServiceWorkerRegister.tsx` — ServiceWorkerRegister — uses useEffect (~72 tok)
+
+## src/components/help/
+
+- `helpContent.tsx` — TOUR (~9216 tok)
 
 ## src/components/layout/
 
-- `AppLayout.tsx` — AppLayout — uses useState (~477 tok)
+- `AppLayout.tsx` — AppLayout (~504 tok)
 - `Sidebar.tsx` — ALL_NAV (~1402 tok)
 
 ## src/components/ui/
@@ -182,6 +196,8 @@
 - `020_fix_adjust_item_stock_guard.sql` — Migration 020: Add negative-stock guard to adjust_item_stock (~313 tok)
 - `021_production_items_snapshot.sql` — Migration 021: Production BOM snapshot (production_items) (~3963 tok)
 - `022_update_production_stock_guard.sql` — Migration 022: Add negative-stock guard to update_production (~1747 tok)
+- `024_produce_sub_recipe_force.sql` — Migration 024: Add p_force bypass to produce_sub_recipe (~1058 tok)
+- `025_produce_recipe_force.sql` — Migration 025: Add p_force bypass to produce_recipe (~1002 tok)
 
 ## supabase/seeds/
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Sidebar } from "./Sidebar";
+import { PWAInstallButton } from "@/components/PWAInstallButton";
 import { Menu, Settings } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -32,6 +33,7 @@ export function AppLayout({ children, title, action }: AppLayoutProps) {
             {title}
           </h1>
           {action && <div className="flex-shrink-0">{action}</div>}
+          <PWAInstallButton />
           <Link
             href="/settings"
             className="p-2 rounded-lg text-[#7C6352] hover:bg-[#E9DFC6] transition-colors"
