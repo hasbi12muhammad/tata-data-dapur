@@ -54,12 +54,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'amount mismatch' }, { status: 400 })
   }
 
-  // Idempotency: already processed
-  if (order.status === 'paid' || order.status === 'account_created') {
+  // Idempotency: only skip if fully processed
+  if (order.status === 'account_created') {
     return NextResponse.json({ ok: true, idempotent: true })
   }
 
-  // Mark paid
+  // Mark paid (safe to repeat if already 'paid')
   await supabase
     .from('orders')
     .update({
@@ -69,19 +69,21 @@ export async function POST(req: NextRequest) {
     })
     .eq('order_id', order_id)
 
-  // Generate password + create auth user
   const password = generatePassword()
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+  const authHeaders = {
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    'Content-Type': 'application/json',
+  }
 
+  // Create auth user
+  let userId: string
   const createRes = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
     method: 'POST',
-    headers: {
-      apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers: authHeaders,
     body: JSON.stringify({
       email: order.email_login,
       password,
@@ -90,24 +92,39 @@ export async function POST(req: NextRequest) {
     }),
   })
 
-  if (!createRes.ok) {
-    const body = await createRes.text()
-    // Save password first even on error so admin can retry manually
-    await supabase
-      .from('orders')
-      .update({ generated_password: password })
-      .eq('order_id', order_id)
-    return NextResponse.json({ error: `create user failed: ${body}` }, { status: 500 })
+  if (createRes.ok) {
+    const newUser = await createRes.json() as { id: string }
+    userId = newUser.id
+  } else {
+    // User already exists — fetch their ID and update password
+    const listRes = await fetch(
+      `${supabaseUrl}/auth/v1/admin/users?email=${encodeURIComponent(order.email_login)}&page=1&per_page=1`,
+      { headers: authHeaders }
+    )
+    if (!listRes.ok) {
+      await supabase.from('orders').update({ generated_password: password }).eq('order_id', order_id)
+      return NextResponse.json({ error: 'create user failed and could not fetch existing' }, { status: 500 })
+    }
+    const { users } = await listRes.json() as { users: Array<{ id: string }> }
+    if (!users?.[0]) {
+      await supabase.from('orders').update({ generated_password: password }).eq('order_id', order_id)
+      return NextResponse.json({ error: 'user not found after create failed' }, { status: 500 })
+    }
+    userId = users[0].id
+    // Update password so the new credentials are valid
+    await fetch(`${supabaseUrl}/auth/v1/admin/users/${userId}`, {
+      method: 'PUT',
+      headers: authHeaders,
+      body: JSON.stringify({ password }),
+    })
   }
-
-  const newUser = await createRes.json() as { id: string }
 
   await supabase
     .from('orders')
     .update({
       status: 'account_created',
       generated_password: password,
-      supabase_user_id: newUser.id,
+      supabase_user_id: userId,
       account_created_at: new Date().toISOString(),
     })
     .eq('order_id', order_id)
