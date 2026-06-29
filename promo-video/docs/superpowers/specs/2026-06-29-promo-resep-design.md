@@ -47,9 +47,9 @@ Sudah lewat skill `humanizer`: tanpa em dash, tanpa bahasa promosi berlebihan, p
 | RecipeFlow caption | "Masukin bahannya, modal per porsi langsung muncul." |
 | RecipeFlow callout | "ngitung sendiri" |
 | PriceAdapt kicker | "Harga bahan baru" |
-| PriceAdapt badge bahan | "naik 33%" |
+| PriceAdapt badge bahan | "naik 36%" |
 | PriceAdapt HPP label | "HPP per porsi" |
-| PriceAdapt banner | "Naikin harga ke Rp 29.000, untungmu balik kayak semula." |
+| PriceAdapt banner | "Naikin harga ke Rp 19.000, untungmu balik kayak semula." |
 | PriceAdapt caption | "Harga bahan berubah, HPP sama saran harganya ikut nyesuain sendiri." |
 | Outro | (tetap) "Coba Sekarang" |
 
@@ -62,25 +62,26 @@ secara visual dengan scene 3.
 
 ### Data (selaras dengan resep yang direkam di scene 3)
 
-Resep contoh: **Nasi Ayam Geprek**, harga jual Rp 25.000.
+Resep: **Pancake Susu Cokelat**, harga jual Rp 17.000. (Resep ini yang dibangun `record.mjs`
+di scene 3, jadi scene 4 selaras dengan rekaman.)
 
 Bahan & modal awal (per porsi):
 
 | Bahan | Qty | Modal awal | Modal setelah naik |
 |-------|-----|-----------|-------------------|
-| Dada Ayam | 150 gr | Rp 5.400 | **Rp 7.200** (naik) |
-| Beras | 120 gr | Rp 1.800 | Rp 1.800 |
-| Bumbu Dasar | 1 porsi | Rp 2.300 | Rp 2.300 |
-| Minyak Goreng | 20 ml | Rp 600 | Rp 600 |
-| Gas + Kemasan | 1 porsi | Rp 2.400 | Rp 2.400 |
+| Tepung | 50 gr | Rp 600 | Rp 600 |
+| Susu UHT | 100 ml | Rp 2.200 | **Rp 3.000** (naik 36%) |
+| Telur | 1 butir | Rp 2.500 | Rp 2.500 |
+| Topping Cokelat | 20 gr | Rp 1.800 | Rp 1.800 |
+| Gas + Kemasan | 1 porsi | Rp 1.400 | Rp 1.400 |
 
-- HPP awal = Rp 12.500 → HPP baru = **Rp 14.300**
-- Margin @Rp 25.000: 50% → **43%**
-- Saran harga jual baru = **Rp 29.000** (margin balik ~51%)
+- HPP awal = Rp 8.500 → HPP baru = **Rp 9.300**
+- Margin @Rp 17.000: 50% → **45%**
+- Saran harga jual baru = **Rp 19.000** (margin balik ~51%)
 
-> Catatan: bahan & angka final dikunci setelah scene 3 direkam, supaya nama resep + bahan yang
-> harganya naik benar-benar muncul di rekaman. Kalau akun demo tidak punya bahan "Dada Ayam",
-> pilih bahan lain yang tersedia dan sesuaikan angka di sini.
+> Catatan: resep diganti dari rencana awal (Nasi Ayam Geprek) ke Pancake Susu Cokelat,
+> yaitu resep yang memang dibangun `record.mjs`, supaya scene 3 (rekaman app asli) dan
+> scene 4 (sintetik) konsisten tanpa bergantung pada bahan yang kebetulan ada di akun demo.
 
 ### Timeline internal (local frame 0–290)
 

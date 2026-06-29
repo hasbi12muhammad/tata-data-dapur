@@ -12,7 +12,7 @@ import { poppins, openSans } from "../fonts";
 import { AppBar, Card, Caption, Kicker } from "../ui";
 import { Decor, Grain } from "../decor";
 
-// Pancake Susu Cokelat — modal per porsi. Susu UHT yang naik harga.
+// Pancake Susu Cokelat, modal per porsi. Susu UHT yang naik harga.
 const ROWS = [
   { name: "Tepung", qty: "50 gr", from: 600, to: 600 },
   { name: "Susu UHT", qty: "100 ml", from: 2200, to: 3000 },
