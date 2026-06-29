@@ -88,11 +88,11 @@ export const RecipeFlow: React.FC<{
           />
         </div>
 
-        {/* callout pointing at the HPP result (lower part of the modal) */}
+        {/* callout pointing at the "Estimasi HPP/pcs" line (the harga modal) */}
         <div
           style={{
             position: "absolute",
-            top: FH * 0.82,
+            top: FH * 0.875,
             right: -24,
             transform: `translateY(-50%) scale(${coIn})`,
             transformOrigin: "right center",

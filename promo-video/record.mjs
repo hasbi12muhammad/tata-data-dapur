@@ -78,11 +78,13 @@ await client.send("Page.startScreencast", { format: "jpeg", quality: 88, everyNt
 const T0 = Date.now();
 
 // ---- the recipe-building performance ----
-await sleep(400);
+// Paced so each ingredient is a readable beat (select -> qty -> short hold),
+// then a clear hold on the computed HPP at the end.
+await sleep(350);
 const nameInput = await page.$('input[placeholder="mis. Nasi Goreng"]');
 await nameInput.click();
-await page.type('input[placeholder="mis. Nasi Goreng"]', "Pancake Susu Cokelat", { delay: 55 });
-await sleep(450);
+await page.type('input[placeholder="mis. Nasi Goreng"]', "Pancake Susu Cokelat", { delay: 42 });
+await sleep(500);
 
 const bahan = [
   { t: "Tepung", q: 50 },
@@ -91,15 +93,15 @@ const bahan = [
   { t: "Topping", q: 20 },
 ];
 for (let i = 0; i < bahan.length; i++) {
-  if (i > 0) { await clickText("Tambah baris"); await sleep(350); await scrollModalBottom(); await sleep(150); }
+  if (i > 0) { await clickText("Tambah baris"); await sleep(250); await scrollModalBottom(); await sleep(120); }
   await setSelect(i, bahan[i].t);
-  await sleep(280);
+  await sleep(260);
   await setQty(i, bahan[i].q);
-  await sleep(550);
+  await sleep(620); // hold so the row + updating HPP is readable
 }
-await sleep(400);
+await sleep(350);
 await scrollModalBottom();
-await sleep(2200); // hold on the computed HPP
+await sleep(1700); // hold on the computed HPP
 
 // ---- stop ----
 await client.send("Page.stopScreencast");

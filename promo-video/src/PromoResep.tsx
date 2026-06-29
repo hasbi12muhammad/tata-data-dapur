@@ -37,42 +37,42 @@ const PAINS = [
 export const PromoResep: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: C.bg }}>
-      {/* Pain 0-120 */}
-      <Sequence from={0} durationInFrames={120}>
-        <Fade dur={120} inOnly>
+      {/* Pain 0-108 */}
+      <Sequence from={0} durationInFrames={108}>
+        <Fade dur={108} inOnly>
           <Pain pains={PAINS} turn="Tenang, ada cara gampangnya." />
         </Fade>
       </Sequence>
 
-      {/* Intro 120-210 */}
-      <Sequence from={120} durationInFrames={90}>
-        <Fade dur={90}>
+      {/* Intro 108-192 */}
+      <Sequence from={108} durationInFrames={84}>
+        <Fade dur={84}>
           <Intro />
         </Fade>
       </Sequence>
 
-      {/* RecipeFlow (rekaman app asli) 210-480 */}
-      <Sequence from={210} durationInFrames={270}>
-        <Fade dur={270}>
+      {/* RecipeFlow (rekaman app asli) 192-618 — full 14.2s recording so the whole bahan input + HPP is readable */}
+      <Sequence from={192} durationInFrames={426}>
+        <Fade dur={426}>
           <RecipeFlow
             kicker="Hitung HPP"
             caption="Masukin bahannya, modal per porsi langsung muncul."
             callout="ngitung sendiri"
-            calloutFrame={200}
+            calloutFrame={360}
           />
         </Fade>
       </Sequence>
 
-      {/* PriceAdapt 480-770 */}
-      <Sequence from={480} durationInFrames={290}>
-        <Fade dur={290}>
+      {/* PriceAdapt 618-792 */}
+      <Sequence from={618} durationInFrames={174}>
+        <Fade dur={174}>
           <PriceAdapt />
         </Fade>
       </Sequence>
 
-      {/* Outro 770-900 */}
-      <Sequence from={770} durationInFrames={130}>
-        <Fade dur={130} out>
+      {/* Outro 792-900 */}
+      <Sequence from={792} durationInFrames={108}>
+        <Fade dur={108} out>
           <Outro />
         </Fade>
       </Sequence>
