@@ -51,7 +51,7 @@ export const PromoResep: React.FC = () => {
         </Fade>
       </Sequence>
 
-      {/* RecipeFlow (rekaman app asli) 192-618 — full 14.2s recording so the whole bahan input + HPP is readable */}
+      {/* RecipeFlow (rekaman app asli) 192-618 - full 14.2s recording so the whole bahan input + HPP is readable */}
       <Sequence from={192} durationInFrames={426}>
         <Fade dur={426}>
           <RecipeFlow

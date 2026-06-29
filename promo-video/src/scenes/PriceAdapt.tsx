@@ -31,13 +31,13 @@ const NAIK_PCT = Math.round(((SUSU_TO - SUSU_FROM) / SUSU_FROM) * 100); // 36
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 // Simplified scene: one ingredient (Susu UHT) goes up, then HPP + margin
-// update, then the suggested price. No full BoM list, no bottom caption —
+// update, then the suggested price. No full BoM list, no bottom caption -
 // the eye follows top to bottom in three beats.
 export const PriceAdapt: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // beat 1 — price change card in
+  // beat 1 - price change card in
   const card1 = spring({ frame, fps, config: { damping: 16 } });
   const card1Y = interpolate(card1, [0, 1], [60, 0]);
 
@@ -48,7 +48,7 @@ export const PriceAdapt: React.FC = () => {
   });
   const susuNow = lerp(SUSU_FROM, SUSU_TO, priceT);
 
-  // beat 2 — HPP card in at frame 48, values count 48..96
+  // beat 2 - HPP card in at frame 48, values count 48..96
   const card2 = spring({
     frame: Math.max(0, frame - 48),
     fps,
@@ -70,7 +70,7 @@ export const PriceAdapt: React.FC = () => {
     extrapolateRight: "clamp",
   });
 
-  // beat 3 — suggestion banner slide up at frame 110
+  // beat 3 - suggestion banner slide up at frame 110
   const banner = spring({
     frame: Math.max(0, frame - 110),
     fps,
@@ -83,7 +83,7 @@ export const PriceAdapt: React.FC = () => {
       <AppBar title="Pancake Susu Cokelat" Icon={TrendingUp} kicker="Harga bahan baru" />
 
       <div style={{ padding: "48px 48px 0", display: "flex", flexDirection: "column", gap: 36 }}>
-        {/* Beat 1 — the ingredient that went up */}
+        {/* Beat 1 - the ingredient that went up */}
         <div style={{ opacity: card1, transform: `translateY(${card1Y}px)` }}>
           <Card style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             <div style={{ fontFamily: openSans, fontSize: 30, color: C.muted }}>
@@ -124,7 +124,7 @@ export const PriceAdapt: React.FC = () => {
           </Card>
         </div>
 
-        {/* Beat 2 — HPP + margin react */}
+        {/* Beat 2 - HPP + margin react */}
         <div style={{ opacity: card2, transform: `translateY(${interpolate(card2, [0, 1], [60, 0])}px)` }}>
           <Card
             style={{
@@ -161,7 +161,7 @@ export const PriceAdapt: React.FC = () => {
           </Card>
         </div>
 
-        {/* Beat 3 — suggestion */}
+        {/* Beat 3 - suggestion */}
         <div style={{ opacity: banner, transform: `translateY(${interpolate(banner, [0, 1], [50, 0])}px)` }}>
           <div
             style={{
