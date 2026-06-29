@@ -11,18 +11,29 @@ const browser = await puppeteer.launch({
   args: ["--no-sandbox", "--disable-setuid-sandbox", "--hide-scrollbars"],
 });
 const page = await browser.newPage();
+// Next.js dev mode hydrates via eval(); the app sets a CSP without
+// 'unsafe-eval', which headless Chrome enforces and blocks hydration.
+// Bypass CSP so the client bundle runs and the login handler attaches.
+await page.setBypassCSP(true);
 await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
 
 // ---- login ----
 await page.goto(`${BASE}/login`, { waitUntil: "networkidle2" });
 await page.waitForSelector("input[type=email]");
-await page.waitForFunction(() => { const el = document.querySelector('button[type=submit]'); return el && Object.keys(el).some((k) => k.startsWith("__reactProps$")); }, { timeout: 30000, polling: 200 });
-await page.evaluate((email, pass) => { const set = (el, v) => { const d = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), "value"); d.set.call(el, v); el.dispatchEvent(new Event("input", { bubbles: true })); }; set(document.querySelector('input[type=email]'), email); set(document.querySelector('input[type=password]'), pass); }, "akun-demo@tatadata-dapur.com", "hasbi123456");
+await sleep(4500); // let the client bundle hydrate the form handler
+// Type natively so the form's React state updates the normal way.
+await page.type('input[type=email]', "akun-demo@tatadata-dapur.com", { delay: 25 });
+await page.type('input[type=password]', "hasbi123456", { delay: 25 });
+const authOk = page
+  .waitForResponse((r) => r.url().includes("/auth/v1/token") && r.status() === 200, { timeout: 30000 })
+  .then(() => console.log("  auth 200 OK"))
+  .catch(() => console.log("  WARN: no auth 200"));
+await sleep(300);
 await page.click('button[type=submit]');
-await page.waitForFunction(() => !location.pathname.includes("/login"), { timeout: 30000 }).catch(() => {});
-await sleep(1500);
+await authOk;
+await sleep(2000);
 await page.goto(`${BASE}/recipes`, { waitUntil: "networkidle2" });
-await sleep(1800);
+await sleep(4000); // let the recipes page hydrate so the button handler attaches
 
 // helpers
 const setSelect = (idx, text) => page.evaluate((idx, text) => {
@@ -39,15 +50,22 @@ const setQty = (row, val) => page.evaluate((row, val) => {
   setter.call(q, String(val));
   q.dispatchEvent(new Event("input", { bubbles: true }));
 }, row, val);
-const clickText = (t) => page.evaluate((t) => Array.from(document.querySelectorAll("button")).find((b) => b.textContent.trim() === t)?.click(), t);
+// Use a real (trusted) mouse click — evaluate().click() does not open the
+// modal or add rows because the handlers ignore synthetic clicks.
+const clickText = async (t) => {
+  const h = await page.evaluateHandle((t) => Array.from(document.querySelectorAll("button")).find((b) => b.textContent.trim() === t), t);
+  const el = h.asElement();
+  if (el) await el.click();
+};
 const scrollModalBottom = () => page.evaluate(() => {
   const d = document.querySelector('[role=dialog]') || document.querySelector('.fixed .overflow-y-auto') || document.querySelector('.overflow-y-auto');
   if (d) d.scrollTop = d.scrollHeight;
 });
 
-// open modal
+// open modal — wait for it to actually appear before recording
 await clickText("Produk Baru");
-await sleep(1200);
+await page.waitForSelector('input[placeholder="mis. Nasi Goreng"]', { timeout: 15000 });
+await sleep(600);
 
 // ---- start screencast ----
 const client = await page.target().createCDPSession();
