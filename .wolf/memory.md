@@ -690,3 +690,115 @@
 | 15:39 | Edited ../Tata-Data-Dapur-Land-Page/src/pages/HelpCenterPage.jsx | modified Android() | ~663 |
 | 15:40 | Add PWA install button + FAQ di app help & landing help | PWAInstallButton.tsx, AppLayout.tsx, helpContent.tsx, HelpCenterPage.jsx | done | ~800 |
 | 15:40 | Session end: 5 writes across 4 files (PWAInstallButton.tsx, AppLayout.tsx, helpContent.tsx, HelpCenterPage.jsx) | 3 reads | ~10920 tok |
+| 15:45 | Session end: 5 writes across 4 files (PWAInstallButton.tsx, AppLayout.tsx, helpContent.tsx, HelpCenterPage.jsx) | 3 reads | ~10920 tok |
+| 15:45 | Session end: 5 writes across 4 files (PWAInstallButton.tsx, AppLayout.tsx, helpContent.tsx, HelpCenterPage.jsx) | 3 reads | ~10920 tok |
+
+## Session: 2026-06-20 20:15
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 20:24 | Created promo-video/package.json | — | ~132 |
+| 20:24 | Created promo-video/tsconfig.json | — | ~80 |
+| 20:24 | Created promo-video/remotion.config.ts | — | ~34 |
+| 20:24 | Created promo-video/src/index.ts | — | ~32 |
+| 20:24 | Created promo-video/src/theme.ts | — | ~142 |
+| 20:24 | Created promo-video/src/Root.tsx | — | ~82 |
+| 20:24 | Created promo-video/src/fonts.ts | — | ~193 |
+| 20:24 | Created promo-video/src/ui.tsx | — | ~820 |
+| 20:25 | Created promo-video/src/scenes/Intro.tsx | — | ~852 |
+| 20:25 | Created promo-video/src/scenes/RecipeHPP.tsx | — | ~1858 |
+| 20:25 | Created promo-video/src/scenes/Sales.tsx | — | ~1018 |
+| 20:26 | Created promo-video/src/scenes/Stock.tsx | — | ~1194 |
+| 20:26 | Created promo-video/src/scenes/Outro.tsx | — | ~601 |
+| 20:26 | Created promo-video/src/Promo.tsx | — | ~440 |
+| 20:33 | Built Remotion promo video (30s, 1080x1920 vertical) | promo-video/ | rendered out/promo.mp4 2.9MB | ~12k |
+| 20:33 | Session end: 14 writes across 14 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 8 reads | ~7808 tok |
+| 21:08 | Created promo-video/src/decor.tsx | — | ~1417 |
+| 21:08 | Edited promo-video/src/ui.tsx | expanded (+40 lines) | ~576 |
+| 21:08 | Edited promo-video/src/Promo.tsx | 25→25 lines | ~186 |
+| 21:08 | Edited promo-video/src/scenes/RecipeHPP.tsx | added 2 import(s) | ~63 |
+| 21:08 | Edited promo-video/src/scenes/RecipeHPP.tsx | 2→2 lines | ~24 |
+| 21:08 | Edited promo-video/src/scenes/RecipeHPP.tsx | 16→20 lines | ~176 |
+| 21:09 | Edited promo-video/src/scenes/RecipeHPP.tsx | 2→3 lines | ~29 |
+| 21:09 | Edited promo-video/src/scenes/Sales.tsx | added 2 import(s) | ~66 |
+| 21:09 | Edited promo-video/src/scenes/Sales.tsx | 2→3 lines | ~44 |
+| 21:09 | Edited promo-video/src/scenes/Sales.tsx | 2→3 lines | ~30 |
+| 21:09 | Edited promo-video/src/scenes/Sales.tsx | 3→3 lines | ~64 |
+| 21:09 | Edited promo-video/src/scenes/Sales.tsx | inline fix | ~22 |
+| 21:09 | Edited promo-video/src/scenes/Sales.tsx | CSS: display, alignItems, gap | ~183 |
+| 21:09 | Edited promo-video/src/scenes/Stock.tsx | added 2 import(s) | ~63 |
+| 21:09 | Edited promo-video/src/scenes/Stock.tsx | 2→3 lines | ~42 |
+| 21:10 | Edited promo-video/src/scenes/Stock.tsx | CSS: display, alignItems, gap | ~206 |
+| 21:10 | Edited promo-video/src/scenes/Stock.tsx | 2→3 lines | ~29 |
+| 21:10 | Edited promo-video/src/scenes/Intro.tsx | added 1 import(s) | ~36 |
+| 21:10 | Edited promo-video/src/scenes/Intro.tsx | expanded (+14 lines) | ~145 |
+| 21:10 | Edited promo-video/src/scenes/Intro.tsx | 6→7 lines | ~24 |
+| 21:10 | Edited promo-video/src/scenes/Outro.tsx | added 2 import(s) | ~47 |
+| 21:10 | Edited promo-video/src/scenes/Outro.tsx | 7→8 lines | ~46 |
+| 21:10 | Edited promo-video/src/scenes/Outro.tsx | CSS: display, alignItems, gap | ~128 |
+| 21:20 | Edited promo-video/src/Promo.tsx | edges() → only() | ~154 |
+| 21:21 | Edited promo-video/src/Promo.tsx | 5→5 lines | ~38 |
+| 21:30 | Edited promo-video/src/Promo.tsx | only() → them() | ~190 |
+| 21:30 | Edited promo-video/src/Promo.tsx | 5→5 lines | ~39 |
+| 21:31 | Edited promo-video/src/scenes/Stock.tsx | 6→6 lines | ~60 |
+| 21:41 | Promo v2: premium pass (lucide icons, custom veg SVG decor, grain/vignette, hard-cut transitions, longer reveal holds) | promo-video/src/* | rendered 3.3MB | ~10k |
+| 21:41 | Session end: 42 writes across 15 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 16 reads | ~11935 tok |
+| 21:56 | Created promo-video/shoot.mjs | — | ~407 |
+| 21:59 | Edited promo-video/shoot.mjs | added 1 condition(s) | ~206 |
+| 22:02 | Edited promo-video/shoot.mjs | expanded (+18 lines) | ~347 |
+| 22:04 | Edited promo-video/shoot.mjs | expanded (+10 lines) | ~137 |
+| 22:06 | Created promo-video/debug.mjs | — | ~300 |
+| 22:07 | Created promo-video/debug.mjs | — | ~292 |
+| 22:16 | Edited tsconfig.json | 3→4 lines | ~16 |
+| 22:21 | Created promo-video/src/scenes/Shot.tsx | — | ~1356 |
+| 22:21 | Edited promo-video/src/scenes/Shot.tsx | 3→3 lines | ~45 |
+| 22:22 | Created promo-video/src/Promo.tsx | — | ~759 |
+| 22:31 | Created promo-video/makemusic.sh | — | ~404 |
+| 22:35 | Promo v3: real app screenshots (puppeteer mobile login, prod build to bypass dev CSP eval-block) + device-frame scenes + callouts + ffmpeg ambient music | promo-video/*, shoot.mjs, makemusic.sh | out/promo_music.mp4 12.5MB 30s | ~18k |
+| 22:37 | Session end: 53 writes across 19 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 27 reads | ~17357 tok |
+| 22:43 | Session end: 53 writes across 19 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 27 reads | ~17357 tok |
+| 23:15 | Session end: 53 writes across 19 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 28 reads | ~17357 tok |
+| 23:21 | Session end: 53 writes across 19 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 28 reads | ~17357 tok |
+| 13:35 | Created promo-video/src/decor.tsx | — | ~770 |
+| 13:36 | Edited promo-video/src/scenes/Shot.tsx | 0.14 → 0.5 | ~14 |
+| 13:36 | Edited promo-video/src/scenes/Intro.tsx | inline fix | ~12 |
+| 13:36 | Edited promo-video/src/scenes/Outro.tsx | inline fix | ~12 |
+| 13:45 | Session end: 57 writes across 19 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 31 reads | ~18165 tok |
+| 15:33 | Created promo-video/explore.mjs | — | ~823 |
+| 15:33 | Edited promo-video/explore.mjs | modified if() | ~82 |
+| 15:34 | Created promo-video/explore2.mjs | — | ~599 |
+| 15:35 | Created promo-video/explore3.mjs | — | ~587 |
+| 15:36 | Created promo-video/record.mjs | — | ~1295 |
+| 15:39 | Created promo-video/makemusic.sh | — | ~618 |
+| 15:40 | Edited promo-video/src/ui.tsx | expanded (+35 lines) | ~246 |
+| 15:40 | Edited promo-video/src/decor.tsx | 8→9 lines | ~125 |
+| 15:40 | Edited promo-video/src/scenes/Shot.tsx | 4→4 lines | ~43 |
+| 15:40 | Edited promo-video/src/scenes/Shot.tsx | removed 20 lines | ~17 |
+| 15:41 | Created promo-video/src/scenes/RecipeFlow.tsx | — | ~1007 |
+| 15:41 | Created promo-video/src/Promo.tsx | — | ~700 |
+| 15:41 | Edited promo-video/src/scenes/Intro.tsx | inline fix | ~17 |
+| 15:41 | Edited promo-video/src/scenes/Intro.tsx | inline fix | ~10 |
+| 15:41 | Edited promo-video/src/scenes/Intro.tsx | inline fix | ~15 |
+| 15:41 | Edited promo-video/src/scenes/Outro.tsx | inline fix | ~14 |
+| 15:43 | Edited promo-video/src/Promo.tsx | 7→7 lines | ~79 |
+| 15:54 | Promo v4: recorded recipe->HPP flow (CDP screencast embedded via OffthreadVideo), demo account, humanizer-applied copy, CaptionBar backdrop fix, phone-friendly music (octave-up+arpeggio) | promo-video/* record.mjs makemusic.sh | https://files.catbox.moe/ymhyyn.mp4 | ~22k |
+| 15:54 | Session end: 74 writes across 24 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 39 reads | ~24727 tok |
+| 17:00 | Created promo-video/makemusic.sh | — | ~749 |
+| 17:01 | Created promo-video/src/scenes/Pain.tsx | — | ~789 |
+| 17:01 | Edited promo-video/src/scenes/Intro.tsx | removed 36 lines | ~23 |
+| 17:01 | Edited promo-video/src/scenes/Intro.tsx | removed 7 lines | ~3 |
+| 17:02 | Edited promo-video/src/Promo.tsx | added 1 import(s) | ~67 |
+| 17:02 | Edited promo-video/src/Promo.tsx | expanded (+7 lines) | ~234 |
+| 17:02 | Edited promo-video/src/Promo.tsx | 16→16 lines | ~150 |
+| 17:13 | Session end: 81 writes across 25 files (package.json, tsconfig.json, remotion.config.ts, index.ts, theme.ts) | 42 reads | ~27524 tok |
+
+## Session: 2026-07-30 19:12
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 19:16 | Created supabase/migrations/027_drop_stale_produce_overloads.sql | — | ~451 |
+| 19:20 | Fix ambiguous produce_recipe RPC overload (migrasi 027 drop signature 5-arg) | supabase/migrations/027_drop_stale_produce_overloads.sql, .wolf/buglog.json | file dibuat, perlu di-apply manual di SQL editor | ~3k |
+| 19:17 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 1 reads | ~483 tok |
+| 19:26 | Apply migrasi 027 ke tata-data-dapur via Supabase MCP; verifikasi hanya overload p_force tersisa | supabase (remote) | fixed | ~4k |
+| 19:27 | Audit drift my-kitchen-book: 024/025/026 belum di-apply (no p_force, no orders table) | supabase (remote) | dilaporkan ke user | ~1k |
+| 19:19 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 1 reads | ~483 tok |

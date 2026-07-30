@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-18T08:39:24.217Z
-> Files: 92 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-30T12:16:02.254Z
+> Files: 118 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../../../tmp/
 
@@ -38,7 +38,7 @@
 - `package.json` — Node.js package manifest (~287 tok)
 - `postcss.config.mjs` — Declares config (~26 tok)
 - `README.md` — Project documentation (~363 tok)
-- `tsconfig.json` — TypeScript configuration (~206 tok)
+- `tsconfig.json` — TypeScript configuration (~211 tok)
 - `tsconfig.tsbuildinfo` (~51208 tok)
 - `wrangler.toml` (~134 tok)
 
@@ -56,6 +56,40 @@
 - `ARCHITECTURE.md` — Arsitektur Multi-Tenant (Base App + Paket Fitur) (~761 tok)
 - `PLAN-MULTI-TENANT-KASIR.md` — Rencana Dasar: Multi-Tenant Base App + Paket Fitur (mulai dari Modul Kasir) (~3579 tok)
 - `PROVISIONING.md` — Playbook: Onboarding Klien Baru (~715 tok)
+
+## promo-video/
+
+- `debug.mjs` — Declares sleep (~292 tok)
+- `explore.mjs` — Declares sleep (~812 tok)
+- `explore2.mjs` — Declares sleep (~599 tok)
+- `explore3.mjs` — Declares sleep (~587 tok)
+- `makemusic.sh` (~749 tok)
+- `package.json` — Node.js package manifest (~132 tok)
+- `record.mjs` — Declares sleep (~1295 tok)
+- `remotion.config.ts` (~34 tok)
+- `shoot.mjs` — Declares BASE (~673 tok)
+- `tsconfig.json` — TypeScript configuration (~80 tok)
+
+## promo-video/src/
+
+- `decor.tsx` — ALL (~792 tok)
+- `fonts.ts` — Exports poppins, openSans, fraunces, dmMono (~193 tok)
+- `index.ts` (~32 tok)
+- `Promo.tsx` — Fade (~759 tok)
+- `Root.tsx` — RemotionRoot (~82 tok)
+- `theme.ts` — Warm Earthy Palette — mirrors app globals.css (~142 tok)
+- `ui.tsx` — Top status/app bar of a phone app screen (~1369 tok)
+
+## promo-video/src/scenes/
+
+- `Intro.tsx` — Intro (~686 tok)
+- `Outro.tsx` — Outro (~675 tok)
+- `Pain.tsx` — PAINS (~789 tok)
+- `RecipeFlow.tsx` — RecipeFlow (~1007 tok)
+- `RecipeHPP.tsx` — ROWS (~1940 tok)
+- `Sales.tsx` — PRICE (~1128 tok)
+- `Shot.tsx` — Shot (~1247 tok)
+- `Stock.tsx` — ITEMS (~1296 tok)
 
 ## public/
 
@@ -198,6 +232,8 @@
 - `022_update_production_stock_guard.sql` — Migration 022: Add negative-stock guard to update_production (~1747 tok)
 - `024_produce_sub_recipe_force.sql` — Migration 024: Add p_force bypass to produce_sub_recipe (~1058 tok)
 - `025_produce_recipe_force.sql` — Migration 025: Add p_force bypass to produce_recipe (~1002 tok)
+- `027_drop_stale_produce_overloads.sql` — Migration 027: drops pre-p_force 5-arg overloads of produce_recipe/produce_sub_recipe that made RPC resolution ambiguous; DO block asserts only p_force variants remain (~500 tok)
+- `027_drop_stale_produce_overloads.sql` — Migration 027: Drop stale 5-arg overloads of produce_recipe / produce_sub_recipe (~451 tok)
 
 ## supabase/seeds/
 

@@ -640,6 +640,491 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-06-17T06:45:10.034Z"
+    },
+    {
+      "id": "bug-040",
+      "timestamp": "2026-06-17T06:48:30.638Z",
+      "error_message": "CSS fix: icon",
+      "file": "src/components/help/helpContent.tsx",
+      "root_cause": "icon: \"cake\", title: \"Add-on Penjualan\", body: \"Bahan seperti topper kue, lilin ulang tahun, atau kemasan khusus bisa ditandai sebagai add-on. Nanti bisa dipilih sebagai tambahan pas mencatat penjualan produk.\" → \"alert-triangle\", title: \"Banner Stok Minus & Restock Cepat\", body: \"Kalau ada bahan dengan stok negatif — misal setelah catat penjualan hectic sebelum sempat update stok masuk — banner merah muncul di bagian atas halaman ini. Ketuk untuk langsung buka form restock yang sudah ter-isi qty kekurangan dan harga rata-rata terakhir. Semua bahan yang minus bisa dicatat pembeliannya sekaligus dalam satu klik.\"",
+      "fix": "Changed icon: \"cake\", title: \"Add-on Penjualan\", body: \"Bahan seperti topper kue, lilin ulang tahun, atau kemasan khusus bisa ditandai sebagai add-on. Nanti bisa dipilih sebagai tambahan pas mencatat penjualan produk.\" → \"alert-triangle\", title: \"Banner Stok Minus & Restock Cepat\", body: \"Kalau ada bahan dengan stok negatif — misal setelah catat penjualan hectic sebelum sempat update stok masuk — banner merah muncul di bagian atas halaman ini. Ketuk untuk langsung buka form restock yang sudah ter-isi qty kekurangan dan harga rata-rata terakhir. Semua bahan yang minus bisa dicatat pembeliannya sekaligus dalam satu klik.\"",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-17T06:48:54.641Z"
+    },
+    {
+      "id": "bug-041",
+      "timestamp": "2026-06-17T06:49:28.789Z",
+      "error_message": "CSS fix: title, desc",
+      "file": "../Tata-Data-Dapur-Land-Page/src/components/SolutionSection.jsx",
+      "root_cause": "title: 'Stok terpantau tanpa hitung manual', → 'Stok terpantau — bahkan saat lagi hectic sekalipun',; desc: 'Setiap transaksi langsung kurangi stok secara otomatis. Kamu bisa cek kondisi stok kapan saja dari HP, tanpa perlu hitung fisik tiap pagi.', → 'Setiap transaksi langsung memperbarui stok otomatis. Kalau lagi ramai dan belum sempat catat bahan masuk, bisa catat penjualan dulu — app tandai bahan yang minus dan siapkan form restock satu ketuk saat kamu sudah sempat.',",
+      "fix": "Changed title: 'Stok terpantau tanpa hitung manual', → 'Stok terpantau — bahkan saat lagi hectic sekalipun',; desc: 'Setiap transaksi langsung kurangi stok secara otomatis. Kamu bisa cek kondisi stok kapan saja dari HP, tanpa perlu hitung fisik tiap pagi.', → 'Setiap transaksi langsung memperbarui stok otomatis. Kalau lagi ramai dan belum sempat catat bahan masuk, bisa catat penjualan dulu — app tandai bahan yang minus dan siapkan form restock satu ketuk saat kamu sudah sempat.',",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T06:49:28.789Z"
+    },
+    {
+      "id": "bug-042",
+      "timestamp": "2026-06-17T06:51:57.352Z",
+      "error_message": "CSS fix: icon",
+      "file": "../Tata-Data-Dapur-Land-Page/src/pages/HelpCenterPage.jsx",
+      "root_cause": "icon: 'cake', title: 'Add-on Penjualan', body: 'Bahan seperti topper kue, lilin ulang tahun, atau kemasan khusus bisa ditandai sebagai add-on. Nanti bisa dipilih sebagai tambahan pas mencatat penjualan produk.' → 'alert-triangle', title: 'Banner Stok Minus & Restock Cepat', body: 'Kalau ada bahan dengan stok negatif — misal setelah catat penjualan hectic sebelum sempat update stok masuk — banner merah muncul di bagian atas halaman ini. Ketuk untuk langsung buka form restock yang sudah ter-isi qty kekurangan dan harga rata-rata terakhir. Semua bahan yang minus bisa dicatat pembeliannya sekaligus dalam satu klik.'",
+      "fix": "Changed icon: 'cake', title: 'Add-on Penjualan', body: 'Bahan seperti topper kue, lilin ulang tahun, atau kemasan khusus bisa ditandai sebagai add-on. Nanti bisa dipilih sebagai tambahan pas mencatat penjualan produk.' → 'alert-triangle', title: 'Banner Stok Minus & Restock Cepat', body: 'Kalau ada bahan dengan stok negatif — misal setelah catat penjualan hectic sebelum sempat update stok masuk — banner merah muncul di bagian atas halaman ini. Ketuk untuk langsung buka form restock yang sudah ter-isi qty kekurangan dan harga rata-rata terakhir. Semua bahan yang minus bisa dicatat pembeliannya sekaligus dalam satu klik.'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "jsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-17T06:52:07.823Z"
+    },
+    {
+      "id": "bug-043",
+      "timestamp": "2026-06-17T07:25:28.350Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 13→23 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:25:28.350Z"
+    },
+    {
+      "id": "bug-044",
+      "timestamp": "2026-06-17T07:39:34.875Z",
+      "error_message": "CSS fix: p_batches",
+      "file": "src/app/sales/page.tsx",
+      "root_cause": "p_batches: shortfall, p_total_cost: hppTotal, → shortfall, p_total_cost: hppTotal, p_force: true,",
+      "fix": "Changed p_batches: shortfall, p_total_cost: hppTotal, → shortfall, p_total_cost: hppTotal, p_force: true,",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:39:34.875Z"
+    },
+    {
+      "id": "bug-045",
+      "timestamp": "2026-06-17T07:54:06.852Z",
+      "error_message": "CSS fix: quantity",
+      "file": "src/app/items/page.tsx",
+      "root_cause": "quantity: Number(r.qty), → String(Math.abs(i.stock ?? 0)),",
+      "fix": "Changed quantity: Number(r.qty), → String(Math.abs(i.stock ?? 0)),",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:54:06.852Z"
+    },
+    {
+      "id": "bug-046",
+      "timestamp": "2026-06-17T07:55:10.911Z",
+      "error_message": "Missing error handling in openCreate",
+      "file": "src/app/purchases/page.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:55:10.911Z"
+    },
+    {
+      "id": "bug-047",
+      "timestamp": "2026-06-17T07:59:05.780Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/app/items/page.tsx",
+      "root_cause": "Had \"/purchases?restock=1\"",
+      "fix": "Changed to \"/purchases\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:59:05.780Z"
+    },
+    {
+      "id": "bug-048",
+      "timestamp": "2026-06-18T08:38:06.541Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/components/layout/AppLayout.tsx",
+      "root_cause": "Had \"lucide-react\"",
+      "fix": "Changed to \"@/components/PWAInstallButton\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T08:38:06.542Z"
+    },
+    {
+      "id": "bug-049",
+      "timestamp": "2026-06-18T08:38:10.181Z",
+      "error_message": "Wrong reference: Link should be PWAInstallButton",
+      "file": "src/components/layout/AppLayout.tsx",
+      "root_cause": "Used \"Link\" instead of \"PWAInstallButton\"",
+      "fix": "Changed Link → PWAInstallButton",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T08:38:10.181Z"
+    },
+    {
+      "id": "bug-050",
+      "timestamp": "2026-06-20T14:08:16.659Z",
+      "error_message": "Significant refactor of ",
+      "file": "promo-video/src/ui.tsx",
+      "root_cause": "14 lines replaced/restructured",
+      "fix": "Rewrote 45→85 lines (14 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:08:16.659Z"
+    },
+    {
+      "id": "bug-051",
+      "timestamp": "2026-06-20T14:09:03.692Z",
+      "error_message": "Wrong reference: AbsoluteFill should be Grain",
+      "file": "promo-video/src/scenes/RecipeHPP.tsx",
+      "root_cause": "Used \"AbsoluteFill\" instead of \"Grain\"",
+      "fix": "Changed AbsoluteFill → Grain",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:09:03.692Z"
+    },
+    {
+      "id": "bug-052",
+      "timestamp": "2026-06-20T14:09:18.062Z",
+      "error_message": "Incorrect value in code",
+      "file": "promo-video/src/scenes/Sales.tsx",
+      "root_cause": "Had \"🧾\"",
+      "fix": "Changed to \"Untung Otomatis\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:09:18.062Z"
+    },
+    {
+      "id": "bug-053",
+      "timestamp": "2026-06-20T14:09:24.509Z",
+      "error_message": "Wrong reference: AbsoluteFill should be Grain",
+      "file": "promo-video/src/scenes/Sales.tsx",
+      "root_cause": "Used \"AbsoluteFill\" instead of \"Grain\"",
+      "fix": "Changed AbsoluteFill → Grain",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:09:24.509Z"
+    },
+    {
+      "id": "bug-054",
+      "timestamp": "2026-06-20T14:09:45.438Z",
+      "error_message": "CSS fix: fontFamily",
+      "file": "promo-video/src/scenes/Sales.tsx",
+      "root_cause": "fontFamily: openSans, fontSize: 28, color: \"rgba(255,255,255,0.85)\" → openSans,",
+      "fix": "Changed fontFamily: openSans, fontSize: 28, color: \"rgba(255,255,255,0.85)\" → openSans,",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:09:45.438Z"
+    },
+    {
+      "id": "bug-055",
+      "timestamp": "2026-06-20T14:09:57.992Z",
+      "error_message": "Incorrect value in code",
+      "file": "promo-video/src/scenes/Stock.tsx",
+      "root_cause": "Had \"📦\"",
+      "fix": "Changed to \"Real-time\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:09:57.992Z"
+    },
+    {
+      "id": "bug-056",
+      "timestamp": "2026-06-20T14:10:12.357Z",
+      "error_message": "Wrong reference: AbsoluteFill should be Grain",
+      "file": "promo-video/src/scenes/Stock.tsx",
+      "root_cause": "Used \"AbsoluteFill\" instead of \"Grain\"",
+      "fix": "Changed AbsoluteFill → Grain",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:10:12.357Z"
+    },
+    {
+      "id": "bug-057",
+      "timestamp": "2026-06-20T14:10:59.670Z",
+      "error_message": "CSS fix: padding",
+      "file": "promo-video/src/scenes/Outro.tsx",
+      "root_cause": "padding: \"36px 96px\", → \"36px 84px\",",
+      "fix": "Changed padding: \"36px 96px\", → \"36px 84px\",",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:10:59.670Z"
+    },
+    {
+      "id": "bug-058",
+      "timestamp": "2026-06-20T14:20:56.758Z",
+      "error_message": "CSS fix: Fade",
+      "file": "promo-video/src/Promo.tsx",
+      "root_cause": "Fade: React.FC<{ dur: number → React.FC<{",
+      "fix": "Changed Fade: React.FC<{ dur: number → React.FC<{",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:20:56.758Z"
+    },
+    {
+      "id": "bug-059",
+      "timestamp": "2026-06-20T14:30:41.352Z",
+      "error_message": "CSS fix: extrapolateLeft",
+      "file": "promo-video/src/Promo.tsx",
+      "root_cause": "extrapolateLeft: \"clamp\", extrapolateRight: \"clamp\" → \"clamp\"",
+      "fix": "Changed extrapolateLeft: \"clamp\", extrapolateRight: \"clamp\" → \"clamp\"",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:30:41.352Z"
+    },
+    {
+      "id": "bug-060",
+      "timestamp": "2026-06-20T14:59:24.079Z",
+      "error_message": "Function not marked async",
+      "file": "promo-video/shoot.mjs",
+      "root_cause": "Function uses await but wasn't declared async",
+      "fix": "Added async modifier",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "mjs"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T14:59:24.079Z"
+    },
+    {
+      "id": "bug-061",
+      "timestamp": "2026-06-20T15:02:35.057Z",
+      "error_message": "Significant refactor of ",
+      "file": "promo-video/shoot.mjs",
+      "root_cause": "12 lines replaced/restructured",
+      "fix": "Rewrote 20→38 lines (12 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "mjs"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T15:02:35.057Z"
+    },
+    {
+      "id": "bug-062",
+      "timestamp": "2026-06-20T15:21:44.630Z",
+      "error_message": "Incorrect value in code",
+      "file": "promo-video/src/scenes/Shot.tsx",
+      "root_cause": "Had `translateX(${right ? 1 : -1} * 0) translateY(-50%",
+      "fix": "Changed to `translateY(-50%) scale(${op})`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-20T15:21:44.630Z"
+    },
+    {
+      "id": "bug-063",
+      "timestamp": "2026-06-21T08:40:05.588Z",
+      "error_message": "Type error",
+      "file": "promo-video/src/ui.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-21T08:40:05.588Z"
+    },
+    {
+      "id": "bug-064",
+      "timestamp": "2026-06-21T08:40:22.646Z",
+      "error_message": "CSS fix: x",
+      "file": "promo-video/src/decor.tsx",
+      "root_cause": "x: 880, y: 820, size: 190, rot: -24, drift: -8 → 885, y: 800, size: 185, rot: -24, drift: -8",
+      "fix": "Changed x: 880, y: 820, size: 190, rot: -24, drift: -8 → 885, y: 800, size: 185, rot: -24, drift: -8",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-21T08:40:22.646Z"
+    },
+    {
+      "id": "bug-065",
+      "timestamp": "2026-06-21T08:40:41.561Z",
+      "error_message": "Significant refactor of ",
+      "file": "promo-video/src/scenes/Shot.tsx",
+      "root_cause": "18 lines replaced/restructured",
+      "fix": "Rewrote 20→3 lines (18 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-21T08:40:41.561Z"
+    },
+    {
+      "id": "bug-066",
+      "timestamp": "2026-06-21T08:41:42.264Z",
+      "error_message": "Incorrect value in code",
+      "file": "promo-video/src/scenes/Intro.tsx",
+      "root_cause": "Had \"Pantau Stok\"",
+      "fix": "Changed to \"Cek Stok\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-21T08:41:42.264Z"
+    },
+    {
+      "id": "bug-067",
+      "timestamp": "2026-06-21T08:43:18.841Z",
+      "error_message": "CSS fix: text",
+      "file": "promo-video/src/Promo.tsx",
+      "root_cause": "text: \"stok mau habis\", atY: 0.12, color: C.destructive, side: \"right\" → \"sisa stok\", atY: 0.34, color: C.verde, side: \"right\"",
+      "fix": "Changed text: \"stok mau habis\", atY: 0.12, color: C.destructive, side: \"right\" → \"sisa stok\", atY: 0.34, color: C.verde, side: \"right\"",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-21T08:43:18.841Z"
+    },
+    {
+      "id": "bug-068",
+      "timestamp": "2026-06-21T10:01:42.126Z",
+      "error_message": "Significant refactor of ",
+      "file": "promo-video/src/scenes/Intro.tsx",
+      "root_cause": "30 lines replaced/restructured",
+      "fix": "Rewrote 36→3 lines (30 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-21T10:01:42.126Z"
+    },
+    {
+      "id": "bug-069",
+      "timestamp": "2026-07-30T19:20:00.000Z",
+      "error_message": "Could not choose the best candidate function between: public.produce_recipe(p_user_id => uuid, p_recipe_id => uuid, p_batches => numeric, p_total_cost => numeric, p_created_at => timestamp with time zone), public.produce_recipe(... , p_force => boolean)",
+      "file": "supabase/migrations/027_drop_stale_produce_overloads.sql",
+      "root_cause": "Migrasi 024/025 pakai CREATE OR REPLACE FUNCTION sambil menambah param p_force. Karena signature berubah, Postgres membuat overload BARU, bukan mengganti fungsi lama. Panggilan RPC 5-arg (produksi page, usePurchases) cocok ke dua-duanya (p_force punya DEFAULT) sehingga resolusi fungsi ambigu.",
+      "fix": "Migrasi 027: DROP FUNCTION IF EXISTS public.produce_recipe(uuid,uuid,numeric,numeric,timestamptz) dan produce_sub_recipe(sama) + DO block sanity check bahwa hanya varian ber-p_force yang tersisa. Aturan: menambah/menghapus parameter RPC WAJIB DROP FUNCTION signature lama, CREATE OR REPLACE tidak cukup. APPLIED ke tata-data-dapur (tqhfnaerzttcfceoygxw) 2026-07-30 via MCP apply_migration; terverifikasi tinggal 1 overload ber-p_force. my-kitchen-book (sbjjnlkemezsjjcaeznj) TIDAK kena bug ini (024/025 belum pernah di-apply di sana, jadi cuma ada varian 5-arg) — jangan jalankan 027 di sana sebelum 024+025 masuk.",
+      "tags": [
+        "supabase",
+        "postgres",
+        "rpc",
+        "overload",
+        "produce_recipe",
+        "produce_sub_recipe",
+        "migration",
+        "produksi"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-30T19:20:00.000Z"
     }
   ]
 }

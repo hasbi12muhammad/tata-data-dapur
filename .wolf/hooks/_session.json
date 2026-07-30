@@ -1,21 +1,27 @@
 {
-  "session_id": "session-2026-06-13-0453",
-  "started": "2026-06-13T04:53:08.873Z",
-  "files_read": {},
+  "session_id": "session-2026-07-30-1912",
+  "started": "2026-07-30T12:12:04.826Z",
+  "files_read": {
+    "/home/hasbi/Downloads/WhatsApp Image 2026-07-30 at 19.11.24.jpeg": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-30T12:13:54.923Z"
+    }
+  },
   "files_written": [
     {
-      "file": "/home/user/tata-data-dapur/docs/PLAN-MULTI-TENANT-KASIR.md",
+      "file": "/home/hasbi/Proyek/TataData-Dapur/supabase/migrations/027_drop_stale_produce_overloads.sql",
       "action": "create",
-      "tokens": 2170,
-      "at": "2026-06-13T04:54:12.888Z"
+      "tokens": 483,
+      "at": "2026-07-30T12:16:02.337Z"
     }
   ],
   "edit_counts": {
-    "docs/PLAN-MULTI-TENANT-KASIR.md": 1
+    "supabase/migrations/027_drop_stale_produce_overloads.sql": 1
   },
   "anatomy_hits": 0,
-  "anatomy_misses": 0,
+  "anatomy_misses": 1,
   "repeated_reads_warned": 0,
   "cerebrum_warnings": 0,
-  "stop_count": 0
+  "stop_count": 2
 }
