@@ -1143,6 +1143,27 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-30T19:32:00.000Z"
+    },
+    {
+      "id": "bug-071",
+      "timestamp": "2026-07-30T12:24:16.000Z",
+      "error_message": "Cloudflare Pages build gagal: ./promo-video/remotion.config.ts:1:24 Type error: Cannot find module '@remotion/cli/config' or its corresponding type declarations. Next.js build worker exited with code: 1",
+      "file": "tsconfig.json",
+      "root_cause": "tsconfig root pakai include \"**/*.ts\" tanpa mengecualikan promo-video/. promo-video adalah subproject terpisah dengan package.json + node_modules sendiri (remotion TIDAK ada di package.json root), jadi `npm clean-install` di CI tak menginstall @remotion/cli. Tahap 'Linting and checking validity of types' next build ikut mengetik-cek file promo-video dan gagal. Lokal lolos karena promo-video/node_modules sudah ada.",
+      "fix": "Tambah \"promo-video\" ke tsconfig.json exclude. Verifikasi: `npx tsc --noEmit` exit 0 dengan exclude; tanpa exclude muncul error dari promo-video/src/index.ts. Aturan: subfolder ber-package.json sendiri harus di-exclude dari tsconfig root.",
+      "tags": [
+        "build",
+        "deploy",
+        "cloudflare-pages",
+        "tsconfig",
+        "typescript",
+        "remotion",
+        "promo-video",
+        "monorepo"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-30T12:24:16.000Z"
     }
   ]
 }

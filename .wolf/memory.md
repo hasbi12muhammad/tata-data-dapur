@@ -804,3 +804,5 @@
 | 19:19 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 1 reads | ~483 tok |
 | 19:21 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 1 reads | ~483 tok |
 | 19:32 | Restore public/manifest.json yang terhapus (layout.tsx masih refer /manifest.json) | public/manifest.json, .wolf/buglog.json | restored dari HEAD, tree bersih | ~1k |
+| 19:23 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 1 reads | ~483 tok |
+| 19:40 | Fix deploy CF Pages gagal: exclude promo-video di tsconfig (remotion tak terinstall di CI) | tsconfig.json, .wolf/buglog.json | tsc --noEmit exit 0, pushed | ~5k |
