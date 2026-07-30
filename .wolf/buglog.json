@@ -1125,6 +1125,24 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-30T19:20:00.000Z"
+    },
+    {
+      "id": "bug-070",
+      "timestamp": "2026-07-30T19:32:00.000Z",
+      "error_message": "public/manifest.json terhapus dari working tree (D di git status) — PWA manifest hilang",
+      "file": "public/manifest.json",
+      "root_cause": "File terhapus tak sengaja di sesi sebelumnya. Tidak ada pengganti src/app/manifest.ts, sedangkan src/app/layout.tsx:12 masih menunjuk manifest: \"/manifest.json\" — install PWA jadi rusak.",
+      "fix": "git checkout -- public/manifest.json (isi HEAD masih benar). Cek: kalau manifest hilang lagi, pastikan layout.tsx metadata.manifest dan file statis tetap sinkron, atau migrasi ke src/app/manifest.ts.",
+      "tags": [
+        "pwa",
+        "manifest",
+        "public",
+        "accidental-delete",
+        "layout"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-30T19:32:00.000Z"
     }
   ]
 }

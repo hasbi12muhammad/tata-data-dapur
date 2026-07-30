@@ -802,3 +802,5 @@
 | 19:26 | Apply migrasi 027 ke tata-data-dapur via Supabase MCP; verifikasi hanya overload p_force tersisa | supabase (remote) | fixed | ~4k |
 | 19:27 | Audit drift my-kitchen-book: 024/025/026 belum di-apply (no p_force, no orders table) | supabase (remote) | dilaporkan ke user | ~1k |
 | 19:19 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 1 reads | ~483 tok |
+| 19:21 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 1 reads | ~483 tok |
+| 19:32 | Restore public/manifest.json yang terhapus (layout.tsx masih refer /manifest.json) | public/manifest.json, .wolf/buglog.json | restored dari HEAD, tree bersih | ~1k |
