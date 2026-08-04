@@ -1,0 +1,3722 @@
+{
+  "version": 1,
+  "meta": {
+    "lastScanned": "2026-08-04T05:08:53.513Z",
+    "fileCount": 284,
+    "hits": 0,
+    "misses": 0,
+    "renderedHash": "f5c02b96d8b258b9650b71bdfe6508e08c1ae1193479f2236ce0daaeae0333ce",
+    "storeUpdatedAt": "2026-08-04T05:08:53.514Z"
+  },
+  "files": {
+    ".agents/skills/higgsfield-generate/references/marketing-ad-references.md": {
+      "description": "Marketing Studio Ad References",
+      "tokens": 1075,
+      "hash": "7bbf52b4bd6bfc5e",
+      "size": 4314,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/marketing-avatars.md": {
+      "description": "Avatars",
+      "tokens": 349,
+      "hash": "b28c7cf1df62173d",
+      "size": 1395,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/marketing-brand-kits.md": {
+      "description": "Marketing Studio Brand Kits",
+      "tokens": 562,
+      "hash": "3990d51add8c3f60",
+      "size": 2256,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/marketing-dtc-ads.md": {
+      "description": "DTC Ads Engine",
+      "tokens": 1166,
+      "hash": "4d12a3b5eef151f5",
+      "size": 4698,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/marketing-modes.md": {
+      "description": "Marketing Studio Modes",
+      "tokens": 823,
+      "hash": "2ac9021f73ae0d05",
+      "size": 3330,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/marketing-products.md": {
+      "description": "Products",
+      "tokens": 376,
+      "hash": "fb50159ca6001956",
+      "size": 1505,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/marketing-setup-items.md": {
+      "description": "Marketing Studio Hooks And Settings",
+      "tokens": 660,
+      "hash": "1f2170abc4fbca87",
+      "size": 2640,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/media-inputs.md": {
+      "description": "Media Inputs",
+      "tokens": 1151,
+      "hash": "45722d8cb93b9bd9",
+      "size": 4624,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.391Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/model-catalog.md": {
+      "description": "Model Catalog",
+      "tokens": 3520,
+      "hash": "72a3b0bbe9744d21",
+      "size": 14171,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.392Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/prompt-engineering.md": {
+      "description": "Prompt Engineering",
+      "tokens": 385,
+      "hash": "26e4d828d985ae21",
+      "size": 1554,
+      "mtimeMs": 1781063743308.2097,
+      "updatedAt": "2026-08-04T05:08:53.392Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/references/troubleshooting.md": {
+      "description": "Troubleshooting",
+      "tokens": 338,
+      "hash": "95fbdb276c3d56af",
+      "size": 1373,
+      "mtimeMs": 1781063743309.2097,
+      "updatedAt": "2026-08-04T05:08:53.392Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-generate/SKILL.md": {
+      "description": "Higgsfield Generate",
+      "tokens": 5075,
+      "hash": "7e3555d6e51e2e7f",
+      "size": 20429,
+      "mtimeMs": 1781063743307.2097,
+      "updatedAt": "2026-08-04T05:08:53.392Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-marketplace-cards/SKILL.md": {
+      "description": "Marketplace Cards",
+      "tokens": 939,
+      "hash": "897d51d8f907e717",
+      "size": 3753,
+      "mtimeMs": 1781063743436.2073,
+      "updatedAt": "2026-08-04T05:08:53.392Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-product-photoshoot/SKILL.md": {
+      "description": "Product Photoshoot",
+      "tokens": 2341,
+      "hash": "c87eb136b2e7b634",
+      "size": 9437,
+      "mtimeMs": 1781063743473.2065,
+      "updatedAt": "2026-08-04T05:08:53.393Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-soul-id/references/photo-guide.md": {
+      "description": "Photo Guide",
+      "tokens": 179,
+      "hash": "c3c00f24b10b64ea",
+      "size": 720,
+      "mtimeMs": 1781063743708.2021,
+      "updatedAt": "2026-08-04T05:08:53.393Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-soul-id/references/troubleshooting.md": {
+      "description": "Soul Troubleshooting",
+      "tokens": 135,
+      "hash": "e2e7159fbd002cbd",
+      "size": 538,
+      "mtimeMs": 1781063743708.2021,
+      "updatedAt": "2026-08-04T05:08:53.393Z",
+      "source": "scan"
+    },
+    ".agents/skills/higgsfield-soul-id/SKILL.md": {
+      "description": "Higgsfield Soul Character",
+      "tokens": 838,
+      "hash": "3b2ce06af6ddec96",
+      "size": 3377,
+      "mtimeMs": 1781063743708.2021,
+      "updatedAt": "2026-08-04T05:08:53.393Z",
+      "source": "scan"
+    },
+    ".claude/commands/reframe.md": {
+      "description": "Mode: migrate [framework]",
+      "tokens": 551,
+      "hash": "17a75695be5d4629",
+      "size": 2221,
+      "mtimeMs": 1785820094614.945,
+      "updatedAt": "2026-08-04T05:08:53.393Z",
+      "source": "scan"
+    },
+    ".claude/commands/security-audit.md": {
+      "description": "Layer 1 — Dependencies",
+      "tokens": 510,
+      "hash": "e6f7e0b7337c9c86",
+      "size": 2060,
+      "mtimeMs": 1785820094614.945,
+      "updatedAt": "2026-08-04T05:08:53.393Z",
+      "source": "scan"
+    },
+    ".claude/rules/openwolf.md": {
+      "description": "",
+      "tokens": 328,
+      "hash": "6d735b2c1c54a916",
+      "size": 1323,
+      "mtimeMs": 1785820094608.945,
+      "updatedAt": "2026-08-04T05:08:53.394Z",
+      "source": "scan"
+    },
+    ".claude/settings.json": {
+      "description": "",
+      "tokens": 514,
+      "hash": "d8888b729911cfaf",
+      "size": 1799,
+      "mtimeMs": 1785820094608.945,
+      "updatedAt": "2026-08-04T05:08:53.394Z",
+      "source": "scan"
+    },
+    ".claude/settings.local.json": {
+      "description": "",
+      "tokens": 307,
+      "hash": "bce5bc6988da3f6c",
+      "size": 1073,
+      "mtimeMs": 1776308029386.3665,
+      "updatedAt": "2026-08-04T05:08:53.394Z",
+      "source": "scan"
+    },
+    ".code-review-graph/.gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 38,
+      "hash": "0372cef6feb8cafa",
+      "size": 142,
+      "mtimeMs": 1779335753000.1323,
+      "updatedAt": "2026-08-04T05:08:53.395Z",
+      "source": "scan"
+    },
+    ".gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 151,
+      "hash": "e87316f42a8af1c8",
+      "size": 566,
+      "mtimeMs": 1785820094608.945,
+      "updatedAt": "2026-08-04T05:08:53.395Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/18148-1778552436/content/tutorial-layout.html": {
+      "description": "",
+      "tokens": 1673,
+      "hash": "02551db30cde6969",
+      "size": 6292,
+      "mtimeMs": 1778552650310.472,
+      "updatedAt": "2026-08-04T05:08:53.395Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/18148-1778552436/state/server-stopped": {
+      "description": "",
+      "tokens": 16,
+      "hash": "8865902b4fcbdf82",
+      "size": 60,
+      "mtimeMs": 1778552496228.3257,
+      "updatedAt": "2026-08-04T05:08:53.396Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/18148-1778552436/state/server.log": {
+      "description": "",
+      "tokens": 97,
+      "hash": "d35be154eed4bb22",
+      "size": 363,
+      "mtimeMs": 1778552496227.3257,
+      "updatedAt": "2026-08-04T05:08:53.396Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/18148-1778552436/state/server.pid": {
+      "description": "",
+      "tokens": 2,
+      "hash": "fcf8d8821f690874",
+      "size": 6,
+      "mtimeMs": 1778552436162.4465,
+      "updatedAt": "2026-08-04T05:08:53.396Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19398-1778552756/content/dashboard-placement.html": {
+      "description": "",
+      "tokens": 2122,
+      "hash": "2a355337eabc6a85",
+      "size": 7980,
+      "mtimeMs": 1778552852636.7615,
+      "updatedAt": "2026-08-04T05:08:53.397Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19398-1778552756/content/tutorial-layout.html": {
+      "description": "",
+      "tokens": 1673,
+      "hash": "02551db30cde6969",
+      "size": 6292,
+      "mtimeMs": 1778552762325.4133,
+      "updatedAt": "2026-08-04T05:08:53.397Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19398-1778552756/state/events": {
+      "description": "",
+      "tokens": 240,
+      "hash": "cc1dadd3d00a638c",
+      "size": 909,
+      "mtimeMs": 1778552875943.3362,
+      "updatedAt": "2026-08-04T05:08:53.397Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19398-1778552756/state/server-stopped": {
+      "description": "",
+      "tokens": 16,
+      "hash": "94cb893c59606ab1",
+      "size": 60,
+      "mtimeMs": 1778552816594.42,
+      "updatedAt": "2026-08-04T05:08:53.398Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19398-1778552756/state/server.log": {
+      "description": "",
+      "tokens": 379,
+      "hash": "7e9b30006d256fca",
+      "size": 1431,
+      "mtimeMs": 1778552875940.3362,
+      "updatedAt": "2026-08-04T05:08:53.398Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19398-1778552756/state/server.pid": {
+      "description": "",
+      "tokens": 2,
+      "hash": "906262062af11e0f",
+      "size": 6,
+      "mtimeMs": 1778552756535.5195,
+      "updatedAt": "2026-08-04T05:08:53.398Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19934-1778552891/content/dashboard-placement.html": {
+      "description": "",
+      "tokens": 2122,
+      "hash": "2a355337eabc6a85",
+      "size": 7980,
+      "mtimeMs": 1778552901259.8745,
+      "updatedAt": "2026-08-04T05:08:53.398Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19934-1778552891/state/server-stopped": {
+      "description": "",
+      "tokens": 16,
+      "hash": "ebdad852f2882a14",
+      "size": 60,
+      "mtimeMs": 1778552952013.9502,
+      "updatedAt": "2026-08-04T05:08:53.399Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19934-1778552891/state/server.log": {
+      "description": "",
+      "tokens": 135,
+      "hash": "cc0bb3977e900cf1",
+      "size": 504,
+      "mtimeMs": 1778552952013.9502,
+      "updatedAt": "2026-08-04T05:08:53.399Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/19934-1778552891/state/server.pid": {
+      "description": "",
+      "tokens": 2,
+      "hash": "5c0852b5ec5b8e11",
+      "size": 6,
+      "mtimeMs": 1778552891938.0444,
+      "updatedAt": "2026-08-04T05:08:53.399Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/61292-1778654910/content/q1-scope.html": {
+      "description": "",
+      "tokens": 290,
+      "hash": "eea7b6f04b97bc38",
+      "size": 1093,
+      "mtimeMs": 1778654970936.7322,
+      "updatedAt": "2026-08-04T05:08:53.400Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/61292-1778654910/content/q2-production.html": {
+      "description": "",
+      "tokens": 279,
+      "hash": "3e712853c1f0c0be",
+      "size": 1050,
+      "mtimeMs": 1778655454373.031,
+      "updatedAt": "2026-08-04T05:08:53.400Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/61292-1778654910/content/waiting-1.html": {
+      "description": "",
+      "tokens": 39,
+      "hash": "a2dd7c5c10738954",
+      "size": 144,
+      "mtimeMs": 1778655102225.9907,
+      "updatedAt": "2026-08-04T05:08:53.401Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/61292-1778654910/content/waiting-2.html": {
+      "description": "",
+      "tokens": 39,
+      "hash": "a2dd7c5c10738954",
+      "size": 144,
+      "mtimeMs": 1778655743350.672,
+      "updatedAt": "2026-08-04T05:08:53.401Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/61292-1778654910/state/server-stopped": {
+      "description": "",
+      "tokens": 16,
+      "hash": "cf95a272d2ed025e",
+      "size": 60,
+      "mtimeMs": 1778654970092.7434,
+      "updatedAt": "2026-08-04T05:08:53.402Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/61292-1778654910/state/server.log": {
+      "description": "",
+      "tokens": 97,
+      "hash": "cd3fe87f6f3ebe72",
+      "size": 363,
+      "mtimeMs": 1778654970091.7434,
+      "updatedAt": "2026-08-04T05:08:53.402Z",
+      "source": "scan"
+    },
+    ".superpowers/brainstorm/61292-1778654910/state/server.pid": {
+      "description": "",
+      "tokens": 2,
+      "hash": "c0da9135ee9231ab",
+      "size": 6,
+      "mtimeMs": 1778654910046.5464,
+      "updatedAt": "2026-08-04T05:08:53.402Z",
+      "source": "scan"
+    },
+    "AGENTS.md": {
+      "description": "This is NOT the Next.js you know",
+      "tokens": 150,
+      "hash": "67bb1f3cc69bee20",
+      "size": 599,
+      "mtimeMs": 1785820094610.945,
+      "updatedAt": "2026-08-04T05:08:53.403Z",
+      "source": "scan"
+    },
+    "BRAINSTORM-CONTEXT.md": {
+      "description": "Tata Data Dapur — Dokumen Konteks untuk Brainstorm",
+      "tokens": 5791,
+      "hash": "b597c433417a3a4e",
+      "size": 23433,
+      "mtimeMs": 1782715273005.0422,
+      "updatedAt": "2026-08-04T05:08:53.403Z",
+      "source": "scan"
+    },
+    "CLAUDE.md": {
+      "description": "OpenWolf",
+      "tokens": 60,
+      "hash": "dc7af420506c1e1f",
+      "size": 238,
+      "mtimeMs": 1776908880897.898,
+      "updatedAt": "2026-08-04T05:08:53.404Z",
+      "source": "scan"
+    },
+    "docs/ARCHITECTURE.md": {
+      "description": "Arsitektur Multi-Tenant (Base App + Paket Fitur)",
+      "tokens": 761,
+      "hash": "ece69fa9d1f9c630",
+      "size": 3289,
+      "mtimeMs": 1782715273006.0422,
+      "updatedAt": "2026-08-04T05:08:53.404Z",
+      "source": "scan"
+    },
+    "docs/payment-link-research.md": {
+      "description": "Riset: Payment Link / Terima Pembayaran Otomatis",
+      "tokens": 958,
+      "hash": "5e6f99f692395746",
+      "size": 3894,
+      "mtimeMs": 1782715273007.0422,
+      "updatedAt": "2026-08-04T05:08:53.404Z",
+      "source": "scan"
+    },
+    "docs/PLAN-MULTI-TENANT-KASIR.md": {
+      "description": "Rencana Dasar: Multi-Tenant Base App + Paket Fitur (mulai dari Modul Kasir)",
+      "tokens": 3579,
+      "hash": "99468dc724d02862",
+      "size": 14454,
+      "mtimeMs": 1782715273007.0422,
+      "updatedAt": "2026-08-04T05:08:53.405Z",
+      "source": "scan"
+    },
+    "docs/PROVISIONING.md": {
+      "description": "Playbook: Onboarding Klien Baru",
+      "tokens": 715,
+      "hash": "b48782ff7f8a88e0",
+      "size": 2876,
+      "mtimeMs": 1782715273007.0422,
+      "updatedAt": "2026-08-04T05:08:53.405Z",
+      "source": "scan"
+    },
+    "docs/superpowers/plans/2026-05-12-tutorial-page.md": {
+      "description": "Tutorial Page Implementation Plan",
+      "tokens": 2063,
+      "hash": "53d6a5e74228b633",
+      "size": 8283,
+      "mtimeMs": 1778553687571.6685,
+      "updatedAt": "2026-08-04T05:08:53.406Z",
+      "source": "scan"
+    },
+    "docs/superpowers/plans/2026-05-13-sub-recipe.md": {
+      "description": "Sub-Recipe (Bahan Setengah Jadi) Implementation Plan",
+      "tokens": 8801,
+      "hash": "e2b4069b077f08b1",
+      "size": 35778,
+      "mtimeMs": 1778658084276.387,
+      "updatedAt": "2026-08-04T05:08:53.407Z",
+      "source": "scan"
+    },
+    "docs/superpowers/plans/2026-06-04-harga-jual-tetap.md": {
+      "description": "Harga Jual Tetap Implementation Plan",
+      "tokens": 6432,
+      "hash": "b8eb4226c3b909ed",
+      "size": 25821,
+      "mtimeMs": 1780628895459.8804,
+      "updatedAt": "2026-08-04T05:08:53.408Z",
+      "source": "scan"
+    },
+    "docs/superpowers/specs/2026-05-12-tutorial-page-design.md": {
+      "description": "Tutorial Page Design",
+      "tokens": 816,
+      "hash": "91bda7beee8a9c0c",
+      "size": 3283,
+      "mtimeMs": 1778553388819.0447,
+      "updatedAt": "2026-08-04T05:08:53.409Z",
+      "source": "scan"
+    },
+    "docs/superpowers/specs/2026-05-13-sub-recipe-design.md": {
+      "description": "Sub-Recipe (Bahan Setengah Jadi) — Design Spec",
+      "tokens": 1849,
+      "hash": "0768ff1065aaaf7c",
+      "size": 7436,
+      "mtimeMs": 1779087519284.8428,
+      "updatedAt": "2026-08-04T05:08:53.409Z",
+      "source": "scan"
+    },
+    "docs/superpowers/specs/2026-06-04-harga-jual-tetap-design.md": {
+      "description": "Harga Jual Tetap (Fixed Selling Price)",
+      "tokens": 1133,
+      "hash": "eb61913d700c6986",
+      "size": 4585,
+      "mtimeMs": 1780628888511.7268,
+      "updatedAt": "2026-08-04T05:08:53.409Z",
+      "source": "scan"
+    },
+    "docs/tutorial-script-bahan-setengah-jadi.txt": {
+      "description": "",
+      "tokens": 162,
+      "hash": "037f27919bce34fa",
+      "size": 670,
+      "mtimeMs": 1778731169681.0542,
+      "updatedAt": "2026-08-04T05:08:53.410Z",
+      "source": "scan"
+    },
+    "eslint.config.mjs": {
+      "description": "ESLint flat configuration",
+      "tokens": 109,
+      "hash": "a891d0b149666a0f",
+      "size": 408,
+      "mtimeMs": 1776236170178.6494,
+      "updatedAt": "2026-08-04T05:08:53.410Z",
+      "source": "scan"
+    },
+    "graphify-out/.graphify_labels.json": {
+      "description": "",
+      "tokens": 1042,
+      "hash": "6c87f3cb5b91eb33",
+      "size": 3650,
+      "mtimeMs": 1785817758462.5925,
+      "updatedAt": "2026-08-04T05:08:53.411Z",
+      "source": "scan"
+    },
+    "graphify-out/.graphify_labels.json.sig": {
+      "description": "",
+      "tokens": 806,
+      "hash": "40833ddf818fe4cd",
+      "size": 3022,
+      "mtimeMs": 1785817758462.5925,
+      "updatedAt": "2026-08-04T05:08:53.411Z",
+      "source": "scan"
+    },
+    "graphify-out/.graphify_root": {
+      "description": "",
+      "tokens": 1,
+      "hash": "cdb4ee2aea69cc6a",
+      "size": 1,
+      "mtimeMs": 1785817758462.5925,
+      "updatedAt": "2026-08-04T05:08:53.411Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/003f52c07e4e5b0b0b55a566c0964d93d8650ecae684c5175694c01a470153d2.json": {
+      "description": "",
+      "tokens": 788,
+      "hash": "a3af0c6915f31b79",
+      "size": 2755,
+      "mtimeMs": 1785817756988.6206,
+      "updatedAt": "2026-08-04T05:08:53.412Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/0298246692af757f1ff9cf22941aa59450ac136ca454bc57a6ca67102e6217ce.json": {
+      "description": "",
+      "tokens": 3070,
+      "hash": "0e4d3a4a79dd6e9b",
+      "size": 10743,
+      "mtimeMs": 1785817756961.621,
+      "updatedAt": "2026-08-04T05:08:53.412Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/042d81c7229c455eeac513f6d0483b04fb188c49a2576988d3328cd70fcde3e5.json": {
+      "description": "",
+      "tokens": 1268,
+      "hash": "16d6341933bde681",
+      "size": 4435,
+      "mtimeMs": 1785817756976.6208,
+      "updatedAt": "2026-08-04T05:08:53.412Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/0434b6213e1900295bffcecfc5ce6ac3d32c398013657b847a06fd780f9e0c23.json": {
+      "description": "",
+      "tokens": 67,
+      "hash": "16845760fcfa5fb4",
+      "size": 233,
+      "mtimeMs": 1785817756986.6206,
+      "updatedAt": "2026-08-04T05:08:53.412Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/06b7df2bd214450d889d6b62f30127fe580b89b6f7deac38a5d2b7cb25220bbf.json": {
+      "description": "",
+      "tokens": 3595,
+      "hash": "0b11e7161b21451f",
+      "size": 12582,
+      "mtimeMs": 1785817756967.621,
+      "updatedAt": "2026-08-04T05:08:53.413Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/08bf631f59afc276c3e90b4b0dd921be6663acd1e4a16ebb8992bb670b631d19.json": {
+      "description": "",
+      "tokens": 1626,
+      "hash": "1e70a82b8ed75329",
+      "size": 5688,
+      "mtimeMs": 1785817756631.6274,
+      "updatedAt": "2026-08-04T05:08:53.413Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/0b44daaa94766d385f056c95e8aabb30ad6e49ef3aa9c7eb9e32606055f4eaf2.json": {
+      "description": "",
+      "tokens": 370,
+      "hash": "b1935930565d7381",
+      "size": 1294,
+      "mtimeMs": 1785817757000.6204,
+      "updatedAt": "2026-08-04T05:08:53.413Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/0f5116ca04c70fa1b4eb3ae676365590bfda8b71595b86b75576169221dbe8e6.json": {
+      "description": "",
+      "tokens": 859,
+      "hash": "749456caf3184402",
+      "size": 3005,
+      "mtimeMs": 1785817756978.6208,
+      "updatedAt": "2026-08-04T05:08:53.413Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/120672027a2098ff47cf5c72df9e01619b59bc454cb23577f3db993ac516f3f6.json": {
+      "description": "",
+      "tokens": 1124,
+      "hash": "78fac4aea63732db",
+      "size": 3933,
+      "mtimeMs": 1785817756971.6208,
+      "updatedAt": "2026-08-04T05:08:53.413Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/199197ea31973bd8aa3e24713d94c83d7e2ba499e2d729437800b0914302eed0.json": {
+      "description": "",
+      "tokens": 1699,
+      "hash": "0efc54f857a62f2d",
+      "size": 5946,
+      "mtimeMs": 1785817756976.6208,
+      "updatedAt": "2026-08-04T05:08:53.414Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/1be6cc8e4140b6a399b4884ce5147a594175bc633513c083eefcd62cf26181b8.json": {
+      "description": "",
+      "tokens": 1325,
+      "hash": "372a25ef7e206191",
+      "size": 4636,
+      "mtimeMs": 1785817756934.6216,
+      "updatedAt": "2026-08-04T05:08:53.414Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/239aef2b2e6191f2a84ec11bbcd31c13d359f329defc9da84c3098cb9bf4eea1.json": {
+      "description": "",
+      "tokens": 122,
+      "hash": "17389762aaa7ae97",
+      "size": 427,
+      "mtimeMs": 1785817756928.6218,
+      "updatedAt": "2026-08-04T05:08:53.414Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/275a64c6f08b66f00e8b62882802ae40e76ce522d18fea061fcb89e2fe8f85f5.json": {
+      "description": "",
+      "tokens": 910,
+      "hash": "922a8f02a5092f51",
+      "size": 3184,
+      "mtimeMs": 1785817757002.6204,
+      "updatedAt": "2026-08-04T05:08:53.414Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/2d4d87d77c02f36218066aee534e04fac275bd492811899c255af9c691d78d50.json": {
+      "description": "",
+      "tokens": 1484,
+      "hash": "b68f615eab686077",
+      "size": 5194,
+      "mtimeMs": 1785817756927.6218,
+      "updatedAt": "2026-08-04T05:08:53.415Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/35d5cfdc397b628584db54a491b5046b4bc1e9927bd072caf6a81bb601dd99ba.json": {
+      "description": "",
+      "tokens": 3732,
+      "hash": "4cd42192eaf32669",
+      "size": 13062,
+      "mtimeMs": 1785817756985.6206,
+      "updatedAt": "2026-08-04T05:08:53.415Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/3734151c50a15cddf1b99c58d759aadda0c24005b88300399f4b50d6b1cbf122.json": {
+      "description": "",
+      "tokens": 168,
+      "hash": "9a6615537d74e8e5",
+      "size": 585,
+      "mtimeMs": 1785817756936.6216,
+      "updatedAt": "2026-08-04T05:08:53.415Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/38b10af2a553525dca718112e78e337ad23b9e641eaef94da5a69f9c9eb4d364.json": {
+      "description": "",
+      "tokens": 3045,
+      "hash": "05c611105f4c23cb",
+      "size": 10657,
+      "mtimeMs": 1785817757010.62,
+      "updatedAt": "2026-08-04T05:08:53.415Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/3a3ce3f38fb8c4bbc521fa7ebe4e424e6899c700fbfa135c62d0985830cb2781.json": {
+      "description": "",
+      "tokens": 420,
+      "hash": "fd03bc1729e40e3f",
+      "size": 1469,
+      "mtimeMs": 1785817756937.6216,
+      "updatedAt": "2026-08-04T05:08:53.416Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/3a63c94e997301bb78134cd952f9a984a6453423d1c8edda4a05f409ccd30fa9.json": {
+      "description": "",
+      "tokens": 6497,
+      "hash": "29c03c3fbaeb862b",
+      "size": 22739,
+      "mtimeMs": 1785817756633.6274,
+      "updatedAt": "2026-08-04T05:08:53.416Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/3cb570c12d85dff724976dcf9cce2711f3fc10b2d8ce86bc3ab882e549f48eaf.json": {
+      "description": "",
+      "tokens": 576,
+      "hash": "0e00d46069866966",
+      "size": 2016,
+      "mtimeMs": 1785817756919.6218,
+      "updatedAt": "2026-08-04T05:08:53.416Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/3eec17802ce41c2da23bf3d10bd7caa234fcac604a1a7b3066620bfa29dad67b.json": {
+      "description": "",
+      "tokens": 125,
+      "hash": "a6203d68958005c2",
+      "size": 435,
+      "mtimeMs": 1785817756930.6218,
+      "updatedAt": "2026-08-04T05:08:53.417Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4148088f7a2eba05fb8a7fdb10bf68ab7801467feb02333421ddd159684fec62.json": {
+      "description": "",
+      "tokens": 3832,
+      "hash": "1657a5884f912e07",
+      "size": 13412,
+      "mtimeMs": 1785817756961.621,
+      "updatedAt": "2026-08-04T05:08:53.417Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4330e442a5bd709cb3848101a87304f618d5b8b55515243c36c49c42ffd11a09.json": {
+      "description": "",
+      "tokens": 276,
+      "hash": "4eabd2ec04292fd6",
+      "size": 964,
+      "mtimeMs": 1785817756994.6206,
+      "updatedAt": "2026-08-04T05:08:53.417Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4aa8d08b1f4f876ae100ad4c87634864f99f60a6b3f83dc44953e07dcf28a82d.json": {
+      "description": "",
+      "tokens": 4841,
+      "hash": "aa5cf3ccde9a47b2",
+      "size": 16941,
+      "mtimeMs": 1785817757001.6204,
+      "updatedAt": "2026-08-04T05:08:53.418Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4b32f6af0b196a2d3940f8f518b2eeef46bcd63d4db5acbe015893bd02f0e0d7.json": {
+      "description": "",
+      "tokens": 400,
+      "hash": "3c4721353ddba0e3",
+      "size": 1398,
+      "mtimeMs": 1785817756941.6216,
+      "updatedAt": "2026-08-04T05:08:53.418Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4bee5a7c7a9bb9f7abd03e7145599a95ea887ae9fbd5ad22211e02c94c049719.json": {
+      "description": "",
+      "tokens": 995,
+      "hash": "5d61be08708ece62",
+      "size": 3481,
+      "mtimeMs": 1785817756925.6218,
+      "updatedAt": "2026-08-04T05:08:53.418Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4eeb3f5ef59bfa0aff166ad72266c10b36f12cb1039d3f317fe8b7c77dbccfa8.json": {
+      "description": "",
+      "tokens": 1021,
+      "hash": "cd53283778db0cc2",
+      "size": 3572,
+      "mtimeMs": 1785817756978.6208,
+      "updatedAt": "2026-08-04T05:08:53.418Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4f1e28c9d2c6a36b5a735e6869abfc902830f5b8a5275c2a83b20e7632d5b63b.json": {
+      "description": "",
+      "tokens": 576,
+      "hash": "799dd8ada7427a84",
+      "size": 2016,
+      "mtimeMs": 1785817756917.622,
+      "updatedAt": "2026-08-04T05:08:53.419Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/4f7152dff130c7a1d0897fc69da6a8843bdd3138a627998eb45a177e1ba502f2.json": {
+      "description": "",
+      "tokens": 2023,
+      "hash": "18e207ab7f3f2cc5",
+      "size": 7079,
+      "mtimeMs": 1785817757007.6204,
+      "updatedAt": "2026-08-04T05:08:53.419Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/50b8480a9401b13f07a6bf9c0191770dcbe7daa720ab7cddbead2b956e5ad017.json": {
+      "description": "",
+      "tokens": 2236,
+      "hash": "ab044c741e99ecd0",
+      "size": 7824,
+      "mtimeMs": 1785817757007.6204,
+      "updatedAt": "2026-08-04T05:08:53.419Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/53cc24bb36f6bdbbae1ee128f9aebba8239e306aeb8cd0f92381e3c737802a38.json": {
+      "description": "",
+      "tokens": 811,
+      "hash": "3eba0dc72462ac68",
+      "size": 2836,
+      "mtimeMs": 1785817756990.6206,
+      "updatedAt": "2026-08-04T05:08:53.420Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/53f9b74dee99aa15318c6c572e665894eb21eb4e8d956990d60b829bc2e889d7.json": {
+      "description": "",
+      "tokens": 1118,
+      "hash": "c348067b67a16675",
+      "size": 3910,
+      "mtimeMs": 1785817756985.6206,
+      "updatedAt": "2026-08-04T05:08:53.420Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/5402b46943bf4cf01a4ed0931aaaef177f448ad2fcba50992aca8850e2c9c13b.json": {
+      "description": "",
+      "tokens": 1797,
+      "hash": "b0a240d9c05edfc9",
+      "size": 6288,
+      "mtimeMs": 1785817756916.622,
+      "updatedAt": "2026-08-04T05:08:53.420Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/54b83c0f742d2542c189944f09207af27fc7aa07d290c7f428ec4f4ca7edbde4.json": {
+      "description": "",
+      "tokens": 1072,
+      "hash": "c68e5d4c6d99d183",
+      "size": 3752,
+      "mtimeMs": 1785817756968.621,
+      "updatedAt": "2026-08-04T05:08:53.420Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/5525cc76a3089470d90385b26916c4d199e6a92ebe0075a2c09da08d97958706.json": {
+      "description": "",
+      "tokens": 2358,
+      "hash": "c6c99e0c82df3e83",
+      "size": 8252,
+      "mtimeMs": 1785817756981.6208,
+      "updatedAt": "2026-08-04T05:08:53.420Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/5cfd73ba41d509952c1c9796b29e9101fdab80d745963e6f936340f65355df69.json": {
+      "description": "",
+      "tokens": 831,
+      "hash": "8dc08dfe38efc3c5",
+      "size": 2906,
+      "mtimeMs": 1785817756925.6218,
+      "updatedAt": "2026-08-04T05:08:53.421Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/6057c765e07b727c11a73c5a1ec2b11320903716ae3d3f15014eeb7b5b58077e.json": {
+      "description": "",
+      "tokens": 1318,
+      "hash": "ad6f6c22fd44ba57",
+      "size": 4610,
+      "mtimeMs": 1785817757003.6204,
+      "updatedAt": "2026-08-04T05:08:53.421Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/655d16d80e7c90362971e4aae9ac98ededac0c436acc546e8c1fe1c97bb4ea23.json": {
+      "description": "",
+      "tokens": 420,
+      "hash": "23d327e6eb281d21",
+      "size": 1467,
+      "mtimeMs": 1785817756933.6216,
+      "updatedAt": "2026-08-04T05:08:53.421Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/65f85d1e7873c933bfdae4e9238cb846969fbc4dc312686ec094473d2e169ddd.json": {
+      "description": "",
+      "tokens": 1031,
+      "hash": "67e7322c60560629",
+      "size": 3607,
+      "mtimeMs": 1785817756974.6208,
+      "updatedAt": "2026-08-04T05:08:53.421Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/6d085820e5eb904b53859e0b1d3c75e66a214da80ace552ba550e5af3fc9e69c.json": {
+      "description": "",
+      "tokens": 62,
+      "hash": "a17d1a167a00ea5c",
+      "size": 214,
+      "mtimeMs": 1785817756981.6208,
+      "updatedAt": "2026-08-04T05:08:53.421Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/6fc04b467a6022b3d79a53007947beaa6e432b658bc95499bd6f0589a921e4d1.json": {
+      "description": "",
+      "tokens": 1221,
+      "hash": "1f4b493c854429ca",
+      "size": 4272,
+      "mtimeMs": 1785817756976.6208,
+      "updatedAt": "2026-08-04T05:08:53.421Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/7747b89e9f86652b3df9511fdbb9a3d72a50f641a596e9f87c0cd9769f420b01.json": {
+      "description": "",
+      "tokens": 2815,
+      "hash": "8396c3c662e8a14f",
+      "size": 9850,
+      "mtimeMs": 1785817756974.6208,
+      "updatedAt": "2026-08-04T05:08:53.422Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/79254ad5647d674ed8ea7513f76dd67c80d96d1ecb3abdf0686a1c39887a9fda.json": {
+      "description": "",
+      "tokens": 168,
+      "hash": "bb9a6a46958ad6cf",
+      "size": 586,
+      "mtimeMs": 1785817756576.6284,
+      "updatedAt": "2026-08-04T05:08:53.422Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/7aa9a01965eb1d4f57afb2235827678fc25f07f8611fa12eb146b5b5a95f2e77.json": {
+      "description": "",
+      "tokens": 638,
+      "hash": "a6dd647d76c8a224",
+      "size": 2231,
+      "mtimeMs": 1785817756992.6206,
+      "updatedAt": "2026-08-04T05:08:53.422Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/8ab8e56119c0f95e66f737d00db837a44e1319ae8d668846fec26c3dfe583315.json": {
+      "description": "",
+      "tokens": 4119,
+      "hash": "5c84170e287c7f91",
+      "size": 14414,
+      "mtimeMs": 1785817757000.6204,
+      "updatedAt": "2026-08-04T05:08:53.422Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/90a9668619843621d0072b8a4ddfba81bd97dd07c8832282420057701f7e1555.json": {
+      "description": "",
+      "tokens": 738,
+      "hash": "eab11e7cc61729a1",
+      "size": 2581,
+      "mtimeMs": 1785817756939.6216,
+      "updatedAt": "2026-08-04T05:08:53.423Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/9603657c977cd6c5ef8483b91de01ceef15331eef528fed1b71f493a8a5eb7cf.json": {
+      "description": "",
+      "tokens": 1426,
+      "hash": "5ad48defb16236be",
+      "size": 4989,
+      "mtimeMs": 1785817756981.6208,
+      "updatedAt": "2026-08-04T05:08:53.423Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/98227c9ee30674aea860d5107c05bf39d484e4916502138b66a2d5af957db86f.json": {
+      "description": "",
+      "tokens": 1732,
+      "hash": "c653fcf0665f0d5e",
+      "size": 6059,
+      "mtimeMs": 1785817757004.6204,
+      "updatedAt": "2026-08-04T05:08:53.424Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/986c02b6c886b1d2ba0135b5530c25c3f432ed5ed9755c4016624fce51ef914c.json": {
+      "description": "",
+      "tokens": 1811,
+      "hash": "baaefc35fbf2b5f4",
+      "size": 6336,
+      "mtimeMs": 1785817756956.6213,
+      "updatedAt": "2026-08-04T05:08:53.424Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/9e83ac4aad6b58f56ed99feafd58ca1895f618947653972ee8d42085148d4f9e.json": {
+      "description": "",
+      "tokens": 1380,
+      "hash": "f510cf7f8c148d14",
+      "size": 4827,
+      "mtimeMs": 1785817756982.6208,
+      "updatedAt": "2026-08-04T05:08:53.424Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/a7d49b265fc51c7989f1ae698b8ec44126a97b8cc8ca1f3cf265f8875fda91c6.json": {
+      "description": "",
+      "tokens": 876,
+      "hash": "36548cf4fefe466e",
+      "size": 3064,
+      "mtimeMs": 1785817756929.6218,
+      "updatedAt": "2026-08-04T05:08:53.424Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/a7f4357a1766ab6419e9404cca83b490abe78b9ba047c16e2adc59ff03ed70f5.json": {
+      "description": "",
+      "tokens": 212,
+      "hash": "d5a6a68d5768a1ef",
+      "size": 739,
+      "mtimeMs": 1785817756969.621,
+      "updatedAt": "2026-08-04T05:08:53.425Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/abb7bae56c173fb85b9dc5a12245d8aee5f623fa785522d3048ffab7af06e2dc.json": {
+      "description": "",
+      "tokens": 156,
+      "hash": "0e855e3fad457cf1",
+      "size": 545,
+      "mtimeMs": 1785817756998.6204,
+      "updatedAt": "2026-08-04T05:08:53.425Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/ad7bee35f4747344047e856ef1488f2084ef9d9b30f7d14d3f7a4b3d940d632f.json": {
+      "description": "",
+      "tokens": 357,
+      "hash": "5ac49f108903da08",
+      "size": 1247,
+      "mtimeMs": 1785817756917.622,
+      "updatedAt": "2026-08-04T05:08:53.425Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/af4576f030dab09ddc7affea7dba508f083d3db98aa103b9e0c834748c4ec135.json": {
+      "description": "",
+      "tokens": 372,
+      "hash": "8424bf73bd64992f",
+      "size": 1302,
+      "mtimeMs": 1785817756919.6218,
+      "updatedAt": "2026-08-04T05:08:53.425Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/af8c917961112b02850cf77695f5843e8082ed29f573b51073015e845c71b1cb.json": {
+      "description": "",
+      "tokens": 469,
+      "hash": "c47bcb308e9ad66c",
+      "size": 1641,
+      "mtimeMs": 1785817756987.6206,
+      "updatedAt": "2026-08-04T05:08:53.426Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/b10fb36dd4e05c3064c76eaac805df8d1504e95425af3bd566e0ed0017135a6b.json": {
+      "description": "",
+      "tokens": 1353,
+      "hash": "c250cb58e5753310",
+      "size": 4733,
+      "mtimeMs": 1785817757004.6204,
+      "updatedAt": "2026-08-04T05:08:53.426Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/b52cc64af10bd1bb35a9feedbc843227efbe70256e1a6cb9430c532aa234f0ad.json": {
+      "description": "",
+      "tokens": 4182,
+      "hash": "123188ae63c3eda5",
+      "size": 14636,
+      "mtimeMs": 1785817757008.6204,
+      "updatedAt": "2026-08-04T05:08:53.426Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/b730f70f65841ea7d3b09a6f0ce9b95154e33f5e632fb5ff2a1cb7cb967e95f4.json": {
+      "description": "",
+      "tokens": 2016,
+      "hash": "39c2b8fa181d104f",
+      "size": 7056,
+      "mtimeMs": 1785817757010.62,
+      "updatedAt": "2026-08-04T05:08:53.427Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/c5fd8f570bc9d8c9c190fa2d4820193f1b77fe3fb7c6d5b2aaa0152c3d18a2b4.json": {
+      "description": "",
+      "tokens": 2704,
+      "hash": "c0ffbc88cb812b14",
+      "size": 9461,
+      "mtimeMs": 1785817756996.6204,
+      "updatedAt": "2026-08-04T05:08:53.427Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/c67d84ef56052e4f8cebb46d14077e1fdaebacd1e636c2c8a8d0f101f2fa32b8.json": {
+      "description": "",
+      "tokens": 1486,
+      "hash": "c856d86f0a68c2e8",
+      "size": 5201,
+      "mtimeMs": 1785817756992.6206,
+      "updatedAt": "2026-08-04T05:08:53.428Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/c8d9093a194cdda6d1d6f5eabb4ae93644367a2eafd25e6ac9834621f57e2c55.json": {
+      "description": "",
+      "tokens": 474,
+      "hash": "a15d25d5e7918679",
+      "size": 1658,
+      "mtimeMs": 1785817756989.6206,
+      "updatedAt": "2026-08-04T05:08:53.428Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/cd9c3a98d7ed5e3eca91a99ceb81ee92c5d23c87e3115d60da6bd8d7c085aef8.json": {
+      "description": "",
+      "tokens": 1389,
+      "hash": "32b03e6da8f6d94a",
+      "size": 4860,
+      "mtimeMs": 1785817756980.6208,
+      "updatedAt": "2026-08-04T05:08:53.428Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/cf25c333d959881010fa57b6c382abee09fc199ce6c4d136199f5001ac48a363.json": {
+      "description": "",
+      "tokens": 416,
+      "hash": "4c7c9f6696550675",
+      "size": 1456,
+      "mtimeMs": 1785817756914.622,
+      "updatedAt": "2026-08-04T05:08:53.429Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/d16719078784b5e19401a30185a9a51eda8cb28db7161cec8c7f5c2aa065f7cc.json": {
+      "description": "",
+      "tokens": 715,
+      "hash": "e0ecdd30ef4293c2",
+      "size": 2501,
+      "mtimeMs": 1785817756978.6208,
+      "updatedAt": "2026-08-04T05:08:53.429Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/d200fbab766f9a690204dd2b7509fa72e941380761cf13237fe414e771a74cc2.json": {
+      "description": "",
+      "tokens": 460,
+      "hash": "8f649123bed04af8",
+      "size": 1607,
+      "mtimeMs": 1785817756987.6206,
+      "updatedAt": "2026-08-04T05:08:53.429Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/dcd7630d30b08fb2d12b9bb897dd18ff980fd5915cb028dae199883a026258e7.json": {
+      "description": "",
+      "tokens": 738,
+      "hash": "39f3d4a39d646180",
+      "size": 2583,
+      "mtimeMs": 1785817756929.6218,
+      "updatedAt": "2026-08-04T05:08:53.429Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/dee9240f02df32d9efeea01da76334087b71bfd6f7f45566fb921581a6a1a66e.json": {
+      "description": "",
+      "tokens": 172,
+      "hash": "fd49f63503e3c94b",
+      "size": 599,
+      "mtimeMs": 1785817756993.6206,
+      "updatedAt": "2026-08-04T05:08:53.429Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/e0bbe74850fce7942344ce81724867872dfd33685c626b97c3385120c0f89e16.json": {
+      "description": "",
+      "tokens": 2979,
+      "hash": "666fdf5507356ede",
+      "size": 10425,
+      "mtimeMs": 1785817757010.62,
+      "updatedAt": "2026-08-04T05:08:53.430Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/e29f15265838f25f12814cdf760751a0c655bed59fbea4a7b12c0d94fe2f44bf.json": {
+      "description": "/*.ts\", \"file_type\": \"concept\", \"source_file\": \"tsconfig.json\", \"source_location\": \"L31\"}, {\"id\": \"ref_next_dev_types_ts\", \"label\": \".next/dev/type...",
+      "tokens": 3109,
+      "hash": "7d34617ed37bb125",
+      "size": 10881,
+      "mtimeMs": 1785817756972.6208,
+      "updatedAt": "2026-08-04T05:08:53.430Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/e6a24af1c60768e9f78f2b6abd3f8645dfdc03a8bfe8a5a9915621cf214cbd5a.json": {
+      "description": "",
+      "tokens": 4389,
+      "hash": "9745a9ed31fc2656",
+      "size": 15359,
+      "mtimeMs": 1785817757000.6204,
+      "updatedAt": "2026-08-04T05:08:53.431Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/eec93087c71e994e11486fd614e6209f6d9e1a3b4a0feb8c9673c56e8f0a8a93.json": {
+      "description": "",
+      "tokens": 1034,
+      "hash": "cb65f0898834afb5",
+      "size": 3616,
+      "mtimeMs": 1785817756985.6206,
+      "updatedAt": "2026-08-04T05:08:53.431Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/f3f9f3df1b8073477eebfa8fe1577630436f99a1ac7b72fe9be2a8622d2b6463.json": {
+      "description": "",
+      "tokens": 1116,
+      "hash": "c0ffbb78cdd16a41",
+      "size": 3904,
+      "mtimeMs": 1785817756968.621,
+      "updatedAt": "2026-08-04T05:08:53.431Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/f7b67c6dfca50ce12b9bf6cd3be1ee2b2e759c8464a2d7303ceca957ff3561c5.json": {
+      "description": "",
+      "tokens": 803,
+      "hash": "209f14f244f6cd84",
+      "size": 2809,
+      "mtimeMs": 1785817756989.6206,
+      "updatedAt": "2026-08-04T05:08:53.431Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/f807d4c26f83b6e303a5732d2b0d3dc3baee6987a8276e4c05c7660a3e14f531.json": {
+      "description": "",
+      "tokens": 1332,
+      "hash": "45b6a06d8042cbe5",
+      "size": 4659,
+      "mtimeMs": 1785817756989.6206,
+      "updatedAt": "2026-08-04T05:08:53.431Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/fc91a7552f514bdb4bbf850c5ab9ae7562bf56784ce0166f7e4c7c5ab8a681f6.json": {
+      "description": "",
+      "tokens": 1078,
+      "hash": "43205dffa8372baa",
+      "size": 3771,
+      "mtimeMs": 1785817756983.6206,
+      "updatedAt": "2026-08-04T05:08:53.432Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/fdd696978873c35f5491ce2afb1e9b64e8f771930a10258297b8995bfac966f4.json": {
+      "description": "",
+      "tokens": 413,
+      "hash": "b4596c92054e7b25",
+      "size": 1445,
+      "mtimeMs": 1785817756920.6218,
+      "updatedAt": "2026-08-04T05:08:53.432Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/ast/v0.9.32/fffd0894a47ac931538319332126c4e5f060d391fc09a50ef9de39bcfbd36931.json": {
+      "description": "",
+      "tokens": 1404,
+      "hash": "251cbc103e1e32f9",
+      "size": 4914,
+      "mtimeMs": 1785817756992.6206,
+      "updatedAt": "2026-08-04T05:08:53.432Z",
+      "source": "scan"
+    },
+    "graphify-out/cache/stat-index.json": {
+      "description": "",
+      "tokens": 9021,
+      "hash": "10dc9974ffd7d0cb",
+      "size": 31571,
+      "mtimeMs": 1785817758554.5908,
+      "updatedAt": "2026-08-04T05:08:53.433Z",
+      "source": "scan"
+    },
+    "graphify-out/GRAPH_REPORT.md": {
+      "description": "Graph Report - tata-data-dapur  (2026-08-04)",
+      "tokens": 5399,
+      "hash": "52e861e9401ada93",
+      "size": 21709,
+      "mtimeMs": 1785817758462.5925,
+      "updatedAt": "2026-08-04T05:08:53.433Z",
+      "source": "scan"
+    },
+    "graphify-out/graph.html": {
+      "description": "graphify - graphify-out/graph.html",
+      "tokens": 267098,
+      "hash": "5cbcd410c77f5932",
+      "size": 1001623,
+      "mtimeMs": 1785817758546.5908,
+      "updatedAt": "2026-08-04T05:08:53.440Z",
+      "source": "scan"
+    },
+    "graphify-out/manifest.json": {
+      "description": "",
+      "tokens": 9855,
+      "hash": "12d9d1e2bc61cd4a",
+      "size": 34491,
+      "mtimeMs": 1785817758527.5913,
+      "updatedAt": "2026-08-04T05:08:53.440Z",
+      "source": "scan"
+    },
+    "next-env.d.ts": {
+      "description": "/ <reference types=\"next\" />",
+      "tokens": 61,
+      "hash": "f2b3bca04d1bfe58",
+      "size": 211,
+      "mtimeMs": 1776234824034.847,
+      "updatedAt": "2026-08-04T05:08:53.441Z",
+      "source": "scan"
+    },
+    "next.config.ts": {
+      "description": "Next.js configuration",
+      "tokens": 304,
+      "hash": "a8d414c3255df880",
+      "size": 1062,
+      "mtimeMs": 1779087536308.547,
+      "updatedAt": "2026-08-04T05:08:53.441Z",
+      "source": "scan"
+    },
+    "package-lock.json": {
+      "description": "npm lock file",
+      "tokens": 118465,
+      "hash": "6a57d78695f8e514",
+      "size": 414625,
+      "mtimeMs": 1779938802715.9302,
+      "updatedAt": "2026-08-04T05:08:53.444Z",
+      "source": "scan"
+    },
+    "package.json": {
+      "description": "Node.js package manifest",
+      "tokens": 297,
+      "hash": "9b9e37ddc3954238",
+      "size": 1037,
+      "mtimeMs": 1779938802716.9302,
+      "updatedAt": "2026-08-04T05:08:53.444Z",
+      "source": "scan"
+    },
+    "postcss.config.mjs": {
+      "description": "Declares config",
+      "tokens": 26,
+      "hash": "dfac7ac2d86d326a",
+      "size": 94,
+      "mtimeMs": 1776221487988.8384,
+      "updatedAt": "2026-08-04T05:08:53.445Z",
+      "source": "scan"
+    },
+    "promo-video/.gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 9,
+      "hash": "b74788dc1bb57a10",
+      "size": 33,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.445Z",
+      "source": "scan"
+    },
+    "promo-video/debug.mjs": {
+      "description": "Declares sleep",
+      "tokens": 292,
+      "hash": "7ecab3b4099e8400",
+      "size": 1093,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.445Z",
+      "source": "scan"
+    },
+    "promo-video/docs/superpowers/plans/2026-06-29-promo-resep.md": {
+      "description": "PromoResep Video Implementation Plan",
+      "tokens": 5993,
+      "hash": "88cd401d8faf9878",
+      "size": 24034,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.446Z",
+      "source": "scan"
+    },
+    "promo-video/docs/superpowers/specs/2026-06-29-promo-resep-design.md": {
+      "description": "Design Spec: Video Promosi \"PromoResep\" — Resep + Harga Adaptif",
+      "tokens": 1379,
+      "hash": "355e3182a638eaca",
+      "size": 5569,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.446Z",
+      "source": "scan"
+    },
+    "promo-video/explore.mjs": {
+      "description": "Declares sleep",
+      "tokens": 812,
+      "hash": "49f875aa204aec0a",
+      "size": 3042,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.446Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "sleep",
+          "kind": "fn",
+          "startLine": 2,
+          "endLine": 72,
+          "tokens": 858
+        }
+      ]
+    },
+    "promo-video/explore2.mjs": {
+      "description": "Declares sleep",
+      "tokens": 599,
+      "hash": "70fa2b579e0f37a5",
+      "size": 2243,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.447Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "sleep",
+          "kind": "fn",
+          "startLine": 2,
+          "endLine": 32,
+          "tokens": 630
+        }
+      ]
+    },
+    "promo-video/explore3.mjs": {
+      "description": "Declares sleep",
+      "tokens": 587,
+      "hash": "97784f122d6dbab4",
+      "size": 2201,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.447Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "sleep",
+          "kind": "fn",
+          "startLine": 2,
+          "endLine": 28,
+          "tokens": 618
+        }
+      ]
+    },
+    "promo-video/makemusic.sh": {
+      "description": "",
+      "tokens": 802,
+      "hash": "2ac91c41743578ac",
+      "size": 2806,
+      "mtimeMs": 1785820091355.9963,
+      "updatedAt": "2026-08-04T05:08:53.447Z",
+      "source": "scan"
+    },
+    "promo-video/package-lock.json": {
+      "description": "npm lock file",
+      "tokens": 37144,
+      "hash": "573cd30982432d8f",
+      "size": 130002,
+      "mtimeMs": 1785820091356.9963,
+      "updatedAt": "2026-08-04T05:08:53.447Z",
+      "source": "scan"
+    },
+    "promo-video/package.json": {
+      "description": "Node.js package manifest",
+      "tokens": 163,
+      "hash": "5f2439116682c6ce",
+      "size": 569,
+      "mtimeMs": 1785820091356.9963,
+      "updatedAt": "2026-08-04T05:08:53.447Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/basil.webp": {
+      "description": "",
+      "tokens": 14083,
+      "hash": "52e4cf77be2b6a70",
+      "size": 55692,
+      "mtimeMs": 1785820091356.9963,
+      "updatedAt": "2026-08-04T05:08:53.449Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/chili.webp": {
+      "description": "",
+      "tokens": 11446,
+      "hash": "55d29cfe31a14b98",
+      "size": 45286,
+      "mtimeMs": 1785820091356.9963,
+      "updatedAt": "2026-08-04T05:08:53.450Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/cinnamon.webp": {
+      "description": "",
+      "tokens": 8489,
+      "hash": "35c5dd37e6741779",
+      "size": 33648,
+      "mtimeMs": 1785820091356.9963,
+      "updatedAt": "2026-08-04T05:08:53.451Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/garlic.webp": {
+      "description": "",
+      "tokens": 19018,
+      "hash": "c463710cebc2ca72",
+      "size": 75272,
+      "mtimeMs": 1785820091356.9963,
+      "updatedAt": "2026-08-04T05:08:53.453Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/ginger.webp": {
+      "description": "",
+      "tokens": 16393,
+      "hash": "ae10ecc26f01060d",
+      "size": 65006,
+      "mtimeMs": 1785820091356.9963,
+      "updatedAt": "2026-08-04T05:08:53.454Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/mushroom.webp": {
+      "description": "",
+      "tokens": 9236,
+      "hash": "44c624227c7fccb1",
+      "size": 36498,
+      "mtimeMs": 1785820091357.9963,
+      "updatedAt": "2026-08-04T05:08:53.455Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/onion.webp": {
+      "description": "",
+      "tokens": 23755,
+      "hash": "5f6d8e8909b5a1c3",
+      "size": 94128,
+      "mtimeMs": 1785820091357.9963,
+      "updatedAt": "2026-08-04T05:08:53.457Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/parsley.webp": {
+      "description": "",
+      "tokens": 20671,
+      "hash": "3ada6eb6525aaf38",
+      "size": 82008,
+      "mtimeMs": 1785820091357.9963,
+      "updatedAt": "2026-08-04T05:08:53.459Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/sage.webp": {
+      "description": "",
+      "tokens": 12214,
+      "hash": "fd91fe72f4f2a1b3",
+      "size": 48314,
+      "mtimeMs": 1785820091357.9963,
+      "updatedAt": "2026-08-04T05:08:53.461Z",
+      "source": "scan"
+    },
+    "promo-video/public/decor/tomato.webp": {
+      "description": "",
+      "tokens": 13852,
+      "hash": "41d63b75a784dd07",
+      "size": 54724,
+      "mtimeMs": 1785820091357.9963,
+      "updatedAt": "2026-08-04T05:08:53.462Z",
+      "source": "scan"
+    },
+    "promo-video/record.mjs": {
+      "description": "Declares sleep",
+      "tokens": 1478,
+      "hash": "1a84d020b901b04a",
+      "size": 5543,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.463Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "sleep",
+          "kind": "fn",
+          "startLine": 3,
+          "endLine": 38,
+          "tokens": 478
+        },
+        {
+          "name": "setSelect",
+          "kind": "fn",
+          "startLine": 39,
+          "endLine": 46,
+          "tokens": 129
+        },
+        {
+          "name": "setQty",
+          "kind": "fn",
+          "startLine": 47,
+          "endLine": 54,
+          "tokens": 137
+        },
+        {
+          "name": "clickText",
+          "kind": "fn",
+          "startLine": 55,
+          "endLine": 59,
+          "tokens": 66
+        },
+        {
+          "name": "scrollModalBottom",
+          "kind": "fn",
+          "startLine": 60,
+          "endLine": 125,
+          "tokens": 746
+        }
+      ]
+    },
+    "promo-video/remotion.config.ts": {
+      "description": "",
+      "tokens": 34,
+      "hash": "38e9e6394e32f151",
+      "size": 117,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.463Z",
+      "source": "scan"
+    },
+    "promo-video/shoot.mjs": {
+      "description": "Declares BASE",
+      "tokens": 673,
+      "hash": "4b4c6a3ef7008e01",
+      "size": 2524,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.463Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "sleep",
+          "kind": "fn",
+          "startLine": 10,
+          "endLine": 83,
+          "tokens": 650
+        }
+      ]
+    },
+    "promo-video/src/decor.tsx": {
+      "description": "ALL",
+      "tokens": 792,
+      "hash": "584f8e293278a175",
+      "size": 2772,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.463Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "fadeUp",
+          "kind": "fn",
+          "startLine": 91,
+          "endLine": 101,
+          "tokens": 94
+        }
+      ]
+    },
+    "promo-video/src/fonts.ts": {
+      "description": "Exports poppins, openSans, fraunces, dmMono",
+      "tokens": 193,
+      "hash": "c08b7ed288ffe94a",
+      "size": 675,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.463Z",
+      "source": "scan"
+    },
+    "promo-video/src/index.ts": {
+      "description": "",
+      "tokens": 32,
+      "hash": "957e481dd33a29b4",
+      "size": 109,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.464Z",
+      "source": "scan"
+    },
+    "promo-video/src/Promo.tsx": {
+      "description": "Fade",
+      "tokens": 759,
+      "hash": "aa4c1ea58e1d18c3",
+      "size": 2670,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.464Z",
+      "source": "scan"
+    },
+    "promo-video/src/PromoResep.tsx": {
+      "description": "Fade",
+      "tokens": 648,
+      "hash": "6a3a27e88d7df9e0",
+      "size": 2268,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.464Z",
+      "source": "scan"
+    },
+    "promo-video/src/Root.tsx": {
+      "description": "RemotionRoot",
+      "tokens": 153,
+      "hash": "fe107f1bdc4db101",
+      "size": 535,
+      "mtimeMs": 1785820091360.9963,
+      "updatedAt": "2026-08-04T05:08:53.464Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/Intro.tsx": {
+      "description": "Intro",
+      "tokens": 686,
+      "hash": "8f541e23280d5721",
+      "size": 2402,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.464Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/Outro.tsx": {
+      "description": "Outro",
+      "tokens": 675,
+      "hash": "fb02ce1d13931403",
+      "size": 2363,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.465Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/Pain.tsx": {
+      "description": "PAINS",
+      "tokens": 825,
+      "hash": "6dc80a7742329d30",
+      "size": 2887,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.465Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/PriceAdapt.tsx": {
+      "description": "ROWS",
+      "tokens": 2000,
+      "hash": "1b3126e0be708916",
+      "size": 6998,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.465Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "lerp",
+          "kind": "fn",
+          "startLine": 31,
+          "endLine": 185,
+          "tokens": 1721
+        }
+      ]
+    },
+    "promo-video/src/scenes/RecipeFlow.tsx": {
+      "description": "RecipeFlow",
+      "tokens": 1009,
+      "hash": "3dae7fd7d9632838",
+      "size": 3529,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.465Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/RecipeHPP.tsx": {
+      "description": "ROWS",
+      "tokens": 1940,
+      "hash": "0094a35fbeaf8952",
+      "size": 6790,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.466Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/Sales.tsx": {
+      "description": "PRICE",
+      "tokens": 1128,
+      "hash": "501053ffeddb9561",
+      "size": 3948,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.466Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/Shot.tsx": {
+      "description": "Shot",
+      "tokens": 1247,
+      "hash": "121d722e5532e126",
+      "size": 4363,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.466Z",
+      "source": "scan"
+    },
+    "promo-video/src/scenes/Stock.tsx": {
+      "description": "ITEMS",
+      "tokens": 1296,
+      "hash": "271e0be196d11481",
+      "size": 4535,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.466Z",
+      "source": "scan"
+    },
+    "promo-video/src/theme.ts": {
+      "description": "Warm Earthy Palette — mirrors app globals.css",
+      "tokens": 142,
+      "hash": "0dd7a145ca37d9d6",
+      "size": 499,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.467Z",
+      "source": "scan"
+    },
+    "promo-video/src/ui.tsx": {
+      "description": "Top status/app bar of a phone app screen",
+      "tokens": 1369,
+      "hash": "8c1c3067e57aabf8",
+      "size": 4792,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.467Z",
+      "source": "scan"
+    },
+    "promo-video/tsconfig.json": {
+      "description": "TypeScript configuration",
+      "tokens": 80,
+      "hash": "6f50f063416f9438",
+      "size": 280,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.467Z",
+      "source": "scan"
+    },
+    "public/_headers": {
+      "description": "",
+      "tokens": 128,
+      "hash": "d43edf93271fd836",
+      "size": 477,
+      "mtimeMs": 1779087536308.547,
+      "updatedAt": "2026-08-04T05:08:53.468Z",
+      "source": "scan"
+    },
+    "public/manifest.json": {
+      "description": "",
+      "tokens": 186,
+      "hash": "6c0474f0b8cbdfbb",
+      "size": 651,
+      "mtimeMs": 1780116536887.2832,
+      "updatedAt": "2026-08-04T05:08:53.468Z",
+      "source": "scan"
+    },
+    "public/sw.js": {
+      "description": "Declares CACHE",
+      "tokens": 338,
+      "hash": "ae49879701b59594",
+      "size": 1181,
+      "mtimeMs": 1776306944354.2449,
+      "updatedAt": "2026-08-04T05:08:53.469Z",
+      "source": "scan"
+    },
+    "README.md": {
+      "description": "Project documentation",
+      "tokens": 363,
+      "hash": "60b55ff7df79af72",
+      "size": 1450,
+      "mtimeMs": 1776221487986.8384,
+      "updatedAt": "2026-08-04T05:08:53.469Z",
+      "source": "scan"
+    },
+    "skills-lock.json": {
+      "description": "",
+      "tokens": 302,
+      "hash": "0a163686913ad777",
+      "size": 1057,
+      "mtimeMs": 1781063743764.2012,
+      "updatedAt": "2026-08-04T05:08:53.469Z",
+      "source": "scan"
+    },
+    "src/app/api/pakasir/webhook/route.ts": {
+      "description": "Next.js API route: POST",
+      "tokens": 2321,
+      "hash": "c9bf1ec7b7ce9118",
+      "size": 8129,
+      "mtimeMs": 1782715273101.0415,
+      "updatedAt": "2026-08-04T05:08:53.470Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "PakasirPayload",
+          "kind": "section",
+          "startLine": 6,
+          "endLine": 14,
+          "tokens": 43
+        },
+        {
+          "name": "generatePassword",
+          "kind": "fn",
+          "startLine": 15,
+          "endLine": 23,
+          "tokens": 77
+        },
+        {
+          "name": "credentialsEmailHtml",
+          "kind": "fn",
+          "startLine": 24,
+          "endLine": 79,
+          "tokens": 926
+        },
+        {
+          "name": "sendCredentialsEmail",
+          "kind": "fn",
+          "startLine": 80,
+          "endLine": 111,
+          "tokens": 220
+        },
+        {
+          "name": "POST",
+          "kind": "fn",
+          "startLine": 112,
+          "endLine": 232,
+          "tokens": 1014
+        }
+      ]
+    },
+    "src/app/dashboard/page.tsx": {
+      "description": "dynamic",
+      "tokens": 3958,
+      "hash": "6184469be54267b7",
+      "size": 13864,
+      "mtimeMs": 1779938802716.9302,
+      "updatedAt": "2026-08-04T05:08:53.471Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "todayString",
+          "kind": "fn",
+          "startLine": 23,
+          "endLine": 26,
+          "tokens": 24
+        },
+        {
+          "name": "SummaryCardProps",
+          "kind": "section",
+          "startLine": 27,
+          "endLine": 35,
+          "tokens": 43
+        },
+        {
+          "name": "SummaryCard",
+          "kind": "fn",
+          "startLine": 36,
+          "endLine": 71,
+          "tokens": 297
+        },
+        {
+          "name": "DashboardPage",
+          "kind": "fn",
+          "startLine": 72,
+          "endLine": 375,
+          "tokens": 3390
+        }
+      ]
+    },
+    "src/app/expenses/page.tsx": {
+      "description": "dynamic — renders table",
+      "tokens": 6103,
+      "hash": "0f352ac0d9b32003",
+      "size": 21547,
+      "mtimeMs": 1782715273102.0415,
+      "updatedAt": "2026-08-04T05:08:53.473Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ExpensesPage",
+          "kind": "fn",
+          "startLine": 28,
+          "endLine": 552,
+          "tokens": 5816
+        }
+      ]
+    },
+    "src/app/globals.css": {
+      "description": "Styles: 3 rules, 12 vars, 1 media queries",
+      "tokens": 466,
+      "hash": "4fe102d4c24d673e",
+      "size": 1631,
+      "mtimeMs": 1782715273102.0415,
+      "updatedAt": "2026-08-04T05:08:53.473Z",
+      "source": "scan"
+    },
+    "src/app/help/page.tsx": {
+      "description": "FEATURE_ICONS — renders chart",
+      "tokens": 6616,
+      "hash": "cfb873d2a778f88a",
+      "size": 23332,
+      "mtimeMs": 1782715273102.0415,
+      "updatedAt": "2026-08-04T05:08:53.474Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "Shot",
+          "kind": "fn",
+          "startLine": 111,
+          "endLine": 137,
+          "tokens": 248
+        },
+        {
+          "name": "FeatureList",
+          "kind": "fn",
+          "startLine": 138,
+          "endLine": 168,
+          "tokens": 297
+        },
+        {
+          "name": "Callout",
+          "kind": "fn",
+          "startLine": 169,
+          "endLine": 196,
+          "tokens": 241
+        },
+        {
+          "name": "Block",
+          "kind": "fn",
+          "startLine": 197,
+          "endLine": 215,
+          "tokens": 189
+        },
+        {
+          "name": "TourTab",
+          "kind": "fn",
+          "startLine": 216,
+          "endLine": 314,
+          "tokens": 913
+        },
+        {
+          "name": "FaqRow",
+          "kind": "fn",
+          "startLine": 315,
+          "endLine": 377,
+          "tokens": 519
+        },
+        {
+          "name": "FaqTab",
+          "kind": "fn",
+          "startLine": 378,
+          "endLine": 416,
+          "tokens": 376
+        },
+        {
+          "name": "VideoThumb",
+          "kind": "fn",
+          "startLine": 417,
+          "endLine": 541,
+          "tokens": 1115
+        },
+        {
+          "name": "VideoTab",
+          "kind": "fn",
+          "startLine": 542,
+          "endLine": 578,
+          "tokens": 506
+        },
+        {
+          "name": "HelpCenterPage",
+          "kind": "fn",
+          "startLine": 579,
+          "endLine": 690,
+          "tokens": 1464
+        }
+      ]
+    },
+    "src/app/items/page.tsx": {
+      "description": "dynamic",
+      "tokens": 5480,
+      "hash": "0f54eda7a9783ace",
+      "size": 19193,
+      "mtimeMs": 1782715273103.0415,
+      "updatedAt": "2026-08-04T05:08:53.475Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ItemsPage",
+          "kind": "fn",
+          "startLine": 33,
+          "endLine": 500,
+          "tokens": 5105
+        }
+      ]
+    },
+    "src/app/layout.tsx": {
+      "description": "appName",
+      "tokens": 265,
+      "hash": "ef8d55b560d2c2c3",
+      "size": 927,
+      "mtimeMs": 1782715273103.0415,
+      "updatedAt": "2026-08-04T05:08:53.476Z",
+      "source": "scan"
+    },
+    "src/app/login/page.tsx": {
+      "description": "dynamic — renders form",
+      "tokens": 797,
+      "hash": "e9db594004670f6c",
+      "size": 2805,
+      "mtimeMs": 1782715273104.0415,
+      "updatedAt": "2026-08-04T05:08:53.476Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "LoginPage",
+          "kind": "fn",
+          "startLine": 13,
+          "endLine": 84,
+          "tokens": 692
+        }
+      ]
+    },
+    "src/app/offline/page.tsx": {
+      "description": "dynamic",
+      "tokens": 309,
+      "hash": "0fc186fdd5302d88",
+      "size": 1079,
+      "mtimeMs": 1776236204027.952,
+      "updatedAt": "2026-08-04T05:08:53.476Z",
+      "source": "scan"
+    },
+    "src/app/page.tsx": {
+      "description": "Redirected by middleware to /dashboard or /login",
+      "tokens": 30,
+      "hash": "4398b57cdec15fd1",
+      "size": 102,
+      "mtimeMs": 1776236305925.859,
+      "updatedAt": "2026-08-04T05:08:53.477Z",
+      "source": "scan"
+    },
+    "src/app/produksi/page.tsx": {
+      "description": "dynamic",
+      "tokens": 7978,
+      "hash": "75b275f70a9e363a",
+      "size": 29183,
+      "mtimeMs": 1782715273104.0415,
+      "updatedAt": "2026-08-04T05:08:53.478Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ProduksiPage",
+          "kind": "fn",
+          "startLine": 32,
+          "endLine": 615,
+          "tokens": 7616
+        }
+      ]
+    },
+    "src/app/purchases/page.tsx": {
+      "description": "dynamic",
+      "tokens": 15366,
+      "hash": "93574a096984e0d9",
+      "size": 54173,
+      "mtimeMs": 1782715273105.0415,
+      "updatedAt": "2026-08-04T05:08:53.479Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "unitInfo",
+          "kind": "fn",
+          "startLine": 53,
+          "endLine": 56,
+          "tokens": 53
+        },
+        {
+          "name": "metricOptions",
+          "kind": "fn",
+          "startLine": 57,
+          "endLine": 61,
+          "tokens": 50
+        },
+        {
+          "name": "unitFactor",
+          "kind": "fn",
+          "startLine": 62,
+          "endLine": 64,
+          "tokens": 23
+        },
+        {
+          "name": "canonicalUnit",
+          "kind": "fn",
+          "startLine": 65,
+          "endLine": 68,
+          "tokens": 44
+        },
+        {
+          "name": "convFactor",
+          "kind": "fn",
+          "startLine": 69,
+          "endLine": 73,
+          "tokens": 47
+        },
+        {
+          "name": "PurchaseItemRow",
+          "kind": "section",
+          "startLine": 74,
+          "endLine": 89,
+          "tokens": 92
+        },
+        {
+          "name": "emptyItemRow",
+          "kind": "fn",
+          "startLine": 90,
+          "endLine": 99,
+          "tokens": 88
+        },
+        {
+          "name": "PurchasesPage",
+          "kind": "fn",
+          "startLine": 100,
+          "endLine": 965,
+          "tokens": 14218
+        }
+      ]
+    },
+    "src/app/recipes/page.tsx": {
+      "description": "dynamic",
+      "tokens": 7012,
+      "hash": "a820ff330e06acec",
+      "size": 24559,
+      "mtimeMs": 1782715273105.0415,
+      "updatedAt": "2026-08-04T05:08:53.480Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "BomRow",
+          "kind": "section",
+          "startLine": 37,
+          "endLine": 42,
+          "tokens": 54
+        },
+        {
+          "name": "RecipesPage",
+          "kind": "fn",
+          "startLine": 43,
+          "endLine": 637,
+          "tokens": 6660
+        }
+      ]
+    },
+    "src/app/reports/page.tsx": {
+      "description": "dynamic",
+      "tokens": 14892,
+      "hash": "387bf940f059554a",
+      "size": 52544,
+      "mtimeMs": 1779938802718.9302,
+      "updatedAt": "2026-08-04T05:08:53.482Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "getRange",
+          "kind": "fn",
+          "startLine": 58,
+          "endLine": 81,
+          "tokens": 218
+        },
+        {
+          "name": "CustomTooltip",
+          "kind": "fn",
+          "startLine": 82,
+          "endLine": 115,
+          "tokens": 333
+        },
+        {
+          "name": "ReportsPage",
+          "kind": "fn",
+          "startLine": 116,
+          "endLine": 996,
+          "tokens": 13947
+        }
+      ]
+    },
+    "src/app/sales/page.tsx": {
+      "description": "dynamic",
+      "tokens": 24946,
+      "hash": "5f068ece38e25390",
+      "size": 89579,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.484Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "AddonRow",
+          "kind": "section",
+          "startLine": 40,
+          "endLine": 46,
+          "tokens": 30
+        },
+        {
+          "name": "ItemRow",
+          "kind": "section",
+          "startLine": 47,
+          "endLine": 55,
+          "tokens": 62
+        },
+        {
+          "name": "ReceiptItem",
+          "kind": "section",
+          "startLine": 56,
+          "endLine": 62,
+          "tokens": 40
+        },
+        {
+          "name": "ReceiptSnapshot",
+          "kind": "section",
+          "startLine": 63,
+          "endLine": 71,
+          "tokens": 55
+        },
+        {
+          "name": "saleRevenue",
+          "kind": "fn",
+          "startLine": 72,
+          "endLine": 77,
+          "tokens": 41
+        },
+        {
+          "name": "saleHPP",
+          "kind": "fn",
+          "startLine": 78,
+          "endLine": 84,
+          "tokens": 50
+        },
+        {
+          "name": "saleProfit",
+          "kind": "fn",
+          "startLine": 85,
+          "endLine": 87,
+          "tokens": 20
+        },
+        {
+          "name": "saleMargin",
+          "kind": "fn",
+          "startLine": 88,
+          "endLine": 92,
+          "tokens": 33
+        },
+        {
+          "name": "emptyItemRow",
+          "kind": "fn",
+          "startLine": 93,
+          "endLine": 96,
+          "tokens": 46
+        },
+        {
+          "name": "calcSellingPrice",
+          "kind": "fn",
+          "startLine": 97,
+          "endLine": 105,
+          "tokens": 103
+        },
+        {
+          "name": "SalesPage",
+          "kind": "fn",
+          "startLine": 106,
+          "endLine": 2081,
+          "tokens": 24020
+        }
+      ]
+    },
+    "src/app/settings/page.tsx": {
+      "description": "dynamic — renders form",
+      "tokens": 3909,
+      "hash": "f0549afef44a7b76",
+      "size": 13713,
+      "mtimeMs": 1779087536309.547,
+      "updatedAt": "2026-08-04T05:08:53.484Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "EmailConfirmHandler",
+          "kind": "fn",
+          "startLine": 17,
+          "endLine": 41,
+          "tokens": 200
+        },
+        {
+          "name": "SettingsPage",
+          "kind": "fn",
+          "startLine": 42,
+          "endLine": 312,
+          "tokens": 3503
+        }
+      ]
+    },
+    "src/app/tutorial/page.tsx": {
+      "description": "The standalone tutorial page is now part of the Pusat Bantuan page",
+      "tokens": 72,
+      "hash": "d4454e667ab59b9a",
+      "size": 251,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.484Z",
+      "source": "scan"
+    },
+    "src/app/unauthorized/page.tsx": {
+      "description": "UnauthorizedPage",
+      "tokens": 428,
+      "hash": "d4a3d6d1e17885a8",
+      "size": 1498,
+      "mtimeMs": 1776412464403.498,
+      "updatedAt": "2026-08-04T05:08:53.485Z",
+      "source": "scan"
+    },
+    "src/app/welcome/page.tsx": {
+      "description": "dynamic",
+      "tokens": 580,
+      "hash": "0216cd33e66980f0",
+      "size": 2029,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.485Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "WelcomePage",
+          "kind": "fn",
+          "startLine": 5,
+          "endLine": 66,
+          "tokens": 560
+        }
+      ]
+    },
+    "src/components/help/fieldHelp.tsx": {
+      "description": "Single source of truth for field-level help. Each entry holds a short blurb",
+      "tokens": 1096,
+      "hash": "6f6991c7c7fef85d",
+      "size": 3855,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.485Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "helpHref",
+          "kind": "fn",
+          "startLine": 11,
+          "endLine": 117,
+          "tokens": 968
+        }
+      ]
+    },
+    "src/components/help/helpContent.tsx": {
+      "description": "TOUR",
+      "tokens": 9216,
+      "hash": "abab73513ddab9c6",
+      "size": 32647,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.486Z",
+      "source": "scan"
+    },
+    "src/components/help/HelpTip.tsx": {
+      "description": "Contextual help affordance for form fields. Renders a small \"?\" button that",
+      "tokens": 1031,
+      "hash": "5352e89a0bb449e3",
+      "size": 3608,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.487Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "HelpTip",
+          "kind": "fn",
+          "startLine": 14,
+          "endLine": 102,
+          "tokens": 888
+        }
+      ]
+    },
+    "src/components/help/Lightbox.tsx": {
+      "description": "Thumbnail tunggal yang buka Lightbox saat diklik",
+      "tokens": 2333,
+      "hash": "2e4c4385df9211c5",
+      "size": 8169,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.487Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "LightboxProps",
+          "kind": "section",
+          "startLine": 6,
+          "endLine": 11,
+          "tokens": 24
+        },
+        {
+          "name": "Lightbox",
+          "kind": "fn",
+          "startLine": 12,
+          "endLine": 114,
+          "tokens": 968
+        },
+        {
+          "name": "TourImage",
+          "kind": "fn",
+          "startLine": 115,
+          "endLine": 134,
+          "tokens": 229
+        },
+        {
+          "name": "TourCarousel",
+          "kind": "fn",
+          "startLine": 135,
+          "endLine": 240,
+          "tokens": 1070
+        }
+      ]
+    },
+    "src/components/layout/AppLayout.tsx": {
+      "description": "AppLayout",
+      "tokens": 504,
+      "hash": "bf46fff3ade15b04",
+      "size": 1764,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.487Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "AppLayoutProps",
+          "kind": "section",
+          "startLine": 9,
+          "endLine": 14,
+          "tokens": 30
+        },
+        {
+          "name": "AppLayout",
+          "kind": "fn",
+          "startLine": 15,
+          "endLine": 54,
+          "tokens": 409
+        }
+      ]
+    },
+    "src/components/layout/Sidebar.tsx": {
+      "description": "ALL_NAV",
+      "tokens": 1582,
+      "hash": "463fce444387a049",
+      "size": 5537,
+      "mtimeMs": 1782715273107.0415,
+      "updatedAt": "2026-08-04T05:08:53.488Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "SidebarProps",
+          "kind": "section",
+          "startLine": 44,
+          "endLine": 48,
+          "tokens": 20
+        },
+        {
+          "name": "Sidebar",
+          "kind": "fn",
+          "startLine": 49,
+          "endLine": 160,
+          "tokens": 1143
+        }
+      ]
+    },
+    "src/components/PWAInstallButton.tsx": {
+      "description": "PWAInstallButton — listens beforeinstallprompt, shows Install App button, hides if already installed as standalone",
+      "tokens": 449,
+      "hash": "f9c077865fa0e48f",
+      "size": 1571,
+      "mtimeMs": 1782715273106.0415,
+      "updatedAt": "2026-08-04T05:08:53.488Z",
+      "source": "scan"
+    },
+    "src/components/ServiceWorkerRegister.tsx": {
+      "description": "ServiceWorkerRegister — uses useEffect",
+      "tokens": 72,
+      "hash": "801ae8a047ae8f57",
+      "size": 252,
+      "mtimeMs": 1776221487991.8384,
+      "updatedAt": "2026-08-04T05:08:53.488Z",
+      "source": "scan"
+    },
+    "src/components/ui/Button.tsx": {
+      "description": "variants",
+      "tokens": 437,
+      "hash": "e75e77f814e0fde7",
+      "size": 1529,
+      "mtimeMs": 1776221487992.8384,
+      "updatedAt": "2026-08-04T05:08:53.488Z",
+      "source": "scan"
+    },
+    "src/components/ui/Card.tsx": {
+      "description": "Card",
+      "tokens": 230,
+      "hash": "4f2e72d2495fb7a4",
+      "size": 804,
+      "mtimeMs": 1776221487992.8384,
+      "updatedAt": "2026-08-04T05:08:53.489Z",
+      "source": "scan"
+    },
+    "src/components/ui/EmptyState.tsx": {
+      "description": "EmptyState",
+      "tokens": 202,
+      "hash": "ea052fd0e9e96526",
+      "size": 707,
+      "mtimeMs": 1776221487992.8384,
+      "updatedAt": "2026-08-04T05:08:53.489Z",
+      "source": "scan"
+    },
+    "src/components/ui/ImportExcelModal.tsx": {
+      "description": "ImportExcelModal — renders table, modal — uses useState",
+      "tokens": 1803,
+      "hash": "fe73a349fa1f99de",
+      "size": 6312,
+      "mtimeMs": 1776475603568.781,
+      "updatedAt": "2026-08-04T05:08:53.489Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ImportExcelModalProps",
+          "kind": "section",
+          "startLine": 9,
+          "endLine": 20,
+          "tokens": 94
+        },
+        {
+          "name": "ImportExcelModal",
+          "kind": "fn",
+          "startLine": 21,
+          "endLine": 203,
+          "tokens": 1650
+        }
+      ]
+    },
+    "src/components/ui/Input.tsx": {
+      "description": "Input",
+      "tokens": 856,
+      "hash": "a136c7d01947aa57",
+      "size": 2994,
+      "mtimeMs": 1782715273107.0415,
+      "updatedAt": "2026-08-04T05:08:53.490Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "InputProps",
+          "kind": "section",
+          "startLine": 4,
+          "endLine": 48,
+          "tokens": 432
+        },
+        {
+          "name": "SelectProps",
+          "kind": "section",
+          "startLine": 49,
+          "endLine": 93,
+          "tokens": 404
+        }
+      ]
+    },
+    "src/components/ui/Modal.tsx": {
+      "description": "sizes — uses useEffect",
+      "tokens": 584,
+      "hash": "85de837626b32f1a",
+      "size": 2043,
+      "mtimeMs": 1779088313501.2668,
+      "updatedAt": "2026-08-04T05:08:53.490Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "ModalProps",
+          "kind": "section",
+          "startLine": 7,
+          "endLine": 16,
+          "tokens": 60
+        },
+        {
+          "name": "Modal",
+          "kind": "fn",
+          "startLine": 17,
+          "endLine": 75,
+          "tokens": 490
+        }
+      ]
+    },
+    "src/components/ui/StatCard.tsx": {
+      "description": "accents",
+      "tokens": 467,
+      "hash": "a7951a11d6fcc39d",
+      "size": 1636,
+      "mtimeMs": 1776240633678.852,
+      "updatedAt": "2026-08-04T05:08:53.490Z",
+      "source": "scan"
+    },
+    "src/components/ui/TutorialBanner.tsx": {
+      "description": "DISMISSED_KEY — uses useEffect",
+      "tokens": 626,
+      "hash": "fbe7c819268eaf26",
+      "size": 2196,
+      "mtimeMs": 1782715273107.0415,
+      "updatedAt": "2026-08-04T05:08:53.490Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "useDismissed",
+          "kind": "fn",
+          "startLine": 10,
+          "endLine": 22,
+          "tokens": 109
+        },
+        {
+          "name": "dismissBanner",
+          "kind": "fn",
+          "startLine": 23,
+          "endLine": 27,
+          "tokens": 37
+        },
+        {
+          "name": "TutorialBanner",
+          "kind": "fn",
+          "startLine": 28,
+          "endLine": 58,
+          "tokens": 306
+        },
+        {
+          "name": "TutorialButton",
+          "kind": "fn",
+          "startLine": 59,
+          "endLine": 72,
+          "tokens": 109
+        }
+      ]
+    },
+    "src/components/ui/UnitSelect.tsx": {
+      "description": "HARDCODED_UNITS — uses useState",
+      "tokens": 875,
+      "hash": "3ceec5aecf46e4f7",
+      "size": 3082,
+      "mtimeMs": 1779087451068.009,
+      "updatedAt": "2026-08-04T05:08:53.491Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "UnitSelectProps",
+          "kind": "section",
+          "startLine": 11,
+          "endLine": 17,
+          "tokens": 36
+        },
+        {
+          "name": "UnitSelect",
+          "kind": "fn",
+          "startLine": 18,
+          "endLine": 94,
+          "tokens": 728
+        }
+      ]
+    },
+    "src/hooks/useAuth.ts": {
+      "description": "Exports useCurrentUser, useAuth",
+      "tokens": 343,
+      "hash": "58f74279dce7e5d0",
+      "size": 1198,
+      "mtimeMs": 1776309287925.665,
+      "updatedAt": "2026-08-04T05:08:53.491Z",
+      "source": "scan"
+    },
+    "src/hooks/useDailyData.ts": {
+      "description": "Exports useSalesByDate, usePurchasesByDate",
+      "tokens": 423,
+      "hash": "ac9854fd9598957e",
+      "size": 1478,
+      "mtimeMs": 1779938802720.9302,
+      "updatedAt": "2026-08-04T05:08:53.491Z",
+      "source": "scan"
+    },
+    "src/hooks/useExpenses.ts": {
+      "description": "Exports useExpenses, useExpensesByDate, useExpenseCategories, useReportExpenses + 4 more",
+      "tokens": 1368,
+      "hash": "96fbe7ff09b11f55",
+      "size": 4786,
+      "mtimeMs": 1776908880902.898,
+      "updatedAt": "2026-08-04T05:08:53.492Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "useExpenses",
+          "kind": "fn",
+          "startLine": 8,
+          "endLine": 23,
+          "tokens": 123
+        },
+        {
+          "name": "useExpensesByDate",
+          "kind": "fn",
+          "startLine": 24,
+          "endLine": 44,
+          "tokens": 190
+        },
+        {
+          "name": "useExpenseCategories",
+          "kind": "fn",
+          "startLine": 45,
+          "endLine": 59,
+          "tokens": 109
+        },
+        {
+          "name": "useReportExpenses",
+          "kind": "fn",
+          "startLine": 60,
+          "endLine": 74,
+          "tokens": 121
+        },
+        {
+          "name": "useCreateExpense",
+          "kind": "fn",
+          "startLine": 75,
+          "endLine": 103,
+          "tokens": 216
+        },
+        {
+          "name": "useUpdateExpense",
+          "kind": "fn",
+          "startLine": 104,
+          "endLine": 132,
+          "tokens": 207
+        },
+        {
+          "name": "useDeleteExpense",
+          "kind": "fn",
+          "startLine": 133,
+          "endLine": 148,
+          "tokens": 135
+        },
+        {
+          "name": "useCreateExpenseCategory",
+          "kind": "fn",
+          "startLine": 149,
+          "endLine": 172,
+          "tokens": 200
+        }
+      ]
+    },
+    "src/hooks/useItems.ts": {
+      "description": "Exports useItems, useCreateItem, useUpdateItem, useAddonItems, useDeleteItem",
+      "tokens": 766,
+      "hash": "54a5ec652b91f7e4",
+      "size": 2679,
+      "mtimeMs": 1779335747416.2205,
+      "updatedAt": "2026-08-04T05:08:53.492Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "useItems",
+          "kind": "fn",
+          "startLine": 8,
+          "endLine": 22,
+          "tokens": 95
+        },
+        {
+          "name": "useCreateItem",
+          "kind": "fn",
+          "startLine": 23,
+          "endLine": 54,
+          "tokens": 217
+        },
+        {
+          "name": "useUpdateItem",
+          "kind": "fn",
+          "startLine": 55,
+          "endLine": 74,
+          "tokens": 152
+        },
+        {
+          "name": "useAddonItems",
+          "kind": "fn",
+          "startLine": 75,
+          "endLine": 90,
+          "tokens": 108
+        },
+        {
+          "name": "useDeleteItem",
+          "kind": "fn",
+          "startLine": 91,
+          "endLine": 107,
+          "tokens": 132
+        }
+      ]
+    },
+    "src/hooks/usePackagingTypes.ts": {
+      "description": "Exports usePackagingTypes, useCreatePackagingType, useDeletePackagingType",
+      "tokens": 583,
+      "hash": "e74fb5a8fa50df1d",
+      "size": 2040,
+      "mtimeMs": 1779087431306.3406,
+      "updatedAt": "2026-08-04T05:08:53.493Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "usePackagingTypes",
+          "kind": "fn",
+          "startLine": 8,
+          "endLine": 22,
+          "tokens": 106
+        },
+        {
+          "name": "useCreatePackagingType",
+          "kind": "fn",
+          "startLine": 23,
+          "endLine": 44,
+          "tokens": 196
+        },
+        {
+          "name": "useDeletePackagingType",
+          "kind": "fn",
+          "startLine": 45,
+          "endLine": 67,
+          "tokens": 217
+        }
+      ]
+    },
+    "src/hooks/usePurchases.ts": {
+      "description": "Exports usePurchases, useUpdatePurchase, useCreatePurchase",
+      "tokens": 2381,
+      "hash": "e173cbc4d484813e",
+      "size": 8332,
+      "mtimeMs": 1780116536888.2832,
+      "updatedAt": "2026-08-04T05:08:53.493Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "dateToTimestamp",
+          "kind": "fn",
+          "startLine": 7,
+          "endLine": 20,
+          "tokens": 160
+        },
+        {
+          "name": "usePurchases",
+          "kind": "fn",
+          "startLine": 21,
+          "endLine": 36,
+          "tokens": 129
+        },
+        {
+          "name": "useUpdatePurchase",
+          "kind": "fn",
+          "startLine": 37,
+          "endLine": 75,
+          "tokens": 328
+        },
+        {
+          "name": "useCreatePurchase",
+          "kind": "fn",
+          "startLine": 76,
+          "endLine": 117,
+          "tokens": 369
+        },
+        {
+          "name": "useDeletePurchase",
+          "kind": "fn",
+          "startLine": 118,
+          "endLine": 141,
+          "tokens": 204
+        },
+        {
+          "name": "useDeleteProduction",
+          "kind": "fn",
+          "startLine": 142,
+          "endLine": 163,
+          "tokens": 202
+        },
+        {
+          "name": "useUpdateProduction",
+          "kind": "fn",
+          "startLine": 164,
+          "endLine": 187,
+          "tokens": 235
+        },
+        {
+          "name": "useProductions",
+          "kind": "fn",
+          "startLine": 188,
+          "endLine": 204,
+          "tokens": 141
+        },
+        {
+          "name": "useProduceSubRecipe",
+          "kind": "fn",
+          "startLine": 205,
+          "endLine": 238,
+          "tokens": 274
+        },
+        {
+          "name": "useProduceRecipe",
+          "kind": "fn",
+          "startLine": 239,
+          "endLine": 263,
+          "tokens": 259
+        }
+      ]
+    },
+    "src/hooks/useRecipes.ts": {
+      "description": "Exports calcHPP, useRecipes, useCreateRecipe, useUpdateRecipe + 3 more",
+      "tokens": 2059,
+      "hash": "33a011f1bc43c9fb",
+      "size": 7204,
+      "mtimeMs": 1782715273107.0415,
+      "updatedAt": "2026-08-04T05:08:53.494Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "calcHPP",
+          "kind": "fn",
+          "startLine": 8,
+          "endLine": 34,
+          "tokens": 221
+        },
+        {
+          "name": "useRecipes",
+          "kind": "fn",
+          "startLine": 35,
+          "endLine": 69,
+          "tokens": 339
+        },
+        {
+          "name": "useCreateRecipe",
+          "kind": "fn",
+          "startLine": 70,
+          "endLine": 125,
+          "tokens": 460
+        },
+        {
+          "name": "useUpdateRecipe",
+          "kind": "fn",
+          "startLine": 126,
+          "endLine": 183,
+          "tokens": 472
+        },
+        {
+          "name": "useAddonSubRecipes",
+          "kind": "fn",
+          "startLine": 184,
+          "endLine": 208,
+          "tokens": 187
+        },
+        {
+          "name": "useAddonFinishedRecipes",
+          "kind": "fn",
+          "startLine": 209,
+          "endLine": 233,
+          "tokens": 181
+        },
+        {
+          "name": "useDeleteRecipe",
+          "kind": "fn",
+          "startLine": 234,
+          "endLine": 250,
+          "tokens": 134
+        }
+      ]
+    },
+    "src/hooks/useSales.ts": {
+      "description": "All sale_items (no limit) for reports — includes created_at for date filtering",
+      "tokens": 4180,
+      "hash": "28a1d61e6e17cf42",
+      "size": 14631,
+      "mtimeMs": 1782715273107.0415,
+      "updatedAt": "2026-08-04T05:08:53.494Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "useSales",
+          "kind": "fn",
+          "startLine": 8,
+          "endLine": 31,
+          "tokens": 164
+        },
+        {
+          "name": "useSaleCategories",
+          "kind": "fn",
+          "startLine": 32,
+          "endLine": 46,
+          "tokens": 106
+        },
+        {
+          "name": "useCreateSaleCategory",
+          "kind": "fn",
+          "startLine": 47,
+          "endLine": 71,
+          "tokens": 221
+        },
+        {
+          "name": "useReportSales",
+          "kind": "fn",
+          "startLine": 72,
+          "endLine": 90,
+          "tokens": 151
+        },
+        {
+          "name": "useDashboardStats",
+          "kind": "fn",
+          "startLine": 91,
+          "endLine": 142,
+          "tokens": 384
+        },
+        {
+          "name": "deductAddonStock",
+          "kind": "fn",
+          "startLine": 143,
+          "endLine": 166,
+          "tokens": 178
+        },
+        {
+          "name": "restoreAddonStock",
+          "kind": "fn",
+          "startLine": 167,
+          "endLine": 190,
+          "tokens": 178
+        },
+        {
+          "name": "persistSellingPrices",
+          "kind": "fn",
+          "startLine": 191,
+          "endLine": 224,
+          "tokens": 307
+        },
+        {
+          "name": "useCreateSale",
+          "kind": "fn",
+          "startLine": 225,
+          "endLine": 320,
+          "tokens": 879
+        },
+        {
+          "name": "useUpdateSale",
+          "kind": "fn",
+          "startLine": 321,
+          "endLine": 434,
+          "tokens": 1122
+        },
+        {
+          "name": "useDeleteSale",
+          "kind": "fn",
+          "startLine": 435,
+          "endLine": 476,
+          "tokens": 421
+        }
+      ]
+    },
+    "src/hooks/useUnits.ts": {
+      "description": "Exports useCustomUnits, useCreateCustomUnit, useDeleteCustomUnit",
+      "tokens": 624,
+      "hash": "d06e15830947f407",
+      "size": 2182,
+      "mtimeMs": 1779087438283.2239,
+      "updatedAt": "2026-08-04T05:08:53.494Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "useCustomUnits",
+          "kind": "fn",
+          "startLine": 8,
+          "endLine": 22,
+          "tokens": 102
+        },
+        {
+          "name": "useCreateCustomUnit",
+          "kind": "fn",
+          "startLine": 23,
+          "endLine": 41,
+          "tokens": 175
+        },
+        {
+          "name": "useDeleteCustomUnit",
+          "kind": "fn",
+          "startLine": 42,
+          "endLine": 69,
+          "tokens": 283
+        }
+      ]
+    },
+    "src/lib/features/entitlements.ts": {
+      "description": "Entitlements — resolves which features are active for THIS deployment.",
+      "tokens": 745,
+      "hash": "7d25c9d570525032",
+      "size": 2610,
+      "mtimeMs": 1782715273108.0415,
+      "updatedAt": "2026-08-04T05:08:53.495Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "parseFeatureList",
+          "kind": "fn",
+          "startLine": 25,
+          "endLine": 37,
+          "tokens": 107
+        },
+        {
+          "name": "computeEnabled",
+          "kind": "fn",
+          "startLine": 38,
+          "endLine": 54,
+          "tokens": 131
+        },
+        {
+          "name": "getEnabledFeatureIds",
+          "kind": "fn",
+          "startLine": 55,
+          "endLine": 59,
+          "tokens": 33
+        },
+        {
+          "name": "isFeatureEnabled",
+          "kind": "fn",
+          "startLine": 60,
+          "endLine": 64,
+          "tokens": 48
+        },
+        {
+          "name": "getFeatureForPath",
+          "kind": "fn",
+          "startLine": 65,
+          "endLine": 79,
+          "tokens": 137
+        },
+        {
+          "name": "isPathAllowed",
+          "kind": "fn",
+          "startLine": 80,
+          "endLine": 85,
+          "tokens": 51
+        }
+      ]
+    },
+    "src/lib/features/registry.ts": {
+      "description": "Feature registry — single source of truth for every module/feature that the",
+      "tokens": 737,
+      "hash": "29763a6718e871a8",
+      "size": 2647,
+      "mtimeMs": 1782715273108.0415,
+      "updatedAt": "2026-08-04T05:08:53.495Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "FeatureDef",
+          "kind": "section",
+          "startLine": 23,
+          "endLine": 104,
+          "tokens": 504
+        },
+        {
+          "name": "isFeatureId",
+          "kind": "fn",
+          "startLine": 105,
+          "endLine": 108,
+          "tokens": 38
+        }
+      ]
+    },
+    "src/lib/providers.tsx": {
+      "description": "Providers — uses useState",
+      "tokens": 272,
+      "hash": "986ce1beb8c793df",
+      "size": 950,
+      "mtimeMs": 1776223921015.5232,
+      "updatedAt": "2026-08-04T05:08:53.495Z",
+      "source": "scan"
+    },
+    "src/lib/supabase/admin.ts": {
+      "description": "Exports createAdminClient",
+      "tokens": 86,
+      "hash": "78728874d97f8b83",
+      "size": 300,
+      "mtimeMs": 1782715273108.0415,
+      "updatedAt": "2026-08-04T05:08:53.496Z",
+      "source": "scan"
+    },
+    "src/lib/supabase/client.ts": {
+      "description": "Exports createClient",
+      "tokens": 62,
+      "hash": "7a1c73804ca024e3",
+      "size": 215,
+      "mtimeMs": 1776221487993.8384,
+      "updatedAt": "2026-08-04T05:08:53.496Z",
+      "source": "scan"
+    },
+    "src/lib/supabase/server.ts": {
+      "description": "Exports createClient",
+      "tokens": 176,
+      "hash": "f064959b567e71fd",
+      "size": 616,
+      "mtimeMs": 1776221487993.8384,
+      "updatedAt": "2026-08-04T05:08:53.496Z",
+      "source": "scan"
+    },
+    "src/lib/tenant/config.ts": {
+      "description": "Tenant config — per-deployment identity & branding, sourced from env vars.",
+      "tokens": 255,
+      "hash": "bd37a5b910fec0e6",
+      "size": 894,
+      "mtimeMs": 1782715273108.0415,
+      "updatedAt": "2026-08-04T05:08:53.496Z",
+      "source": "scan"
+    },
+    "src/lib/utils.ts": {
+      "description": "Exports cn, formatCurrency, formatNumber, calcProfitMargin",
+      "tokens": 286,
+      "hash": "98814c1320c66101",
+      "size": 1003,
+      "mtimeMs": 1780628895506.8813,
+      "updatedAt": "2026-08-04T05:08:53.497Z",
+      "source": "scan"
+    },
+    "src/middleware.ts": {
+      "description": "Exports middleware, config",
+      "tokens": 788,
+      "hash": "09dc3a174ab13a25",
+      "size": 2764,
+      "mtimeMs": 1782715273108.0415,
+      "updatedAt": "2026-08-04T05:08:53.497Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "middleware",
+          "kind": "fn",
+          "startLine": 5,
+          "endLine": 90,
+          "tokens": 738
+        }
+      ]
+    },
+    "src/types/index.ts": {
+      "description": "Exports CustomUnit, PackagingType, Item, Purchase + 10 more",
+      "tokens": 845,
+      "hash": "5c724100c09046a5",
+      "size": 2956,
+      "mtimeMs": 1780628895471.8806,
+      "updatedAt": "2026-08-04T05:08:53.498Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "CustomUnit",
+          "kind": "section",
+          "startLine": 1,
+          "endLine": 7,
+          "tokens": 30
+        },
+        {
+          "name": "PackagingType",
+          "kind": "section",
+          "startLine": 8,
+          "endLine": 14,
+          "tokens": 31
+        },
+        {
+          "name": "Item",
+          "kind": "section",
+          "startLine": 15,
+          "endLine": 28,
+          "tokens": 78
+        },
+        {
+          "name": "Purchase",
+          "kind": "section",
+          "startLine": 29,
+          "endLine": 43,
+          "tokens": 88
+        },
+        {
+          "name": "Recipe",
+          "kind": "section",
+          "startLine": 44,
+          "endLine": 62,
+          "tokens": 136
+        },
+        {
+          "name": "RecipeItem",
+          "kind": "section",
+          "startLine": 63,
+          "endLine": 72,
+          "tokens": 55
+        },
+        {
+          "name": "Production",
+          "kind": "section",
+          "startLine": 73,
+          "endLine": 82,
+          "tokens": 48
+        },
+        {
+          "name": "SaleCategory",
+          "kind": "section",
+          "startLine": 83,
+          "endLine": 89,
+          "tokens": 30
+        },
+        {
+          "name": "SaleAddon",
+          "kind": "section",
+          "startLine": 90,
+          "endLine": 100,
+          "tokens": 66
+        },
+        {
+          "name": "SaleItem",
+          "kind": "section",
+          "startLine": 101,
+          "endLine": 115,
+          "tokens": 95
+        },
+        {
+          "name": "Sale",
+          "kind": "section",
+          "startLine": 116,
+          "endLine": 124,
+          "tokens": 48
+        },
+        {
+          "name": "ExpenseCategory",
+          "kind": "section",
+          "startLine": 125,
+          "endLine": 131,
+          "tokens": 31
+        },
+        {
+          "name": "Expense",
+          "kind": "section",
+          "startLine": 132,
+          "endLine": 144,
+          "tokens": 67
+        },
+        {
+          "name": "DashboardStats",
+          "kind": "section",
+          "startLine": 145,
+          "endLine": 152,
+          "tokens": 44
+        }
+      ]
+    },
+    "supabase/migrations/001_initial_schema.sql": {
+      "description": "Enable UUID extension",
+      "tokens": 1686,
+      "hash": "7465b6eced331b68",
+      "size": 5898,
+      "mtimeMs": 1776221487994.8384,
+      "updatedAt": "2026-08-04T05:08:53.498Z",
+      "source": "scan"
+    },
+    "supabase/migrations/002_fix_record_purchase_generated_col.sql": {
+      "description": "Fix: price_per_unit is a generated column, cannot be inserted explicitly.",
+      "tokens": 429,
+      "hash": "e252bfcbd014e3f5",
+      "size": 1502,
+      "mtimeMs": 1776225443096.1768,
+      "updatedAt": "2026-08-04T05:08:53.498Z",
+      "source": "scan"
+    },
+    "supabase/migrations/002_prev_avg_price.sql": {
+      "description": "Add prev_avg_price to items (stores avg_price before last purchase update)",
+      "tokens": 468,
+      "hash": "048117e04458273c",
+      "size": 1637,
+      "mtimeMs": 1776307902965.0938,
+      "updatedAt": "2026-08-04T05:08:53.499Z",
+      "source": "scan"
+    },
+    "supabase/migrations/003_update_purchase.sql": {
+      "description": "Update an existing purchase: adjusts stock delta and recalculates weighted avg price.",
+      "tokens": 432,
+      "hash": "609d5c92d2a8f4ba",
+      "size": 1512,
+      "mtimeMs": 1776308998811.0735,
+      "updatedAt": "2026-08-04T05:08:53.499Z",
+      "source": "scan"
+    },
+    "supabase/migrations/004_purchase_created_at.sql": {
+      "description": "Allow record_purchase to accept optional transaction date",
+      "tokens": 372,
+      "hash": "5c5d71ae0738818b",
+      "size": 1300,
+      "mtimeMs": 1779087519284.8428,
+      "updatedAt": "2026-08-04T05:08:53.499Z",
+      "source": "scan"
+    },
+    "supabase/migrations/005_delete_purchase.sql": {
+      "description": "Delete a purchase: reduces stock and recalculates weighted avg price from remaining purchases.",
+      "tokens": 394,
+      "hash": "afa5175e67277e06",
+      "size": 1379,
+      "mtimeMs": 1777000911484.5437,
+      "updatedAt": "2026-08-04T05:08:53.500Z",
+      "source": "scan"
+    },
+    "supabase/migrations/005_fix_price_per_unit_generated_col.sql": {
+      "description": "Fix: migration 004 re-introduced generated column bug; record_purchase omits price_per_unit from INSERT.",
+      "tokens": 435,
+      "hash": "f8604220c7466de7",
+      "size": 1524,
+      "mtimeMs": 1776908880902.898,
+      "updatedAt": "2026-08-04T05:08:53.500Z",
+      "source": "scan"
+    },
+    "supabase/migrations/006_sub_recipe.sql": {
+      "description": "Extends recipes (is_ingredient/unit/stock/avg_price), recipe_items (sub_recipe_id), creates productions table+RLS, RPCs: produce_sub_recipe + deduct_sub_recipe_stock",
+      "tokens": 1468,
+      "hash": "47a8f601bc61e303",
+      "size": 5626,
+      "mtimeMs": 1778658788636.6628,
+      "updatedAt": "2026-08-04T05:08:53.500Z",
+      "source": "scan"
+    },
+    "supabase/migrations/007_production_crud.sql": {
+      "description": "RPCs: delete_production + update_production, both SECURITY DEFINER, reverse/adjust stock on recipes and items",
+      "tokens": 1010,
+      "hash": "58d99681d6ca8a19",
+      "size": 3750,
+      "mtimeMs": 1778742719579.2375,
+      "updatedAt": "2026-08-04T05:08:53.501Z",
+      "source": "scan"
+    },
+    "supabase/migrations/008_security_fix_rpc_auth.sql": {
+      "description": "Security fix: adds auth.uid() guard to all 7 SECURITY DEFINER RPCs; creates user_profiles table with RLS + signup trigger",
+      "tokens": 3316,
+      "hash": "8f38f544ba203679",
+      "size": 12491,
+      "mtimeMs": 1779087536309.547,
+      "updatedAt": "2026-08-04T05:08:53.501Z",
+      "source": "scan"
+    },
+    "supabase/migrations/009_dynamic_units_packaging.sql": {
+      "description": "Migration 009: Dynamic units & packaging input",
+      "tokens": 1822,
+      "hash": "4b6d72b476c34520",
+      "size": 6381,
+      "mtimeMs": 1779087536309.547,
+      "updatedAt": "2026-08-04T05:08:53.501Z",
+      "source": "scan"
+    },
+    "supabase/migrations/010_sale_addons.sql": {
+      "description": "Sale Add-On: is_addon flag on items+recipes, sale_addons table, hpp_addons_at_sale on sales, RPCs: adjust_item_stock + restore_sub_recipe_stock",
+      "tokens": 668,
+      "hash": "13784e0e18999fa0",
+      "size": 2335,
+      "mtimeMs": 1779335747417.2205,
+      "updatedAt": "2026-08-04T05:08:53.502Z",
+      "source": "scan"
+    },
+    "supabase/migrations/011_sale_items.sql": {
+      "description": "Migration 011: Multi-item sales",
+      "tokens": 899,
+      "hash": "1aa64b5c7b5ef4a7",
+      "size": 3735,
+      "mtimeMs": 1779938802721.9302,
+      "updatedAt": "2026-08-04T05:08:53.502Z",
+      "source": "scan"
+    },
+    "supabase/migrations/012_batch_yield_waste.sql": {
+      "description": "Add batch production fields to recipes",
+      "tokens": 120,
+      "hash": "627063861620b36a",
+      "size": 420,
+      "mtimeMs": 1779938802721.9302,
+      "updatedAt": "2026-08-04T05:08:53.502Z",
+      "source": "scan"
+    },
+    "supabase/migrations/013_item_price_updated_at.sql": {
+      "description": "Track when item avg_price last changed so recipe HPP diff badge",
+      "tokens": 1313,
+      "hash": "c196a3215a156a65",
+      "size": 4595,
+      "mtimeMs": 1779938802721.9302,
+      "updatedAt": "2026-08-04T05:08:53.503Z",
+      "source": "scan"
+    },
+    "supabase/migrations/014_recipe_hpp_baseline.sql": {
+      "description": "Store HPP baseline per recipe so diff badge compares against",
+      "tokens": 91,
+      "hash": "3f0b6d9096a07f1e",
+      "size": 316,
+      "mtimeMs": 1779938802721.9302,
+      "updatedAt": "2026-08-04T05:08:53.503Z",
+      "source": "scan"
+    },
+    "supabase/migrations/015_record_purchase_set_prev_avg_price.sql": {
+      "description": "Fix: record_purchase sebelumnya tidak set prev_avg_price.",
+      "tokens": 471,
+      "hash": "b483e8486581c1cf",
+      "size": 1647,
+      "mtimeMs": 1779938802721.9302,
+      "updatedAt": "2026-08-04T05:08:53.503Z",
+      "source": "scan"
+    },
+    "supabase/migrations/016_fix_record_purchase_prev_avg_price.sql": {
+      "description": "Root cause: there are two overloaded record_purchase functions.",
+      "tokens": 723,
+      "hash": "bf22191c1a026514",
+      "size": 2534,
+      "mtimeMs": 1779938802721.9302,
+      "updatedAt": "2026-08-04T05:08:53.503Z",
+      "source": "scan"
+    },
+    "supabase/migrations/017_produce_recipe.sql": {
+      "description": "Migration 017: Finished Goods Inventory (Stok Produk Jadi)",
+      "tokens": 1015,
+      "hash": "9a71b754df10a0a4",
+      "size": 3777,
+      "mtimeMs": 1780110621217.1619,
+      "updatedAt": "2026-08-04T05:08:53.504Z",
+      "source": "scan"
+    },
+    "supabase/migrations/018_selling_price.sql": {
+      "description": "Migration 018: Selling Price (Harga Jual Tetap)",
+      "tokens": 120,
+      "hash": "d96df4f36ea87753",
+      "size": 419,
+      "mtimeMs": 1780628895464.8804,
+      "updatedAt": "2026-08-04T05:08:53.504Z",
+      "source": "scan"
+    },
+    "supabase/migrations/019_fix_delete_production_sub_recipe.sql": {
+      "description": "Migration 019: Fix delete_production + update_production sub-recipe stock restoration",
+      "tokens": 3361,
+      "hash": "cba27b5462c823fe",
+      "size": 12207,
+      "mtimeMs": 1782715273108.0415,
+      "updatedAt": "2026-08-04T05:08:53.505Z",
+      "source": "scan"
+    },
+    "supabase/migrations/020_fix_adjust_item_stock_guard.sql": {
+      "description": "Migration 020: Add negative-stock guard to adjust_item_stock",
+      "tokens": 336,
+      "hash": "d030eb0193def72a",
+      "size": 1175,
+      "mtimeMs": 1782715273108.0415,
+      "updatedAt": "2026-08-04T05:08:53.505Z",
+      "source": "scan"
+    },
+    "supabase/migrations/021_production_items_snapshot.sql": {
+      "description": "Migration 021: Production BOM snapshot (production_items)",
+      "tokens": 4246,
+      "hash": "4f5cb9599e3c5808",
+      "size": 15098,
+      "mtimeMs": 1782715273109.0415,
+      "updatedAt": "2026-08-04T05:08:53.505Z",
+      "source": "scan"
+    },
+    "supabase/migrations/022_update_production_stock_guard.sql": {
+      "description": "Migration 022: Add negative-stock guard to update_production",
+      "tokens": 1872,
+      "hash": "89c38b0003b8582e",
+      "size": 6726,
+      "mtimeMs": 1782715273109.0415,
+      "updatedAt": "2026-08-04T05:08:53.506Z",
+      "source": "scan"
+    },
+    "supabase/migrations/023_produce_sub_recipe_nested.sql": {
+      "description": "Migration 023: produce_sub_recipe deducts nested sub-recipes too",
+      "tokens": 1210,
+      "hash": "b0f51e88ed88f2c3",
+      "size": 4236,
+      "mtimeMs": 1782715273109.0415,
+      "updatedAt": "2026-08-04T05:08:53.506Z",
+      "source": "scan"
+    },
+    "supabase/migrations/024_produce_sub_recipe_force.sql": {
+      "description": "Migration 024: Add p_force bypass to produce_sub_recipe",
+      "tokens": 1133,
+      "hash": "3c43d7124cc6cd91",
+      "size": 3970,
+      "mtimeMs": 1782715273109.0415,
+      "updatedAt": "2026-08-04T05:08:53.506Z",
+      "source": "scan"
+    },
+    "supabase/migrations/025_produce_recipe_force.sql": {
+      "description": "Migration 025: Add p_force bypass to produce_recipe",
+      "tokens": 1073,
+      "hash": "ff8baefe3871dae5",
+      "size": 3758,
+      "mtimeMs": 1782715273109.0415,
+      "updatedAt": "2026-08-04T05:08:53.506Z",
+      "source": "scan"
+    },
+    "supabase/migrations/026_orders_table.sql": {
+      "description": "orders table: tracks purchases from landing page via Pakasir payment gateway",
+      "tokens": 274,
+      "hash": "77e4ea9c4fd65437",
+      "size": 958,
+      "mtimeMs": 1782715273109.0415,
+      "updatedAt": "2026-08-04T05:08:53.507Z",
+      "source": "scan"
+    },
+    "supabase/migrations/027_drop_stale_produce_overloads.sql": {
+      "description": "Migration 027: Drop stale 5-arg overloads of produce_recipe / produce_sub_recipe",
+      "tokens": 483,
+      "hash": "e78fddec80b5b00f",
+      "size": 1689,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.507Z",
+      "source": "scan"
+    },
+    "supabase/seeds/001_dummy_data.sql": {
+      "description": "COSTIFY SEED DATA",
+      "tokens": 4328,
+      "hash": "179321ca1c39a898",
+      "size": 15178,
+      "mtimeMs": 1776226297857.3894,
+      "updatedAt": "2026-08-04T05:08:53.507Z",
+      "source": "scan"
+    },
+    "tsconfig.json": {
+      "description": "TypeScript configuration",
+      "tokens": 211,
+      "hash": "3743a4fa23aab813",
+      "size": 736,
+      "mtimeMs": 1785820091361.996,
+      "updatedAt": "2026-08-04T05:08:53.507Z",
+      "source": "scan"
+    },
+    "tsconfig.tsbuildinfo": {
+      "description": "",
+      "tokens": 50515,
+      "hash": "79be8588cd5af79d",
+      "size": 189430,
+      "mtimeMs": 1780563694954.739,
+      "updatedAt": "2026-08-04T05:08:53.509Z",
+      "source": "scan"
+    },
+    "wrangler.toml": {
+      "description": "",
+      "tokens": 134,
+      "hash": "f292e3148ff08723",
+      "size": 469,
+      "mtimeMs": 1776306944360.2446,
+      "updatedAt": "2026-08-04T05:08:53.509Z",
+      "source": "scan"
+    }
+  }
+}
