@@ -812,3 +812,14 @@
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 | 11:33 | update tooling: graphify 0.9.32 + skill, openwolf v2, rtk 0.44.2, lean-ctx 3.9.14; build graphify-out dapur (1179 node/1965 edge/116 komunitas); hapus wiring .codex/.opencode | .wolf/config.json, .gitignore, graphify-out/ | ok | ~8k |
+| 12:10 | Session end: 1 writes across 1 files (027_drop_stale_produce_overloads.sql) | 2 reads | ~483 tok |
+
+## Session: 2026-08-04 12:11
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 12:40 | security audit 5 layer (deps/secrets/injection/authz) | src/app/api/pakasir/webhook/route.ts, src/middleware.ts, supabase/migrations/026 | 1 CRITICAL (webhook pakasir tanpa verifikasi signature -> account takeover via anon INSERT orders), 2 HIGH; logged bug-072..074 | ~30k |
+| 12:55 | fix CRITICAL bug-072: verifikasi balik ke API Pakasir (transactiondetail) sebelum aksi akun + guard reset password akun existing | src/app/api/pakasir/webhook/route.ts, .env.example | tsc bersih (0 error di route), eslint bersih; butuh env PAKASIR_API_KEY di Cloudflare Pages | ~12k |
+| 13:40 | koreksi host Pakasir ke app.pakasir.com (dari docs pakasir.com/p/docs; endpoint+params+respons cocok persis, Pakasir TIDAK punya signature webhook) | src/app/api/pakasir/webhook/route.ts, .env.example | tsc bersih | ~6k |
+| 14:05 | fix HIGH bug-074: migrasi 028 RLS untuk expenses/expense_categories/sale_categories (tabel bikinan dashboard, tak pernah tercatat di migrasi) | supabase/migrations/028_rls_untracked_tables.sql | file dibuat, BELUM di-push ke DB | ~5k |
+| 14:20 | fix HIGH bug-073: password plaintext dihapus setelah email terkirim; resend admin jadi reset password baru | src/app/api/pakasir/webhook/route.ts + repo tata-data-admin (worker/index.ts, worker/supabase-admin.ts, src/pages/Orders.tsx) | vitest supabase-admin 8/8 pass, tsc 2 file worker 0 error; 5 test gagal di admin = pre-existing (identik sebelum/sesudah, sudah dicek via git stash) | ~14k |

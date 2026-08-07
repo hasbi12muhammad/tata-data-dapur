@@ -322,12 +322,13 @@
 
 ## src/app/api/pakasir/webhook/
 
-- `route.ts` — Next.js API route: POST (~2321 tok)
+- `route.ts` — Next.js API route: POST. Public (middleware skips auth); payload untrusted — every paid order is confirmed by calling Pakasir back before an account is created/modified (~2800 tok)
   - section `PakasirPayload` L6-14 (~43 tok)
-  - fn `generatePassword` L15-23 (~77 tok)
-  - fn `credentialsEmailHtml` L24-79 (~926 tok)
-  - fn `sendCredentialsEmail` L80-111 (~220 tok)
-  - fn `POST` L112-232 (~1014 tok)
+  - fn `verifyWithPakasir` L29-77 — fail-closed callback to Pakasir /api/transactiondetail (~430 tok)
+  - fn `generatePassword` L79-87 (~77 tok)
+  - fn `credentialsEmailHtml` L88-143 (~926 tok)
+  - fn `sendCredentialsEmail` L144-175 (~220 tok)
+  - fn `POST` L176-327 (~1200 tok)
 
 ## src/app/dashboard/
 
@@ -621,6 +622,7 @@
 - `025_produce_recipe_force.sql` — Migration 025: Add p_force bypass to produce_recipe (~1073 tok)
 - `026_orders_table.sql` — orders table: tracks purchases from landing page via Pakasir payment gateway (~274 tok)
 - `027_drop_stale_produce_overloads.sql` — Migration 027: Drop stale 5-arg overloads of produce_recipe / produce_sub_recipe (~483 tok)
+- `028_rls_untracked_tables.sql` — Migration 028: enable RLS + users_own_* policies for expenses, expense_categories, sale_categories (dashboard-made tables never tracked in migrations). Idempotent (~230 tok)
 
 ## supabase/seeds/
 

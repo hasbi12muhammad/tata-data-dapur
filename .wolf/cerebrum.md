@@ -8,6 +8,7 @@
 
 <!-- How the user likes things done. Code style, tools, patterns, communication. -->
 - **Communication:** User writes in Indonesian (casual). Respond in Indonesian.
+- **Penjelasan temuan teknis (2026-08-04):** User sering minta "jelaskan simple". Untuk kerentanan/arsitektur, mulai dengan analogi konkret + rantai serangan langkah-per-langkah, baru istilah teknis. Tabel severity oke untuk ringkasan, tapi selalu sediakan versi bahasa manusia.
 - **Product direction (2026-06-13):** Project is becoming a multi-tenant "base app" sold as feature packages. Wants per-client deployment + per-client database, but base updates must auto-propagate to all clients.
 
 ## Key Learnings
@@ -23,6 +24,8 @@
 - **useDeletePurchase:** Delete langsung dari tabel `purchases`, TIDAK via RPC. Tidak me-revert perubahan stock/avg_price — user harus sadar ini.
 - **Date filter purchases:** State `filterDateFrom`/`filterDateTo` di-filter di useMemo client-side. Gunakan `setHours(0,0,0,0)` dan `setHours(23,59,59,999)` untuk full-day range.
 - **Description:** This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+- **Ekosistem 3 repo (2026-08-04):** (1) `tata-data-dapur` = app (Cloudflare Pages, `app.tatadatadapur.my.id`) — juga host webhook Pakasir di `/api/pakasir/webhook`; (2) `tata-data-dapur-land-page` = Vite statis, insert baris `orders` via anon key lalu redirect ke `app.pakasir.com/pay/<slug>/<amount>`; (3) `tata-data-admin` = React + Cloudflare **Worker** `tata-data-admin-worker` (hono, cron per jam) yang menyimpan SERVICE KEY semua project dan mengelola users/orders/subscription. Perubahan alur order/akun hampir selalu menyentuh lebih dari satu repo.
+- **Pakasir (2026-08-04):** TIDAK ada signature/secret di webhook-nya (dikonfirmasi di docs `pakasir.com/p/docs`). Satu-satunya verifikasi yang benar adalah callback `GET https://app.pakasir.com/api/transactiondetail?project&amount&order_id&api_key` lalu cocokkan order_id/amount/status. Host `app.pakasir.com` (bukan pakasir.zone.id). Env: `PAKASIR_API_KEY` di Pages project app.
 
 ## Do-Not-Repeat
 
@@ -32,6 +35,8 @@
 - [2026-06-11] `delete_production` and `update_production` only iterated `recipe_items WHERE item_id IS NOT NULL`. Sub-recipe rows (`sub_recipe_id IS NOT NULL`) were silently skipped, so sub-recipe stocks were never restored on delete/edit. Always loop BOTH item_id and sub_recipe_id when reversing a production. Guard the sub-recipe loop with `IF NOT v_is_ingredient` because `produce_sub_recipe` does NOT deduct nested sub-recipes — only `produce_recipe` does.
 - [2026-07-30] `promo-video/` is a separate subproject with its own `package.json`/`node_modules` (remotion is NOT a root dependency). The root `tsconfig.json` must keep `"promo-video"` in `exclude`, otherwise `next build` type-checks it and the Cloudflare Pages deploy fails with `Cannot find module '@remotion/cli/config'`. Local builds hide this because `promo-video/node_modules` exists. Same rule for any future subfolder with its own `package.json`.
 - [2026-07-30] Adding a parameter to an existing Postgres RPC with `CREATE OR REPLACE FUNCTION` does NOT replace it — a changed signature creates a second overload, and 5-arg calls then fail with "Could not choose the best candidate function" because the new param has a DEFAULT. Whenever an RPC's parameter list changes, `DROP FUNCTION IF EXISTS public.fn(oldargtypes...)` in the same migration. Happened with `produce_recipe`/`produce_sub_recipe` (migr. 024/025, fixed by 027).
+- [2026-08-04] Endpoint publik yang memakai service role (webhook pembayaran) TIDAK boleh mempercayai isi payload-nya. Payload webhook = petunjuk, bukan otorisasi: selalu verifikasi ke penyedia pembayaran memakai nilai dari DB kita sendiri (bukan dari payload), dan fail-closed kalau key hilang / provider tak bisa dihubungi. Ingat juga `orders` bisa di-INSERT anon dari landing page, jadi isi baris order pun tidak tepercaya.
+- [2026-08-04] Tabel yang dibuat lewat dashboard Supabase tanpa file migrasi (`user_profiles` dulu, lalu `expenses`, `expense_categories`, `sale_categories`) bikin status RLS tak bisa diaudit dari repo. Setiap tabel baru HARUS punya migrasi berisi `enable row level security` + policy `auth.uid() = user_id`, karena query app tidak pernah memfilter `user_id` sendiri — RLS satu-satunya pemisah data antar user.
 - [2026-06-11] Auto-fill `totalCost` in produksi form was `Math.ceil(hpp * qty)`. User wants precise `hpp * qty` stored (numeric 2dp), rounded only for display. Use `String(hpp * qty)` for auto-fill and `step="0.01"` on the input.
 
 ## Decision Log

@@ -12,6 +12,70 @@ interface PakasirPayload {
   completed_at?: string
 }
 
+const PAKASIR_PROJECT = 'tata-data-dapur'
+const PAKASIR_BASE_URL = process.env.PAKASIR_BASE_URL ?? 'https://app.pakasir.com'
+
+type VerifyResult =
+  | { ok: true; tx: PakasirPayload }
+  | { ok: false; reason: string; status: number }
+
+/**
+ * The webhook endpoint is public (middleware skips auth for /api/pakasir/*) and
+ * the payload is fully attacker-controllable, so NOTHING in it may be trusted.
+ * Before touching any account we call Pakasir back and let Pakasir tell us
+ * whether that order really was paid. Fails closed: no API key / unreachable /
+ * non-completed → no account is created or modified.
+ */
+async function verifyWithPakasir(orderId: string, amount: number): Promise<VerifyResult> {
+  const apiKey = process.env.PAKASIR_API_KEY
+  if (!apiKey) {
+    return { ok: false, reason: 'PAKASIR_API_KEY not configured', status: 503 }
+  }
+
+  const url =
+    `${PAKASIR_BASE_URL}/api/transactiondetail` +
+    `?project=${encodeURIComponent(PAKASIR_PROJECT)}` +
+    `&amount=${encodeURIComponent(String(amount))}` +
+    `&order_id=${encodeURIComponent(orderId)}` +
+    `&api_key=${encodeURIComponent(apiKey)}`
+
+  let res: Response
+  try {
+    res = await fetch(url, { headers: { Accept: 'application/json' } })
+  } catch {
+    return { ok: false, reason: 'pakasir unreachable', status: 502 }
+  }
+  if (!res.ok) {
+    return { ok: false, reason: `pakasir http ${res.status}`, status: 502 }
+  }
+
+  let body: { transaction?: PakasirPayload } & Partial<PakasirPayload>
+  try {
+    body = await res.json()
+  } catch {
+    return { ok: false, reason: 'pakasir invalid json', status: 502 }
+  }
+
+  const tx = body.transaction ?? (body.order_id ? (body as PakasirPayload) : undefined)
+  if (!tx) {
+    return { ok: false, reason: 'transaction not found at pakasir', status: 402 }
+  }
+  if (tx.order_id !== orderId) {
+    return { ok: false, reason: 'order_id mismatch', status: 402 }
+  }
+  if (tx.project !== undefined && tx.project !== PAKASIR_PROJECT) {
+    return { ok: false, reason: 'project mismatch', status: 402 }
+  }
+  if (Number(tx.amount) !== amount) {
+    return { ok: false, reason: 'amount mismatch', status: 402 }
+  }
+  if (tx.status !== 'completed') {
+    return { ok: false, reason: `not paid (status=${tx.status})`, status: 402 }
+  }
+
+  return { ok: true, tx }
+}
+
 function generatePassword(len = 12): string {
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
   let out = ''
@@ -117,10 +181,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'invalid json' }, { status: 400 })
   }
 
-  const { order_id, amount, project, status } = payload
+  const { order_id, project, status } = payload
 
-  if (project !== 'tata-data-dapur') {
+  // Cheap shape filters only — these are hints, never authorization.
+  if (project !== PAKASIR_PROJECT) {
     return NextResponse.json({ error: 'unknown project' }, { status: 400 })
+  }
+  if (typeof order_id !== 'string' || !order_id) {
+    return NextResponse.json({ error: 'missing order_id' }, { status: 400 })
   }
   if (status !== 'completed') {
     return NextResponse.json({ ok: true, skipped: 'non-completed status' })
@@ -137,20 +205,25 @@ export async function POST(req: NextRequest) {
   if (fetchErr || !order) {
     return NextResponse.json({ error: 'order not found' }, { status: 404 })
   }
-  if (order.amount !== amount) {
-    return NextResponse.json({ error: 'amount mismatch' }, { status: 400 })
-  }
 
   if (order.status === 'account_created') {
     return NextResponse.json({ ok: true, idempotent: true })
   }
 
+  // Source of truth: Pakasir, asked with the amount stored in OUR row.
+  const verified = await verifyWithPakasir(order_id, order.amount)
+  if (!verified.ok) {
+    console.error('Pakasir verification failed:', order_id, verified.reason)
+    return NextResponse.json({ error: 'payment not verified' }, { status: verified.status })
+  }
+  const tx = verified.tx
+
   await supabase
     .from('orders')
     .update({
       status: 'paid',
-      paid_at: payload.completed_at ?? new Date().toISOString(),
-      pakasir_data: payload,
+      paid_at: tx.completed_at ?? new Date().toISOString(),
+      pakasir_data: tx,
     })
     .eq('order_id', order_id)
 
@@ -194,6 +267,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'user not found after create failed' }, { status: 500 })
     }
     userId = users[0].id
+
+    // The email already has an account. Resetting its password is only safe as a
+    // retry of THIS order — otherwise a paid order naming someone else's email
+    // would hand their account over. Anything else goes to manual review.
+    if (order.supabase_user_id !== userId) {
+      const { data: priorOrders } = await supabase
+        .from('orders')
+        .select('order_id')
+        .eq('email_login', order.email_login)
+        .eq('status', 'account_created')
+        .neq('order_id', order_id)
+        .limit(1)
+
+      if (priorOrders && priorOrders.length > 0) {
+        console.error('Order targets an email already claimed by another order:', order_id)
+        await supabase
+          .from('orders')
+          .update({ status: 'needs_review' })
+          .eq('order_id', order_id)
+        return NextResponse.json({ error: 'email already has an account' }, { status: 409 })
+      }
+    }
+
     await fetch(`${supabaseUrl}/auth/v1/admin/users/${userId}`, {
       method: 'PUT',
       headers: authHeaders,
@@ -201,6 +297,8 @@ export async function POST(req: NextRequest) {
     })
   }
 
+  // The password is stored only as a fallback in case the email below never
+  // goes out — it is wiped again the moment delivery succeeds.
   await supabase
     .from('orders')
     .update({
@@ -213,6 +311,7 @@ export async function POST(req: NextRequest) {
 
   // Send credentials email — don't fail if email errors
   const resendKey = process.env.RESEND_API_KEY
+  let emailSent = false
   if (resendKey) {
     try {
       await sendCredentialsEmail({
@@ -222,10 +321,21 @@ export async function POST(req: NextRequest) {
         emailLogin: order.email_login,
         password,
       })
+      emailSent = true
     } catch (err) {
       console.error('Email send failed (non-fatal):', err)
     }
   }
 
-  return NextResponse.json({ ok: true })
+  if (emailSent) {
+    // Delivered — the customer has it, so we stop keeping a plaintext copy.
+    // Admin can still help them later via the resend endpoint, which issues a
+    // fresh password instead of reading an old one back.
+    await supabase
+      .from('orders')
+      .update({ generated_password: null })
+      .eq('order_id', order_id)
+  }
+
+  return NextResponse.json({ ok: true, emailSent })
 }

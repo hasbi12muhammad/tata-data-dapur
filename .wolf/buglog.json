@@ -1164,6 +1164,66 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-30T12:24:16.000Z"
+    },
+    {
+      "id": "bug-072",
+      "timestamp": "2026-08-04T00:00:00.000Z",
+      "error_message": "SECURITY: /api/pakasir/webhook menerima POST tanpa verifikasi signature/secret apa pun — siapa pun bisa memicu pembuatan akun + reset password user yang sudah ada",
+      "file": "src/app/api/pakasir/webhook/route.ts",
+      "root_cause": "Handler POST hanya memvalidasi payload.project === 'tata-data-dapur', status === 'completed', dan amount === order.amount. Semua nilai itu dikontrol penyerang karena policy RLS 'anon_insert_orders' (026_orders_table.sql:21) mengizinkan anon INSERT ke public.orders dengan check (true), sedangkan anon key bersifat publik (wrangler.toml). Rantai serangan: insert order palsu dgn email_login = email korban -> POST webhook -> route pakai service role, user sudah ada -> PUT /auth/v1/admin/users/{id} me-reset password korban -> kredensial dikirim ke email_notif milik penyerang. Middleware sengaja mem-bypass auth utk /api/pakasir/*.",
+      "fix": "DIPERBAIKI 2026-08-04: (1) tambah verifyWithPakasir() — sebelum mutasi apa pun, webhook GET {PAKASIR_BASE_URL}/api/transactiondetail?project&amount&order_id&api_key dan cocokkan order_id/project/amount/status='completed'; amount yang dikirim diambil dari baris orders di DB, bukan dari payload. Fail-closed: PAKASIR_API_KEY kosong -> 503, Pakasir unreachable/non-2xx -> 502, transaksi tidak ada/belum lunas -> 402. Payload webhook sekarang cuma dipakai sbg hint (project + order_id + status), pakasir_data/paid_at diisi dari respons Pakasir. (2) Cabang 'user sudah ada' tidak lagi langsung reset password: kalau order.supabase_user_id != user.id DAN ada order lain dgn email_login sama yg status 'account_created', order ditandai 'needs_review' dan return 409. Env baru: PAKASIR_API_KEY (wajib), PAKASIR_BASE_URL (opsional) — didokumentasikan di .env.example. SISA (belum dikerjakan): policy anon INSERT ke orders masih ada (with check(true)) -> masih bisa spam baris order, tapi tidak lagi bisa memicu aksi akun.",
+      "tags": [
+        "security",
+        "critical",
+        "webhook",
+        "account-takeover",
+        "authn",
+        "pakasir",
+        "rls",
+        "service-role"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-04T00:00:00.000Z"
+    },
+    {
+      "id": "bug-073",
+      "timestamp": "2026-08-04T00:00:00.000Z",
+      "error_message": "SECURITY: password login klien disimpan plaintext permanen di public.orders.generated_password",
+      "file": "src/app/api/pakasir/webhook/route.ts",
+      "root_cause": "Webhook menulis password yang di-generate ke kolom orders.generated_password (baris ~188, ~193, ~205) dan tidak pernah menghapusnya. Password itu sama dengan password login Supabase Auth user, jadi satu kebocoran/backup DB = kredensial login semua pelanggan.",
+      "fix": "DIPERBAIKI 2026-08-04 (opsi dipilih user: hapus setelah email terkirim). App: webhook menyimpan password hanya sbg fallback, lalu UPDATE orders SET generated_password = null begitu sendCredentialsEmail() sukses (respons webhook sekarang {ok,emailSent}). Kalau email gagal, password tetap tersimpan supaya admin bisa menolong. Admin (repo tata-data-admin): endpoint POST /api/projects/:id/orders/:orderId/resend-email tidak lagi membaca password lama — sekarang generatePassword() -> updateUser(auth admin PUT password) -> kirim email -> updateOrder(generated_password:null). Helper baru updateOrder() di worker/supabase-admin.ts (+2 unit test, 8 pass). UI Orders.tsx: tombol jadi 'Reset & Kirim Password', enable-nya dicek dari supabase_user_id (bukan generated_password) + window.confirm karena aksinya destruktif.",
+      "tags": [
+        "security",
+        "high",
+        "credentials",
+        "plaintext-password",
+        "orders",
+        "pakasir"
+      ],
+      "related_bugs": [
+        "bug-072"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-08-04T00:00:00.000Z"
+    },
+    {
+      "id": "bug-074",
+      "timestamp": "2026-08-04T00:00:00.000Z",
+      "error_message": "SECURITY: tabel expenses, expense_categories, sale_categories dipakai aplikasi tapi tidak punya file migrasi — status RLS tidak bisa diverifikasi dari repo",
+      "file": "supabase/migrations/",
+      "root_cause": "Tabel dibuat manual di dashboard Supabase (pola yang sama dengan user_profiles pada bug sebelumnya). Kalau RLS mati, anon key yang publik bisa membaca/menulis seluruh baris tabel tsb.",
+      "fix": "DIPERBAIKI 2026-08-04: migrasi 028_rls_untracked_tables.sql — ENABLE ROW LEVEL SECURITY + policy 'users_own_*' (auth.uid() = user_id, for all, using+with check) untuk expenses, expense_categories, sale_categories. Idempoten (enable 2x = no-op, policy di-drop dulu). Tes empiris sebelum migrasi: GET REST anon ke 3 tabel itu balik [] (sama seperti tabel ber-RLS lain) -> kemungkinan besar RLS memang sudah ON via dashboard, tapi tidak pernah tercatat di repo; migrasi ini yang menjadikannya invariant. Catatan: ketiga tabel dipakai tanpa filter user_id di query (src/hooks/useExpenses.ts, useSales.ts) jadi RLS satu-satunya pemisah data antar user. Dijalankan user manual di Supabase SQL Editor pada 2026-08-04 (MCP Supabase di mesin ini terhubung ke org lain — hovxgjwzuwetlvnwaoyl — jadi tidak punya akses ke project tqhfnaerzttcfceoygxw).",
+      "tags": [
+        "security",
+        "rls",
+        "migrations",
+        "expenses",
+        "schema-drift"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-08-04T00:00:00.000Z"
     }
   ]
 }
