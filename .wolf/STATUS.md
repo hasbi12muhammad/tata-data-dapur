@@ -15,23 +15,25 @@
 - **CRITICAL bug-072 — webhook Pakasir tanpa verifikasi (FIXED, belum deploy).** `verifyWithPakasir()` di `src/app/api/pakasir/webhook/route.ts` callback ke `GET https://app.pakasir.com/api/transactiondetail` sebelum aksi akun apa pun; amount diambil dari baris `orders` di DB, bukan payload. Fail-closed (503/502/402). Guard tambahan: password akun existing tidak di-reset kecuali retry order yang sama → else `needs_review` + 409.
 - **HIGH bug-073 — password plaintext (FIXED, belum deploy).** Webhook menghapus `orders.generated_password` begitu email terkirim. Repo `tata-data-admin`: resend-email jadi reset password baru, plus endpoint baru `POST /orders/:orderId/reset-password` untuk alur WA (tidak email, tidak disimpan). UI Orders: "Reset & Kirim Password" + "Reset & Copy untuk WA".
 - **HIGH bug-074 — RLS tabel tak tercatat (FIXED + APPLIED).** Migrasi `028_rls_untracked_tables.sql` (expenses, expense_categories, sale_categories) — sudah dijalankan user manual di Supabase SQL Editor 2026-08-04.
-- Branch terdorong: `fix/security-pakasir-webhook` (app, commit a9314cd) dan `fix/security-order-passwords` (admin, commit 8e94c68). **Belum di-merge, belum deploy.**
+- **DEPLOYED 2026-08-04.** App: branch `fix/security-pakasir-webhook` merged ke `main` (`63f6952..e099489`), Cloudflare Pages project `tatadata-dapur` build produksi hidup. Admin: `fix/security-order-passwords` merged ke `master` (`6d2e275..8e94c68`) + `wrangler deploy` (Version ID `f63d6489-dfa8-414a-a38b-ca681e8793a1`).
+- Verifikasi produksi (POST ke `app.tatadatadapur.my.id/api/pakasir/webhook`): tanpa order_id → `400 missing order_id` (kode baru; kode lama menjawab 404 karena terlanjur query DB), project asing → `400 unknown project`, order palsu → `404 order not found`, `/login` → 200.
+- Secrets Pages `tatadata-dapur`: environment **production** punya PAKASIR_API_KEY + RESEND_API_KEY + SUPABASE_SERVICE_ROLE_KEY; environment **preview KOSONG** — preview deployment tidak bisa dipakai menguji alur bayar sampai secretnya ditambahkan.
 
 ---
 
 ## 🚀 Next phase
 
-**Goal:** Deploy fix keamanan ke produksi, lalu bereskan sisa temuan Medium.
+**Goal:** Uji alur bayar end-to-end di produksi, lalu bereskan sisa temuan Medium.
 
 ### Acceptance criteria
-1. Branch `fix/security-pakasir-webhook` merged → Cloudflare Pages build sukses → POST palsu ke `/api/pakasir/webhook` dijawab 402/503 (bukan bikin akun).
-2. Branch `fix/security-order-passwords` merged + `npm run worker:deploy` di repo admin → tombol "Reset & Copy untuk WA" jalan.
-3. `PAKASIR_API_KEY` terkonfirmasi ada di environment **Production** Pages project app (bukan cuma Preview).
+1. Satu order asli (atau nominal kecil) lewat landing page → Pakasir → webhook: akun terbuat, email kredensial masuk, dan `orders.generated_password` kembali NULL setelah email terkirim.
+2. Tombol "Reset & Copy untuk WA" di dashboard admin diuji sekali pada order nyata: password lama mati, yang baru tersalin.
+3. Keputusan diambil untuk 2 open decision di bawah.
 
 ### Files to create / edit
 | Type | File | Content |
 |---|---|---|
-| — | (deploy dulu, belum ada file baru) | |
+| — | (belum ada; tergantung open decision) | |
 
 ### Closed decisions
 - Verifikasi pembayaran = callback ke API Pakasir, bukan signature — Pakasir memang tidak menyediakan signature (docs `pakasir.com/p/docs`).
