@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
       pathname === "/login" ||
       pathname === "/unauthorized" ||
       pathname === "/welcome" ||
-      pathname.startsWith("/api/pakasir/")
+      pathname.startsWith("/api/borderpay/")
     ) {
       if (user && pathname === "/login") {
         return NextResponse.redirect(new URL("/dashboard", request.url));
@@ -75,7 +75,7 @@ export async function middleware(request: NextRequest) {
   } catch {
     // Last-resort: never return 500 from middleware
     const { pathname } = request.nextUrl;
-    if (pathname === "/login" || pathname === "/welcome" || pathname.startsWith("/api/pakasir/")) {
+    if (pathname === "/login" || pathname === "/welcome" || pathname.startsWith("/api/borderpay/")) {
       return NextResponse.next({ request });
     }
     return NextResponse.redirect(new URL("/login", request.url));
