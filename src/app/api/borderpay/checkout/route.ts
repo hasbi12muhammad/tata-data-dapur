@@ -39,7 +39,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'invalid order_id' }, { status: 400, headers })
   }
 
-  const test = body.test === true && process.env.BORDERPAY_ALLOW_TEST === '1'
+  const test = body.test === true
+  // Jangan diam-diam jatuh ke live kalau sandbox dimatikan
+  if (test && process.env.BORDERPAY_ALLOW_TEST !== '1') {
+    return NextResponse.json({ error: 'test mode disabled' }, { status: 403, headers })
+  }
   const apiKey = test ? process.env.BORDERPAY_API_KEY_TEST : process.env.BORDERPAY_API_KEY
   if (!apiKey) {
     return NextResponse.json({ error: 'payment not configured' }, { status: 503, headers })
