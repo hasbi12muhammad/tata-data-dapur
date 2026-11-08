@@ -14,7 +14,7 @@ const TOGGLES: { key: Toggle; label: string }[] = [
   { key: "fitur_produksi", label: "Produksi" },
   { key: "fitur_pembelian", label: "Pembelian" },
 ];
-const DEFAULTS = { fitur_stok: true, fitur_produksi: true, fitur_pembelian: false, staff_slots: 1 };
+const DEFAULTS = { fitur_stok: true, fitur_produksi: true, fitur_pembelian: false, staff_slots: 0 };
 
 async function api(method: string, body: object, path = "/api/staff") {
   const supabase = createClient();

@@ -281,6 +281,13 @@ export async function POST(req: NextRequest) {
     })
     .eq('order_id', order_id)
 
+  // Paket 300rb termasuk 1 slot karyawan. ignoreDuplicates: retry webhook / slot yang sudah dibeli tidak tertimpa.
+  if (Number(order.amount) >= 300000) {
+    await supabase
+      .from('staff_settings')
+      .upsert({ owner_id: userId, staff_slots: 1 }, { onConflict: 'owner_id', ignoreDuplicates: true })
+  }
+
   // Send credentials email — don't fail if email errors
   const resendKey = process.env.RESEND_API_KEY
   let emailSent = false
