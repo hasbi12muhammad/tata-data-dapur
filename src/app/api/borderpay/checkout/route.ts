@@ -52,11 +52,16 @@ export async function POST(req: NextRequest) {
   const supabase = createAdminClient()
   const { data: order } = await supabase
     .from('orders')
-    .select('order_id, amount, status')
+    .select('order_id, amount, status, email_login')
     .eq('order_id', orderId)
     .single()
   if (!order) {
     return NextResponse.json({ error: 'order not found' }, { status: 404, headers })
+  }
+  // Sandbox hanya untuk email penguji
+  const testEmails = (process.env.BORDERPAY_TEST_EMAILS ?? '').toLowerCase().split(',').map((e) => e.trim())
+  if (test && !testEmails.includes(String(order.email_login).toLowerCase())) {
+    return NextResponse.json({ error: 'test mode disabled' }, { status: 403, headers })
   }
   if (order.status !== 'pending') {
     return NextResponse.json({ error: 'order not payable' }, { status: 409, headers })
