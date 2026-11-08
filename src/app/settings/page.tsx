@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { StaffSection } from "@/components/StaffSection";
 import { HARDCODED_UNITS } from "@/components/ui/UnitSelect";
 import { useCustomUnits, useCreateCustomUnit, useDeleteCustomUnit } from "@/hooks/useUnits";
 import { usePackagingTypes, useCreatePackagingType, useDeletePackagingType } from "@/hooks/usePackagingTypes";
@@ -148,6 +149,8 @@ export default function SettingsPage() {
             </Button>
           </form>
         </div>
+
+        <StaffSection />
 
         {/* Email Section */}
         <div className="bg-[#FBF8F2] rounded-2xl border border-[#D9CCAF] shadow-sm p-6">
