@@ -171,7 +171,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'order not found' }, { status: 404 })
   }
 
-  if (order.status === 'account_created') {
+  if (order.status === 'account_created' || order.status === 'slot_added') {
     return NextResponse.json({ ok: true, idempotent: true })
   }
 
@@ -179,6 +179,14 @@ export async function POST(req: NextRequest) {
   if (Number(data.order_amount ?? data.amount) !== Number(order.amount)) {
     console.error('BorderPay amount mismatch:', order_id)
     return NextResponse.json({ error: 'amount mismatch' }, { status: 402 })
+  }
+
+  // Order slot karyawan (TDS-): tambah 1 slot, tanpa membuat akun. Idempoten di DB.
+  if (order_id.startsWith('TDS-')) {
+    const { data: slots, error } = await supabase.rpc('grant_staff_slot', { p_order_id: order_id })
+    if (error) return NextResponse.json({ error: 'grant slot failed' }, { status: 500 })
+    await supabase.from('orders').update({ pakasir_data: payload }).eq('order_id', order_id)
+    return NextResponse.json({ ok: true, slots })
   }
 
   await supabase

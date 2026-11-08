@@ -16,16 +16,17 @@ const TOGGLES: { key: Toggle; label: string }[] = [
 ];
 const DEFAULTS = { fitur_stok: true, fitur_produksi: true, fitur_pembelian: false, staff_slots: 1 };
 
-async function api(method: string, body: object) {
+async function api(method: string, body: object, path = "/api/staff") {
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
-  const res = await fetch("/api/staff", {
+  const res = await fetch(path, {
     method,
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session?.access_token}` },
     body: JSON.stringify(body),
   });
   const j = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(j.error ?? "Gagal");
+  return j;
 }
 
 export function StaffSection() {
@@ -118,8 +119,23 @@ export function StaffSection() {
         ))}
       </ul>
 
+      <Button
+        variant="secondary"
+        size="sm"
+        className="mb-5"
+        loading={busy}
+        onClick={() =>
+          run(async () => {
+            const { url } = await api("POST", {}, "/api/staff/slot");
+            window.location.href = url;
+          }, "Mengarahkan ke pembayaran…")
+        }
+      >
+        Tambah 1 slot karyawan — Rp50.000
+      </Button>
+
       {full ? (
-        <p className="text-sm text-[#7C6352] mb-5">Slot penuh. Tambah slot Rp50.000 per karyawan.</p>
+        <p className="text-sm text-[#7C6352] mb-5">Slot penuh. Tambah slot untuk menambah karyawan.</p>
       ) : (
         <form
           className="flex flex-col gap-3 mb-5"
