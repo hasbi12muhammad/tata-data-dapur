@@ -31,6 +31,7 @@ import {
 import { useMemo, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -433,14 +434,14 @@ export default function SalesPage() {
     const total = stockConfirm.shortfalls.length;
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       for (const sf of stockConfirm.shortfalls) {
         const recipe = allRecipes.find((r) => r.id === sf.recipeId);
         const shortfall = sf.needed - sf.currentStock;
         const hppTotal = (recipe?.hpp || recipe?.avg_price || 0) * shortfall;
         const rpc = sf.isIngredient ? "produce_sub_recipe" : "produce_recipe";
         const { error } = await supabase.rpc(rpc, {
-          p_user_id: user!.id,
+          p_user_id: tenantId,
           p_recipe_id: sf.recipeId,
           p_batches: shortfall,
           p_total_cost: hppTotal,
@@ -482,18 +483,18 @@ export default function SalesPage() {
     const allRecipes = [...(recipes ?? []), ...(addonSubRecipes ?? []), ...(addonFinishedRecipes ?? [])];
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       for (const sf of stockConfirm.shortfalls) {
         const recipe = allRecipes.find((r) => r.id === sf.recipeId);
         const shortfall = sf.needed - sf.currentStock;
         const hppTotal = (recipe?.hpp || recipe?.avg_price || 0) * shortfall;
         const { error } = sf.isIngredient
           ? await (supabase.rpc as any)("produce_sub_recipe", {
-              p_user_id: user!.id, p_recipe_id: sf.recipeId,
+              p_user_id: tenantId, p_recipe_id: sf.recipeId,
               p_batches: shortfall, p_total_cost: hppTotal, p_force: true,
             })
           : await (supabase.rpc as any)("produce_recipe", {
-              p_user_id: user!.id, p_recipe_id: sf.recipeId,
+              p_user_id: tenantId, p_recipe_id: sf.recipeId,
               p_batches: shortfall, p_total_cost: hppTotal, p_force: true,
             });
         if (error) throw error;

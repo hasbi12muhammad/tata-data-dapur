@@ -20,7 +20,9 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const ok = await signIn(email, password);
+    // Karyawan login pakai username; email sintetisnya deterministik (tanpa query lookup).
+    const id = email.trim().toLowerCase();
+    const ok = await signIn(id.includes("@") ? id : `${id}@staff.tatadatadapur.my.id`, password);
     if (!ok) setLoading(false);
     // On success keep loading=true so button stays disabled while navigating
   }
@@ -46,13 +48,13 @@ export default function LoginPage() {
           </h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
-              label="Email"
-              type="email"
+              label="Email / Username"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              autoComplete="email"
-              placeholder="you@example.com"
+              autoComplete="username"
+              placeholder="email atau username karyawan"
             />
             <Input
               label="Password"

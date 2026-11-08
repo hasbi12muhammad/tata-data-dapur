@@ -33,6 +33,7 @@ import {
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Recipe } from "@/types";
+import { getTenantId } from "@/lib/tenant";
 
 interface BomRow {
   item_id: string;        // filled if regular item; "" if sub-recipe
@@ -54,9 +55,7 @@ export default function RecipesPage() {
   async function handleImportRecipes(rows: Record<string, unknown>[]) {
     setImporting(true);
     const supabase = (await import("@/lib/supabase/client")).createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const tenantId = await getTenantId(supabase);
 
     const grouped = new Map<
       string,
@@ -84,7 +83,7 @@ export default function RecipesPage() {
     for (const [recipeName, recipeItems] of grouped) {
       const { data: recipe, error: re } = await supabase
         .from("recipes")
-        .insert({ name: recipeName, user_id: user!.id })
+        .insert({ name: recipeName, user_id: tenantId })
         .select()
         .single();
       if (re) {

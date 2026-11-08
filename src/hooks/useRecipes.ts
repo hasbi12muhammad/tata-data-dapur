@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Recipe, RecipeItem } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 export function calcHPP(
   items: RecipeItem[],
@@ -86,14 +87,12 @@ export function useCreateRecipe() {
       }>;
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { data: recipe, error: re } = await supabase
         .from("recipes")
         .insert({
           name: payload.name,
-          user_id: user!.id,
+          user_id: tenantId,
           is_ingredient: payload.is_ingredient ?? false,
           is_addon: payload.is_addon ?? false,
           unit: payload.unit ?? null,

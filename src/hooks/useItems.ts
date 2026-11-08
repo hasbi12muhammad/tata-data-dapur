@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Item } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 export function useItems() {
   return useQuery<Item[]>({
@@ -36,12 +37,10 @@ export function useCreateItem() {
       >,
     ) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { error } = await supabase
         .from("items")
-        .insert({ ...item, user_id: user!.id, avg_price: 0, stock: 0 });
+        .insert({ ...item, user_id: tenantId, avg_price: 0, stock: 0 });
       if (error) throw error;
     },
     onSuccess: () => {

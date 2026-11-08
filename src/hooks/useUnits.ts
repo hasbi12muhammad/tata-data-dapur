@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import { CustomUnit } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 export function useCustomUnits() {
   return useQuery<CustomUnit[]>({
@@ -25,10 +26,10 @@ export function useCreateCustomUnit() {
   return useMutation({
     mutationFn: async (name: string) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { error } = await supabase
         .from("custom_units")
-        .insert({ name: name.trim().toLowerCase(), user_id: user!.id });
+        .insert({ name: name.trim().toLowerCase(), user_id: tenantId });
       if (error) throw error;
     },
     onSuccess: () => {

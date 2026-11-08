@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import { PackagingType } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 export function usePackagingTypes() {
   return useQuery<PackagingType[]>({
@@ -25,10 +26,10 @@ export function useCreatePackagingType() {
   return useMutation({
     mutationFn: async (name: string) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { data, error } = await supabase
         .from("packaging_types")
-        .insert({ name: name.trim(), user_id: user!.id })
+        .insert({ name: name.trim(), user_id: tenantId })
         .select("id")
         .single();
       if (error) throw error;

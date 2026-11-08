@@ -25,6 +25,7 @@ import { AlertTriangle, Factory, Filter, Pencil, Plus, Search, Trash2, X } from 
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -202,11 +203,11 @@ export default function ProduksiPage() {
     setSubProducePending(true);
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       for (const sf of subRecipeConfirm.shortfalls) {
         const shortfall = sf.needed - sf.currentStock;
         const { error } = await supabase.rpc("produce_sub_recipe", {
-          p_user_id: user!.id,
+          p_user_id: tenantId,
           p_recipe_id: sf.recipeId,
           p_batches: shortfall,
           p_total_cost: sf.hpp * shortfall,
@@ -215,7 +216,7 @@ export default function ProduksiPage() {
       }
       const mp = subRecipeConfirm.mainPayload;
       const { error: mainErr } = await supabase.rpc("produce_recipe", {
-        p_user_id: user!.id,
+        p_user_id: tenantId,
         p_recipe_id: mp.recipe_id,
         p_batches: mp.batches,
         p_total_cost: mp.total_cost,

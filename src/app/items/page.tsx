@@ -26,6 +26,7 @@ import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -63,9 +64,7 @@ export default function ItemsPage() {
 
   async function handleImportItems(rows: Record<string, unknown>[]) {
     const supabase = (await import("@/lib/supabase/client")).createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const tenantId = await getTenantId(supabase);
     const valid = rows
       .map((r) => ({
         name: String(r["nama"] ?? r["name"] ?? "").trim(),
@@ -85,7 +84,7 @@ export default function ItemsPage() {
     const { error } = await supabase
       .from("items")
       .insert(
-        valid.map((r) => ({ ...r, user_id: user!.id, avg_price: 0, stock: 0 })),
+        valid.map((r) => ({ ...r, user_id: tenantId, avg_price: 0, stock: 0 })),
       );
     setImporting(false);
     if (error) {

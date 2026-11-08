@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Expense, ExpenseCategory } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 export function useExpenses() {
   return useQuery<Expense[]>({
@@ -85,12 +86,10 @@ export function useCreateExpense() {
       created_at: string;
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { error } = await supabase
         .from("expenses")
-        .insert({ ...p, user_id: user!.id });
+        .insert({ ...p, user_id: tenantId });
       if (error) throw error;
     },
     onSuccess: () => {
@@ -151,12 +150,10 @@ export function useCreateExpenseCategory() {
   return useMutation({
     mutationFn: async (name: string) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { data, error } = await supabase
         .from("expense_categories")
-        .insert({ name, user_id: user!.id })
+        .insert({ name, user_id: tenantId })
         .select()
         .single();
       if (error) throw error;

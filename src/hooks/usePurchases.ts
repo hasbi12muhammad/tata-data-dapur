@@ -17,6 +17,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Purchase, Production } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 export function usePurchases() {
   return useQuery<Purchase[]>({
@@ -47,14 +48,12 @@ export function useUpdatePurchase() {
       size_per_pkg?: number | null;
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const total_price = p.quantity * p.price_per_unit;
 
       const { error } = await supabase.rpc("update_purchase", {
         p_purchase_id: p.id,
-        p_user_id: user!.id,
+        p_user_id: tenantId,
         p_quantity: p.quantity,
         p_total_price: total_price,
         p_pkg_type_id: p.pkg_type_id ?? null,
@@ -87,13 +86,11 @@ export function useCreatePurchase() {
       size_per_pkg?: number | null;
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const total_price = p.quantity * p.price_per_unit;
 
       const { error } = await supabase.rpc("record_purchase", {
-        p_user_id: user!.id,
+        p_user_id: tenantId,
         p_item_id: p.item_id,
         p_quantity: p.quantity,
         p_total_price: total_price,
@@ -120,12 +117,10 @@ export function useDeletePurchase() {
   return useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { error } = await supabase.rpc("delete_purchase", {
         p_purchase_id: id,
-        p_user_id: user!.id,
+        p_user_id: tenantId,
       });
       if (error) throw error;
     },
@@ -144,10 +139,10 @@ export function useDeleteProduction() {
   return useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { error } = await supabase.rpc("delete_production", {
         p_production_id: id,
-        p_user_id: user!.id,
+        p_user_id: tenantId,
       });
       if (error) throw error;
     },
@@ -166,10 +161,10 @@ export function useUpdateProduction() {
   return useMutation({
     mutationFn: async (p: { id: string; batches: number; total_cost: number }) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { error } = await supabase.rpc("update_production", {
         p_production_id: p.id,
-        p_user_id: user!.id,
+        p_user_id: tenantId,
         p_batches: p.batches,
         p_total_cost: p.total_cost,
       });
@@ -213,12 +208,10 @@ export function useProduceSubRecipe() {
       date?: string;
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
 
       const { error } = await supabase.rpc("produce_sub_recipe", {
-        p_user_id: user!.id,
+        p_user_id: tenantId,
         p_recipe_id: p.recipe_id,
         p_batches: p.batches,
         p_total_cost: p.total_cost,
@@ -241,9 +234,9 @@ export function useProduceRecipe() {
   return useMutation({
     mutationFn: async (p: { recipe_id: string; batches: number; total_cost: number; date?: string }) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { error } = await supabase.rpc("produce_recipe", {
-        p_user_id: user!.id,
+        p_user_id: tenantId,
         p_recipe_id: p.recipe_id,
         p_batches: p.batches,
         p_total_cost: p.total_cost,

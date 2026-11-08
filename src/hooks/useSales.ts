@@ -1,9 +1,10 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { Sale, SaleAddon, SaleCategory, SaleItem } from "@/types";
+import { Sale, SaleCategory, SaleItem } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getTenantId } from "@/lib/tenant";
 
 export function useSales() {
   return useQuery<Sale[]>({
@@ -49,12 +50,10 @@ export function useCreateSaleCategory() {
   return useMutation({
     mutationFn: async (name: string) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const tenantId = await getTenantId(supabase);
       const { data, error } = await supabase
         .from("sale_categories")
-        .insert({ name, user_id: user!.id })
+        .insert({ name, user_id: tenantId })
         .select()
         .single();
       if (error) throw error;
@@ -140,52 +139,20 @@ type ItemInput = {
   addons?: AddonInput[];
 };
 
-async function deductAddonStock(
-  supabase: ReturnType<typeof createClient>,
-  userId: string,
-  addons: AddonInput[],
-) {
-  for (const a of addons) {
-    if (a.item_id) {
-      const { error } = await supabase.rpc("adjust_item_stock", {
-        p_user_id: userId,
-        p_item_id: a.item_id,
-        p_delta: -a.quantity,
-      });
-      if (error) throw error;
-    } else if (a.sub_recipe_id) {
-      const { error } = await supabase.rpc("deduct_sub_recipe_stock", {
-        p_user_id: userId,
-        p_recipe_id: a.sub_recipe_id,
-        p_quantity: a.quantity,
-      });
-      if (error) throw error;
-    }
-  }
-}
-
-async function restoreAddonStock(
-  supabase: ReturnType<typeof createClient>,
-  userId: string,
-  addons: SaleAddon[],
-) {
-  for (const a of addons) {
-    if (a.item_id) {
-      const { error } = await supabase.rpc("adjust_item_stock", {
-        p_user_id: userId,
-        p_item_id: a.item_id,
-        p_delta: a.quantity,
-      });
-      if (error) throw error;
-    } else if (a.sub_recipe_id) {
-      const { error } = await supabase.rpc("restore_sub_recipe_stock", {
-        p_user_id: userId,
-        p_recipe_id: a.sub_recipe_id,
-        p_quantity: a.quantity,
-      });
-      if (error) throw error;
-    }
-  }
+// HPP dihitung di server (record_sale/update_sale_record) — klien tidak mengirim HPP.
+function toRpcItems(items: ItemInput[]) {
+  return items.map((i) => ({
+    recipe_id: i.recipe_id,
+    quantity_sold: i.quantity_sold,
+    selling_price: i.selling_price,
+    addons: (i.addons ?? []).map((a) => ({
+      item_id: a.item_id ?? null,
+      sub_recipe_id: a.sub_recipe_id ?? null,
+      quantity: a.quantity,
+      price_per_unit_at_sale: a.price_per_unit_at_sale,
+      name_at_sale: a.name_at_sale,
+    })),
+  }));
 }
 
 async function persistSellingPrices(
@@ -232,78 +199,12 @@ export function useCreateSale() {
       items: ItemInput[];
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      const saleDate = p.date
-        ? new Date(p.date).toISOString()
-        : new Date().toISOString();
-
-      // Create sale header
-      const { data: saleData, error: saleError } = await supabase
-        .from("sales")
-        .insert({
-          user_id: user!.id,
-          category_id: p.category_id ?? null,
-          created_at: saleDate,
-        })
-        .select("id")
-        .single();
-      if (saleError) throw saleError;
-      const saleId = saleData.id as string;
-
-      // Create each sale_item with its addons
-      for (const item of p.items) {
-        const hpp_addons_at_sale = (item.addons ?? []).reduce(
-          (sum, a) => sum + a.quantity * (a.hpp_per_unit ?? a.price_per_unit_at_sale),
-          0,
-        );
-
-        const { data: itemData, error: itemError } = await supabase
-          .from("sale_items")
-          .insert({
-            sale_id: saleId,
-            user_id: user!.id,
-            recipe_id: item.recipe_id,
-            quantity_sold: item.quantity_sold,
-            selling_price: item.selling_price,
-            hpp_at_sale: item.hpp_at_sale,
-            hpp_addons_at_sale,
-            created_at: saleDate,
-          })
-          .select("id")
-          .single();
-        if (itemError) throw itemError;
-        const saleItemId = itemData.id as string;
-
-        // Deduct finished goods stock
-        const { error: stockDeductError } = await supabase.rpc("deduct_sub_recipe_stock", {
-          p_user_id: user!.id,
-          p_recipe_id: item.recipe_id,
-          p_quantity: item.quantity_sold,
-        });
-        if (stockDeductError) throw stockDeductError;
-
-        // Insert addons + deduct addon stock
-        if (item.addons?.length) {
-          const { error: addonError } = await supabase
-            .from("sale_addons")
-            .insert(
-              item.addons.map((a) => ({
-                sale_item_id: saleItemId,
-                item_id: a.item_id ?? null,
-                sub_recipe_id: a.sub_recipe_id ?? null,
-                quantity: a.quantity,
-                price_per_unit_at_sale: a.price_per_unit_at_sale,
-                name_at_sale: a.name_at_sale,
-              })),
-            );
-          if (addonError) throw addonError;
-          await deductAddonStock(supabase, user!.id, item.addons);
-        }
-      }
-
+      const { data: saleId, error } = await supabase.rpc("record_sale", {
+        p_category_id: p.category_id ?? null,
+        p_created_at: p.date ? new Date(p.date).toISOString() : null,
+        p_items: toRpcItems(p.items),
+      });
+      if (error) throw error;
       await persistSellingPrices(supabase, p.items);
       return saleId;
     },
@@ -328,96 +229,13 @@ export function useUpdateSale() {
       items: ItemInput[];
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      // Fetch old sale_items + their addons to restore stocks
-      const { data: oldItems } = await supabase
-        .from("sale_items")
-        .select("id, recipe_id, quantity_sold, sale_addons(*)")
-        .eq("sale_id", p.id);
-
-      await Promise.all(
-        (oldItems ?? []).map(async (oi) => {
-          const { error: restoreError } = await supabase.rpc("restore_recipe_stock", {
-            p_user_id: user!.id,
-            p_recipe_id: oi.recipe_id,
-            p_quantity: oi.quantity_sold,
-          });
-          if (restoreError) throw restoreError;
-          const addons = (oi.sale_addons ?? []) as SaleAddon[];
-          if (addons.length) {
-            await restoreAddonStock(supabase, user!.id, addons);
-          }
-        }),
-      );
-
-      // Delete old sale_items (cascades to sale_addons)
-      await supabase.from("sale_items").delete().eq("sale_id", p.id);
-
-      // Update sale header
-      const saleDate = p.date ? new Date(p.date).toISOString() : undefined;
-      const { error: updateError } = await supabase
-        .from("sales")
-        .update({
-          category_id: p.category_id ?? null,
-          ...(saleDate ? { created_at: saleDate } : {}),
-        })
-        .eq("id", p.id);
-      if (updateError) throw updateError;
-
-      const insertDate = saleDate ?? new Date().toISOString();
-
-      // Re-insert sale_items + addons
-      for (const item of p.items) {
-        const hpp_addons_at_sale = (item.addons ?? []).reduce(
-          (sum, a) => sum + a.quantity * (a.hpp_per_unit ?? a.price_per_unit_at_sale),
-          0,
-        );
-
-        const { data: itemData, error: itemError } = await supabase
-          .from("sale_items")
-          .insert({
-            sale_id: p.id,
-            user_id: user!.id,
-            recipe_id: item.recipe_id,
-            quantity_sold: item.quantity_sold,
-            selling_price: item.selling_price,
-            hpp_at_sale: item.hpp_at_sale,
-            hpp_addons_at_sale,
-            created_at: insertDate,
-          })
-          .select("id")
-          .single();
-        if (itemError) throw itemError;
-        const saleItemId = itemData.id as string;
-
-        // Deduct finished goods stock
-        const { error: stockDeductError } = await supabase.rpc("deduct_sub_recipe_stock", {
-          p_user_id: user!.id,
-          p_recipe_id: item.recipe_id,
-          p_quantity: item.quantity_sold,
-        });
-        if (stockDeductError) throw stockDeductError;
-
-        if (item.addons?.length) {
-          const { error: addonError } = await supabase
-            .from("sale_addons")
-            .insert(
-              item.addons.map((a) => ({
-                sale_item_id: saleItemId,
-                item_id: a.item_id ?? null,
-                sub_recipe_id: a.sub_recipe_id ?? null,
-                quantity: a.quantity,
-                price_per_unit_at_sale: a.price_per_unit_at_sale,
-                name_at_sale: a.name_at_sale,
-              })),
-            );
-          if (addonError) throw addonError;
-          await deductAddonStock(supabase, user!.id, item.addons);
-        }
-      }
+      const { error } = await supabase.rpc("update_sale_record", {
+        p_sale_id: p.id,
+        p_category_id: p.category_id ?? null,
+        p_created_at: p.date ? new Date(p.date).toISOString() : null,
+        p_items: toRpcItems(p.items),
+      });
+      if (error) throw error;
       await persistSellingPrices(supabase, p.items);
     },
     onSuccess: () => {
@@ -437,30 +255,7 @@ export function useDeleteSale() {
   return useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-
-      // Restore finished goods stocks + addon stocks before deleting
-      const { data: saleItems } = await supabase
-        .from("sale_items")
-        .select("recipe_id, quantity_sold, sale_addons(*)")
-        .eq("sale_id", id);
-
-      await Promise.all(
-        (saleItems ?? []).map(async (si) => {
-          const { error: restoreError } = await supabase.rpc("restore_recipe_stock", {
-            p_user_id: user!.id,
-            p_recipe_id: si.recipe_id,
-            p_quantity: si.quantity_sold,
-          });
-          if (restoreError) throw restoreError;
-          const addons = (si.sale_addons ?? []) as SaleAddon[];
-          if (addons.length) {
-            await restoreAddonStock(supabase, user!.id, addons);
-          }
-        }),
-      );
-
-      const { error } = await supabase.from("sales").delete().eq("id", id);
+      const { error } = await supabase.rpc("delete_sale_record", { p_sale_id: id });
       if (error) throw error;
     },
     onSuccess: () => {

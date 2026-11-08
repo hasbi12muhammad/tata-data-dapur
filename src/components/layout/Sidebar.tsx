@@ -41,6 +41,8 @@ const ALL_NAV: {
   { href: "/reports", label: "Laporan", icon: BarChart3, feature: "reports" },
 ];
 
+const STAFF_FEATURES = new Set<FeatureId>(["items", "purchases", "produksi", "sales", "kasir"]);
+
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
@@ -52,7 +54,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const { data: user } = useCurrentUser();
   const storeName = (user?.user_metadata?.store_name as string | undefined) || null;
   const appName = getTenantConfig().name;
-  const nav = ALL_NAV.filter((item) => isFeatureEnabled(item.feature));
+  // Karyawan: sembunyikan halaman tertutup (middleware + DB tetap jadi penjaga sebenarnya).
+  const staff = user?.app_metadata?.role === "staff";
+  const nav = ALL_NAV.filter(
+    (item) => isFeatureEnabled(item.feature) && (!staff || STAFF_FEATURES.has(item.feature)),
+  );
 
   return (
     <>

@@ -2,6 +2,17 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isPathAllowed } from "@/lib/features/entitlements";
 
+// Karyawan hanya boleh ke halaman operasional. Halaman lain (dashboard laba, laporan,
+// resep/HPP, pengeluaran, pengaturan) tertutup permanen. Data tetap dijaga RLS/RPC di DB.
+const STAFF_PATHS = ["/sales", "/kasir", "/items", "/produksi", "/purchases", "/offline", "/help", "/tutorial"];
+
+async function isStaff(supabase: { auth: { getSession(): Promise<{ data: { session: { access_token: string } | null } }> } }) {
+  const t = (await supabase.auth.getSession()).data.session?.access_token;
+  if (!t) return false;
+  const p = t.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+  return JSON.parse(atob(p)).role === "staff";
+}
+
 export async function middleware(request: NextRequest) {
   try {
     const { pathname } = request.nextUrl;
@@ -52,13 +63,23 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/api/borderpay/")
     ) {
       if (user && pathname === "/login") {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
+        const home = (await isStaff(supabase)) ? "/sales" : "/dashboard";
+        return NextResponse.redirect(new URL(home, request.url));
       }
       return NextResponse.next({ request });
     }
 
     if (!user) {
       return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // getUser() di atas sudah memvalidasi token ke server, klaim aman dibaca.
+    if (await isStaff(supabase)) {
+      const ok = STAFF_PATHS.some((r) => pathname === r || pathname.startsWith(r + "/"));
+      if (!ok || !isPathAllowed(pathname)) {
+        return NextResponse.redirect(new URL("/sales", request.url));
+      }
+      return supabaseResponse;
     }
 
     if (pathname === "/") {

@@ -25,6 +25,7 @@ import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, FileUp, Filter, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
+import { getTenantId } from "@/lib/tenant";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -113,9 +114,7 @@ export default function PurchasesPage() {
   async function handleImportPurchases(rows: Record<string, unknown>[]) {
     setImporting(true);
     const supabase = (await import("@/lib/supabase/client")).createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const tenantId = await getTenantId(supabase);
     let success = 0;
     const errors: string[] = [];
     for (const r of rows) {
@@ -131,7 +130,7 @@ export default function PurchasesPage() {
         continue;
       }
       const { error } = await supabase.rpc("record_purchase", {
-        p_user_id: user!.id,
+        p_user_id: tenantId,
         p_item_id: found.id,
         p_quantity: qty,
         p_total_price: total,
