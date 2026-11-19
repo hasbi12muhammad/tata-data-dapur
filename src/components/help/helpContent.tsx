@@ -10,6 +10,7 @@ import {
   Settings,
   ShoppingCart,
   TrendingUp,
+  Users,
 } from "lucide-react";
 
 /* ── Types ── */
@@ -246,6 +247,24 @@ export const TOUR: TourSection[] = [
       ] },
     ],
   },
+  {
+    id: "staff",
+    icon: Users,
+    title: "Akun Karyawan",
+    route: "Pengaturan → Akun Karyawan",
+    blocks: [
+      { type: "p", node: <>Biar karyawan bisa bantu catat penjualan atau stok tanpa pakai akun kamu. Karyawan login pakai <strong>username + password</strong> yang kamu buat sendiri, dan cuma bisa buka menu yang kamu izinkan.</> },
+      { type: "features", items: [
+        { icon: "users", title: "Slot Karyawan", body: <>Paket Tata Data Dapur sudah termasuk <strong>1 slot karyawan</strong>. Butuh lebih? Tambah slot Rp 50.000 per karyawan, bayar sekali, berlaku selamanya.</> },
+        { icon: "banknote", title: "Tambah Slot", body: 'Klik "Tambah 1 slot karyawan — Rp50.000", selesaikan pembayaran, lalu kembali ke Pengaturan. Slot bertambah otomatis begitu pembayaran terkonfirmasi.' },
+        { icon: "circle-plus", title: "Buat Akun Karyawan", body: "Isi username (3-20 karakter: huruf kecil, angka, _) dan password minimal 8 karakter, lalu simpan. Kasih username dan password itu ke karyawanmu." },
+        { icon: "key", title: "Ganti Password & Hapus", body: "Karyawan lupa password? Ganti dari daftar akun. Karyawan berhenti? Hapus akunnya — slotnya kosong lagi dan bisa dipakai karyawan baru." },
+        { icon: "check-circle", title: "Atur Menu yang Boleh Dibuka", body: "Penjualan selalu aktif. Stok, Produksi, dan Pembelian bisa kamu nyalakan atau matikan. Satu setelan berlaku untuk semua karyawan." },
+        { icon: "lock", title: "Data Sensitif Aman", body: "HPP, laba, laporan, dashboard, resep, dan pengaturan nggak bisa dibuka karyawan — dikunci langsung di database, bukan cuma disembunyikan dari menu." },
+      ] },
+      { type: "callout", variant: "tip", node: <>Karyawan login di halaman login yang sama, cukup ketik <strong>username</strong>-nya (tanpa @) di kolom email.</> },
+    ],
+  },
 ];
 
 /* ════════════ TAB 2 — FAQ ════════════ */
@@ -474,6 +493,31 @@ Servis alat / tak terduga → Kategori: Perawatan & Lainnya`}</pre>
             Kalau sudah punya akses Kasir, buka menu Kasir, proses transaksi, lalu pilih &ldquo;Print Struk&rdquo; setelah transaksi selesai.
           </>
         ),
+      },
+    ],
+  },
+  {
+    title: "Akun Karyawan",
+    items: [
+      {
+        q: "Berapa akun karyawan yang saya dapat?",
+        a: <>Paket sudah termasuk <strong>1 akun karyawan</strong>. Tiap tambahan Rp 50.000 per karyawan, sekali bayar dan berlaku selamanya. Tambah slot lewat <strong>Pengaturan → Akun Karyawan</strong>.</>,
+      },
+      {
+        q: "Sudah bayar slot tapi belum bertambah?",
+        a: <>Tunggu beberapa detik lalu refresh halaman Pengaturan. Kalau masih belum bertambah setelah beberapa menit, hubungi kami dan sertakan bukti pembayaran.</>,
+      },
+      {
+        q: "Karyawan bisa lihat HPP atau laba?",
+        a: <>Tidak. HPP, laba, laporan, dashboard, resep, dan pengaturan dikunci di database untuk akun karyawan — tetap nggak bisa diakses meski karyawan paham teknis.</>,
+      },
+      {
+        q: "Karyawan login pakai apa?",
+        a: <>Pakai <strong>username</strong> dan password yang kamu buat. Di halaman login, ketik username-nya saja di kolom email.</>,
+      },
+      {
+        q: "Karyawan resign, slotnya hilang?",
+        a: <>Nggak. Hapus akun karyawan itu, slotnya kosong lagi dan bisa langsung dipakai buat karyawan baru.</>,
       },
     ],
   },
