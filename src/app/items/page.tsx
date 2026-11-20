@@ -103,6 +103,7 @@ export default function ItemsPage() {
   const [name, setName] = useState("");
   const [unit, setUnit] = useState<string>("gr");
   const [isAddon, setIsAddon] = useState(false);
+  const [stock, setStock] = useState("");
 
   const [search, setSearch] = useState("");
   const [filterUnit, setFilterUnit] = useState("");
@@ -124,6 +125,7 @@ export default function ItemsPage() {
     setName(item.name);
     setUnit(item.unit);
     setIsAddon(item.is_addon ?? false);
+    setStock(String(item.stock ?? 0));
     setModalOpen(true);
   }
 
@@ -131,7 +133,19 @@ export default function ItemsPage() {
     e.preventDefault();
     if (!name.trim()) return;
     if (editing) {
-      await updateItem.mutateAsync({ id: editing.id, name: name.trim(), unit, is_addon: isAddon });
+      const n = Number(stock);
+      if (!isStaff && stock.trim() !== "" && !Number.isFinite(n)) {
+        toast.error("Stok tidak valid");
+        return;
+      }
+      // ponytail: koreksi stok langsung tanpa log riwayat — tambah tabel stock_adjustments kalau butuh audit
+      await updateItem.mutateAsync({
+        id: editing.id,
+        name: name.trim(),
+        unit,
+        is_addon: isAddon,
+        ...(!isStaff && stock.trim() !== "" ? { stock: n } : {}),
+      });
     } else {
       await createItem.mutateAsync({ name: name.trim(), unit, is_addon: isAddon });
     }
@@ -446,6 +460,16 @@ export default function ItemsPage() {
             placeholder="mis. Tepung Terigu"
           />
           <UnitSelect label="Unit" value={unit} onChange={setUnit} required />
+          {editing && !isStaff && (
+            <Input
+              label={`Stok (${unit})`}
+              type="number"
+              step="any"
+              inputMode="decimal"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+            />
+          )}
           <div className="flex items-center gap-1">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
