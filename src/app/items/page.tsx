@@ -17,6 +17,7 @@ import {
   useUpdateItem,
 } from "@/hooks/useItems";
 import { useCustomUnits } from "@/hooks/useUnits";
+import { useIsStaff } from "@/hooks/useAuth";
 import { Item } from "@/types";
 import { formatCurrency, formatNumber } from "@/lib/utils";
 import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
@@ -33,6 +34,7 @@ const cls =
 
 export default function ItemsPage() {
   const { data: items, isLoading } = useItems();
+  const isStaff = useIsStaff();
   const createItem = useCreateItem();
   const updateItem = useUpdateItem();
   const deleteItem = useDeleteItem();
@@ -58,6 +60,7 @@ export default function ItemsPage() {
     );
     router.push("/purchases");
   }
+  // ponytail: avg_price di sisi staff = 0 (kolom dikunci DB), prefill restock staff nol — tambah default harga manual saat restock jadi kebutuhan
 
   const [importOpen, setImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -227,8 +230,8 @@ export default function ItemsPage() {
                   >
                     <option value="name_asc">Nama A–Z</option>
                     <option value="name_desc">Nama Z–A</option>
-                    <option value="price_desc">Harga ↑</option>
-                    <option value="price_asc">Harga ↓</option>
+                    {!isStaff && <option value="price_desc">Harga ↑</option>}
+                    {!isStaff && <option value="price_asc">Harga ↓</option>}
                     <option value="stock_desc">Stok ↑</option>
                     <option value="stock_asc">Stok ↓</option>
                   </select>
@@ -368,7 +371,7 @@ export default function ItemsPage() {
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       <span className="inline-flex items-center justify-end gap-1">
-                        Harga Rata-rata
+                        {isStaff ? "Harga Jual" : "Harga Rata-rata"}
                         <HelpTip fieldId="item.avgPrice" />
                       </span>
                     </th>
@@ -396,7 +399,7 @@ export default function ItemsPage() {
                         </span>
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs sm:text-sm whitespace-nowrap">
-                        {formatCurrency(item.avg_price)}
+                        {formatCurrency(isStaff ? item.selling_price ?? 0 : item.avg_price)}
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs hidden sm:table-cell">
                         {formatNumber(item.stock, 2)} {item.unit}

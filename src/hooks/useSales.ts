@@ -5,23 +5,33 @@ import { Sale, SaleCategory, SaleItem } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { getTenantId } from "@/lib/tenant";
+import { isStaffSession } from "@/hooks/useAuth";
+
+// Kolom tanpa HPP (avg_price, hpp_baseline, hpp_at_sale, hpp_addons_at_sale dikunci di DB untuk staff)
+export const RECIPE_SAFE_COLS =
+  "id,user_id,name,selling_price,created_at,is_ingredient,unit,stock,is_addon,batch_yield,waste_pct";
 
 export function useSales() {
   return useQuery<Sale[]>({
     queryKey: ["sales"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
+      const itemCols = staff
+        ? "id,sale_id,user_id,recipe_id,quantity_sold,selling_price,created_at"
+        : "id,sale_id,user_id,recipe_id,quantity_sold,selling_price,hpp_at_sale,hpp_addons_at_sale,created_at";
       const { data, error } = await supabase
         .from("sales")
-        .select(`
-          *,
+        .select(
+          `id,user_id,sold_at,created_at,category_id,created_by,
           category:sale_categories(id, name),
           sale_items(
-            *,
+            ${itemCols},
             recipe:recipes(id, name),
-            sale_addons(*)
+            sale_addons(id,item_id,sub_recipe_id,quantity,price_per_unit_at_sale,name_at_sale,created_at,sale_item_id)
           )
-        `)
+        ` as "*"
+        )
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -73,13 +83,15 @@ export function useReportSales() {
     queryKey: ["report-sales"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
       const { data, error } = await supabase
         .from("sale_items")
-        .select(`
-          *,
+        .select(
+          `${staff ? "id,sale_id,user_id,recipe_id,quantity_sold,selling_price,created_at" : "*"},
           recipe:recipes(id, name),
           sale:sales(id, created_at, category:sale_categories(id, name))
-        `)
+        ` as "*"
+        )
         .order("created_at", { ascending: true });
       if (error) throw error;
       return (data ?? []) as SaleItem[];
@@ -92,20 +104,33 @@ export function useDashboardStats() {
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
       const { data, error } = await supabase
         .from("sale_items")
-        .select("selling_price, hpp_at_sale, hpp_addons_at_sale, quantity_sold, sale_id");
+        .select((
+          staff
+            ? "selling_price, quantity_sold, sale_id"
+            : "selling_price, hpp_at_sale, hpp_addons_at_sale, quantity_sold, sale_id") as "*"
+        );
       if (error) throw error;
 
-      const rows = data ?? [];
+      const rows = data as {
+        selling_price: number;
+        quantity_sold: number;
+        sale_id: string;
+        hpp_at_sale?: number;
+        hpp_addons_at_sale?: number;
+      }[];
       const total_revenue = rows.reduce(
         (s, r) => s + r.selling_price * r.quantity_sold,
         0,
       );
-      const total_hpp = rows.reduce(
-        (s, r) => s + r.hpp_at_sale * r.quantity_sold + (r.hpp_addons_at_sale ?? 0),
-        0,
-      );
+      const total_hpp = staff
+        ? 0
+        : rows.reduce(
+            (s, r) => s + r.hpp_at_sale! * r.quantity_sold + (r.hpp_addons_at_sale ?? 0),
+            0,
+          );
       const total_profit = total_revenue - total_hpp;
       const profit_margin =
         total_revenue > 0 ? (total_profit / total_revenue) * 100 : 0;

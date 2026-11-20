@@ -5,6 +5,8 @@ import { Recipe, RecipeItem } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { getTenantId } from "@/lib/tenant";
+import { RECIPE_SAFE_COLS } from "@/hooks/useSales";
+import { isStaffSession } from "@/hooks/useAuth";
 
 export function calcHPP(
   items: RecipeItem[],
@@ -38,21 +40,30 @@ export function useRecipes() {
     queryKey: ["recipes"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
+      // staff: tanpa avg_price/hpp_baseline (dikunci DB); owner: penuh
+      const cols = staff ? RECIPE_SAFE_COLS : "*";
+      const itemCols = staff
+        ? "name, unit, avg_price_updated_at, stock"
+        : "name, unit, avg_price, prev_avg_price, avg_price_updated_at, stock";
+      const subCols = staff
+        ? "id, name, unit, stock, is_ingredient, batch_yield, waste_pct"
+        : "id, name, unit, stock, avg_price, is_ingredient, batch_yield, waste_pct";
       const { data, error } = await supabase
         .from("recipes")
         .select(
-          `*,
+          `${cols},
           recipe_items!recipe_id(
-            *,
-            item:items(name, unit, avg_price, prev_avg_price, avg_price_updated_at, stock),
+            id,recipe_id,item_id,sub_recipe_id,quantity_used,
+            item:items(${itemCols}),
             sub_recipe:recipes!sub_recipe_id(
-              id, name, unit, stock, avg_price, is_ingredient, batch_yield, waste_pct,
+              ${subCols},
               recipe_items!recipe_id(
                 quantity_used, item_id,
-                item:items(name, unit, avg_price, prev_avg_price, avg_price_updated_at, stock)
+                item:items(${itemCols})
               )
             )
-          )`
+          )` as "*"
         )
         .order("name");
       if (error) throw error;
@@ -185,9 +196,10 @@ export function useAddonSubRecipes() {
     queryKey: ["recipes", "addon"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
       const { data, error } = await supabase
         .from("recipes")
-        .select("*")
+        .select((staff ? RECIPE_SAFE_COLS : "*") as "*")
         .eq("is_ingredient", true)
         .eq("is_addon", true)
         .order("name");
@@ -210,9 +222,10 @@ export function useAddonFinishedRecipes() {
     queryKey: ["recipes", "addon-finished"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
       const { data, error } = await supabase
         .from("recipes")
-        .select("*")
+        .select((staff ? RECIPE_SAFE_COLS : "*") as "*")
         .eq("is_ingredient", false)
         .eq("is_addon", true)
         .order("name");

@@ -26,12 +26,14 @@ import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { getTenantId } from "@/lib/tenant";
+import { useIsStaff } from "@/hooks/useAuth";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
 
 export default function ProduksiPage() {
   const { data: productions, isLoading } = useProductions();
+  const isStaff = useIsStaff();
   const { data: recipes } = useRecipes();
   const deleteProduction = useDeleteProduction();
   const updateProduction = useUpdateProduction();
@@ -141,11 +143,12 @@ export default function ProduksiPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!recipeId || !quantity || !totalCost) return;
+    if (!recipeId || !quantity) return;
+    if (!isStaff && !totalCost) return;
     const payload = {
       recipe_id: recipeId,
       batches: Number(quantity),
-      total_cost: Number(totalCost),
+      total_cost: isStaff ? 0 : Number(totalCost),
       date,
     };
     // Check item (bahan baku) stocks first for both modes
@@ -236,11 +239,12 @@ export default function ProduksiPage() {
 
   async function handleEditSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!editing || !editBatches || !editCost) return;
+    if (!editing || !editBatches) return;
+    if (!isStaff && !editCost) return;
     await updateProduction.mutateAsync({
       id: editing.id,
       batches: Number(editBatches),
-      total_cost: Number(editCost),
+      total_cost: isStaff ? 0 : Number(editCost),
     });
     setEditing(null);
   }
@@ -380,11 +384,13 @@ export default function ProduksiPage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-sm font-semibold text-amber-700 tabular-nums">
-                          {formatCurrency(prod.total_cost)}
-                        </span>
+                        {!isStaff && (
+                          <span className="text-sm font-semibold text-amber-700 tabular-nums">
+                            {formatCurrency(prod.total_cost)}
+                          </span>
+                        )}
                         <button
-                          onClick={() => { setEditing(prod); setEditBatches(String(prod.batches)); setEditCost(String(prod.total_cost)); }}
+                          onClick={() => { setEditing(prod); setEditBatches(String(prod.batches)); setEditCost(String(prod.total_cost ?? "")); }}
                           className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors"
                           aria-label="Edit"
                         >
@@ -469,6 +475,7 @@ export default function ProduksiPage() {
             required
           />
 
+          {!isStaff && (
           <div>
             <div className="flex items-center justify-between mb-1">
               <span className="flex items-center gap-1">
@@ -493,7 +500,7 @@ export default function ProduksiPage() {
               className={`${cls} w-full`}
               value={formatThousands(totalCost)}
               onChange={(e) => setTotalCost(e.target.value.replace(/\./g, ""))}
-              required
+              required={false}
             />
             {estimatedHpp !== null && (
               <p className="mt-1 text-xs text-amber-700 font-medium">
@@ -504,7 +511,7 @@ export default function ProduksiPage() {
               </p>
             )}
           </div>
-
+          )}
           <div>
             <label className="block text-sm font-medium text-[#4A3728] mb-1">Tanggal</label>
             <input type="date" className={`${cls} w-full`} value={date}
@@ -531,11 +538,13 @@ export default function ProduksiPage() {
               type="number" min="0.01" step="0.01"
               value={editBatches} onChange={(e) => setEditBatches(e.target.value)} required
             />
+            {!isStaff && (
             <Input
               label="Total biaya (Rp)"
               type="text" inputMode="numeric"
-              value={formatThousands(editCost)} onChange={(e) => setEditCost(e.target.value.replace(/\./g, ""))} required
+              value={formatThousands(editCost)} onChange={(e) => setEditCost(e.target.value.replace(/\./g, ""))}
             />
+            )}
             <div className="flex gap-2 pt-1">
               <Button type="button" variant="ghost" onClick={() => setEditing(null)} className="flex-1">Batal</Button>
               <Button type="submit" loading={updateProduction.isPending} className="flex-1">Simpan</Button>

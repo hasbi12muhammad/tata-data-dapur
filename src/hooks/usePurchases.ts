@@ -18,15 +18,19 @@ import { Purchase, Production } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { getTenantId } from "@/lib/tenant";
+import { isStaffSession } from "@/hooks/useAuth";
 
 export function usePurchases() {
   return useQuery<Purchase[]>({
     queryKey: ["purchases"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
       const { data, error } = await supabase
         .from("purchases")
-        .select("*, item:items(name, unit), pkg_type:packaging_types(name)")
+        .select(
+          `${staff ? "id,user_id,item_id,quantity,purchased_at,created_at,pkg_type_id,pkg_qty,size_per_pkg,transaction_id" : "*"}, item:items(name, unit), pkg_type:packaging_types(name)` as "*"
+        )
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -186,9 +190,12 @@ export function useProductions() {
     staleTime: 30_000,
     queryFn: async (): Promise<Production[]> => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
       const { data, error } = await supabase
         .from("productions")
-        .select("*, recipe:recipes(name, unit, is_ingredient)")
+        .select(
+          `${staff ? "id,user_id,recipe_id,batches,created_at,created_by" : "*"}, recipe:recipes(name, unit, is_ingredient)` as "*"
+        )
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;

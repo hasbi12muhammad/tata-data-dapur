@@ -23,6 +23,7 @@ import {
 import { Sale, SaleItem } from "@/types";
 import { formatCurrency, formatNumber, formatThousands } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { useIsStaff } from "@/hooks/useAuth";
 import { format } from "date-fns";
 import {
   AlertTriangle, CheckCircle2, FileText, Filter, Minus, Pencil, Plus,
@@ -105,6 +106,7 @@ function calcSellingPrice(baseSellingPrice: string, addonRows: AddonRow[]): stri
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function SalesPage() {
+  const isStaff = useIsStaff();
   const { data: sales, isLoading } = useSales();
   const { data: recipes } = useRecipes();
   const { data: categories } = useSaleCategories();
@@ -894,8 +896,8 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                   >
                     <option value="date_desc">Terbaru</option>
                     <option value="date_asc">Terlama</option>
-                    <option value="profit_desc">Laba ↑</option>
-                    <option value="profit_asc">Laba ↓</option>
+                    {!isStaff && <option value="profit_desc">Laba ↑</option>}
+                    {!isStaff && <option value="profit_asc">Laba ↓</option>}
                     <option value="revenue_desc">Pendapatan ↑</option>
                   </select>
                 </div>
@@ -1046,9 +1048,9 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
             <div className="divide-y divide-[#EDE4CF]">
               {filtered.map((s) => {
                 const rev = saleRevenue(s);
-                const hpp = saleHPP(s);
-                const profit = rev - hpp;
-                const margin = rev > 0 ? (profit / rev) * 100 : 0;
+                const hpp = isStaff ? 0 : saleHPP(s);
+                const profit = isStaff ? 0 : rev - hpp;
+                const margin = isStaff ? 0 : rev > 0 ? (profit / rev) * 100 : 0;
                 const isExpanded = expandedSaleId === s.id;
 
                 return (
@@ -1095,24 +1097,32 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                       {/* Actions & profit */}
                       <div className="flex items-center gap-1 shrink-0">
                         <div className="text-right mr-1">
-                          <p
-                            className={`text-sm font-semibold tabular-nums whitespace-nowrap ${
-                              profit >= 0 ? "text-[#737B4C]" : "text-red-600"
-                            }`}
-                          >
-                            {formatCurrency(profit)}
-                          </p>
-                          <span
-                            className={`text-[10px] font-medium px-1.5 py-0.5 rounded tabular-nums ${
-                              margin >= 30
-                                ? "text-[#5C6B38]"
-                                : margin >= 15
-                                ? "text-[#7C563D]"
-                                : "text-red-600"
-                            }`}
-                          >
-                            {margin.toFixed(1)}%
-                          </span>
+                          {isStaff ? (
+                            <p className="text-sm font-semibold tabular-nums whitespace-nowrap text-[#2C1810]">
+                              {formatCurrency(rev)}
+                            </p>
+                          ) : (
+                            <>
+                              <p
+                                className={`text-sm font-semibold tabular-nums whitespace-nowrap ${
+                                  profit >= 0 ? "text-[#737B4C]" : "text-red-600"
+                                }`}
+                              >
+                                {formatCurrency(profit)}
+                              </p>
+                              <span
+                                className={`text-[10px] font-medium px-1.5 py-0.5 rounded tabular-nums ${
+                                  margin >= 30
+                                    ? "text-[#5C6B38]"
+                                    : margin >= 15
+                                    ? "text-[#7C563D]"
+                                    : "text-red-600"
+                                }`}
+                              >
+                                {margin.toFixed(1)}%
+                              </span>
+                            </>
+                          )}
                         </div>
                         <button
                           onClick={() => setInvoiceSale(s)}
@@ -1143,19 +1153,23 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                     {/* Revenue + HPP summary */}
                     <div className="flex items-center gap-2 mt-1 text-[10px] text-[#B88D6A] tabular-nums flex-wrap">
                       <span>Pendapatan {formatCurrency(rev)}</span>
-                      <span>·</span>
-                      <button
-                        onClick={() =>
-                          setExpandedSaleId(isExpanded ? null : s.id)
-                        }
-                        className={`${hpp > 0 ? "text-[#A05035] font-medium" : ""} hover:underline`}
-                      >
-                        HPP {formatCurrency(hpp)}
-                        {hpp > 0 && " ▾"}
-                      </button>
+                      {!isStaff && (
+                        <>
+                          <span>·</span>
+                          <button
+                            onClick={() =>
+                              setExpandedSaleId(isExpanded ? null : s.id)
+                            }
+                            className={`${hpp > 0 ? "text-[#A05035] font-medium" : ""} hover:underline`}
+                          >
+                            HPP {formatCurrency(hpp)}
+                            {hpp > 0 && " ▾"}
+                          </button>
+                        </>
+                      )}
                     </div>
                     {/* HPP breakdown */}
-                    {isExpanded && (
+                    {isExpanded && !isStaff && (
                       <div className="mt-2 rounded-lg bg-[#F5EFE0] border border-[#E5DACA] px-3 py-2 text-[10px] space-y-1">
                         {(s.sale_items ?? []).map((si) => (
                           <div key={si.id}>
@@ -1221,7 +1235,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
 
             {itemRows.map((row, rowIdx) => {
               const recipe = recipes?.find((r) => r.id === row.recipeId);
-              const hpp = recipe?.hpp ?? 0;
+              const hpp = isStaff ? 0 : (recipe?.hpp ?? 0);
               const addonTotal = row.addonRows.reduce(
                 (s, a) =>
                   a.sourceKey && Number(a.quantity) > 0
@@ -1296,7 +1310,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                           <option value="">Pilih produk...</option>
                           {recipes?.map((r) => (
                             <option key={r.id} value={r.id}>
-                              {r.name} — HPP {formatCurrency(r.hpp)}
+                              {isStaff ? r.name : `${r.name} — HPP ${formatCurrency(r.hpp)}`}
                             </option>
                           ))}
                         </Select>
@@ -1441,7 +1455,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                         />
                         <div className="flex items-center justify-between mt-1 gap-2">
                           <div className="flex items-center gap-2">
-                            {hppPerUnit > 0 && (
+                            {!isStaff && hppPerUnit > 0 && (
                               <p className="text-xs text-[#B88D6A]">
                                 HPP/unit:{" "}
                                 <span className="font-medium tabular-nums">
@@ -1449,7 +1463,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                                 </span>
                               </p>
                             )}
-                            {(() => {
+                            {isStaff ? null : (() => {
                               const sp = Number(row.sellingPrice);
                               if (!sp || !hppPerUnit) return null;
                               const margin = ((sp - hppPerUnit) / sp) * 100;
@@ -1568,7 +1582,7 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                 .map((r) => {
                   const rec = recipes?.find((x) => x.id === r.recipeId);
                   const rev = Number(r.sellingPrice) * Number(r.quantity);
-                  const hppProd = (rec?.hpp ?? 0) * Number(r.quantity);
+                  const hppProd = isStaff ? 0 : (rec?.hpp ?? 0) * Number(r.quantity);
                   const addonTotal = r.addonRows.reduce(
                     (s, a) =>
                       a.sourceKey && Number(a.quantity) > 0
@@ -1576,15 +1590,21 @@ ${opts.txId ? `<p class="txid">#${opts.txId}</p>` : ""}
                         : s,
                     0,
                   );
-                  const profit = rev - hppProd - addonTotal;
+                  const profit = isStaff ? 0 : rev - hppProd - addonTotal;
                   return (
                     <div key={r._key} className="flex justify-between text-[#5C4535]">
                       <span className="truncate max-w-[60%]">{rec?.name ?? "Item"}</span>
-                      <span
-                        className={`tabular-nums font-medium ${profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
-                      >
-                        Laba {formatCurrency(profit)}
-                      </span>
+                      {isStaff ? (
+                        <span className="tabular-nums font-medium text-[#5C4535]">
+                          {formatCurrency(rev)}
+                        </span>
+                      ) : (
+                        <span
+                          className={`tabular-nums font-medium ${profit >= 0 ? "text-[#737B4C]" : "text-red-600"}`}
+                        >
+                          Laba {formatCurrency(profit)}
+                        </span>
+                      )}
                     </div>
                   );
                 })}

@@ -26,6 +26,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, FileUp, Filter, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { getTenantId } from "@/lib/tenant";
+import { useIsStaff } from "@/hooks/useAuth";
 
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
@@ -100,6 +101,7 @@ function emptyItemRow(): PurchaseItemRow {
 
 export default function PurchasesPage() {
   const { data: purchases, isLoading } = usePurchases();
+  const isStaff = useIsStaff();
   const { data: items } = useItems();
   const createPurchase = useCreatePurchase();
   const updatePurchase = useUpdatePurchase();
@@ -169,7 +171,7 @@ export default function PurchasesPage() {
     setEditing(p);
     setItemId("");
     setQuantity(String(p.quantity));
-    setPricePerUnit(String(p.price_per_unit));
+    setPricePerUnit(p.price_per_unit != null ? String(p.price_per_unit) : "");
     setBuyUnit(canonicalUnit((p.item as any)?.unit));
     setDate(new Date(p.created_at).toISOString().slice(0, 10));
     setUsePkg(!!(p.pkg_type_id));
@@ -441,8 +443,8 @@ export default function PurchasesPage() {
                   >
                     <option value="date_desc">Terbaru</option>
                     <option value="date_asc">Terlama</option>
-                    <option value="price_desc">Harga ↑</option>
-                    <option value="price_asc">Harga ↓</option>
+                    {!isStaff && <option value="price_desc">Harga ↑</option>}
+                    {!isStaff && <option value="price_asc">Harga ↓</option>}
                     <option value="qty_desc">Qty terbanyak</option>
                   </select>
                 </div>
@@ -612,19 +614,25 @@ export default function PurchasesPage() {
                         <span className="text-[10px] text-[#B88D6A]">{(p.item as any)?.unit}</span>
                         <span className="text-[10px] text-[#B88D6A]">·</span>
                         <span className="text-[10px] text-[#B88D6A]">{p.quantity} {(p.item as any)?.unit}</span>
-                        <span className="text-[10px] text-[#B88D6A]">·</span>
-                        <span className="text-[10px] text-[#B88D6A]">{formatCurrency(p.price_per_unit)}/{(p.item as any)?.unit}</span>
+                        {!isStaff && (
+                          <>
+                            <span className="text-[10px] text-[#B88D6A]">·</span>
+                            <span className="text-[10px] text-[#B88D6A]">{formatCurrency(p.price_per_unit)}/{(p.item as any)?.unit}</span>
+                          </>
+                        )}
                       </div>
                       <p className="text-[10px] text-[#B88D6A] mt-0.5">
                         {format(new Date(p.created_at), "dd MMM yyyy")}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <div className="text-right">
-                        <p className="text-sm font-semibold text-[#2C1810] tabular-nums whitespace-nowrap">
-                          {formatCurrency(p.total_price)}
-                        </p>
-                      </div>
+                      {!isStaff && (
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-[#2C1810] tabular-nums whitespace-nowrap">
+                            {formatCurrency(p.total_price)}
+                          </p>
+                        </div>
+                      )}
                       <button
                         onClick={() => openEdit(p)}
                         className="p-1.5 rounded-lg text-[#B88D6A] hover:text-[#A05035] hover:bg-[#EDE4CF] transition-colors"
@@ -651,8 +659,8 @@ export default function PurchasesPage() {
                     <tr className="border-b border-[#E5DACA]">
                       <th className="text-left px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Bahan</th>
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Qty</th>
-                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Total</th>
-                      <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">/Unit</th>
+                      {!isStaff && <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Total</th>}
+                      {!isStaff && <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">/Unit</th>}
                       <th className="text-right px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">Tanggal</th>
                       <th className="px-3 py-3" />
                     </tr>
@@ -665,8 +673,8 @@ export default function PurchasesPage() {
                           <span className="text-[10px] text-[#B88D6A]">{(p.item as any)?.unit}</span>
                         </td>
                         <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-sm">{p.quantity}</td>
-                        <td className="px-6 py-3 text-right tabular-nums font-medium text-[#2C1810] text-sm whitespace-nowrap">{formatCurrency(p.total_price)}</td>
-                        <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-xs whitespace-nowrap">{formatCurrency(p.price_per_unit)}</td>
+                        {!isStaff && <td className="px-6 py-3 text-right tabular-nums font-medium text-[#2C1810] text-sm whitespace-nowrap">{formatCurrency(p.total_price)}</td>}
+                        {!isStaff && <td className="px-6 py-3 text-right tabular-nums text-[#5C4535] text-xs whitespace-nowrap">{formatCurrency(p.price_per_unit)}</td>}
                         <td className="px-6 py-3 text-right text-[#B88D6A] text-xs whitespace-nowrap">{format(new Date(p.created_at), "dd MMM yyyy")}</td>
                         <td className="px-3 py-3">
                           <div className="flex items-center gap-1">

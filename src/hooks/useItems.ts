@@ -5,15 +5,23 @@ import { Item } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { getTenantId } from "@/lib/tenant";
+import { isStaffSession } from "@/hooks/useAuth";
 
 export function useItems() {
   return useQuery<Item[]>({
     queryKey: ["items"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
+      // staff: tanpa avg_price/prev_avg_price (dikunci DB); owner: penuh
       const { data, error } = await supabase
         .from("items")
-        .select("*")
+        .select((
+          staff
+            ? "id,user_id,name,unit,current_price,created_at,stock,is_addon,avg_price_updated_at,selling_price"
+            : "*"
+          ) as "*"
+        )
         .order("name");
       if (error) throw error;
       return data ?? [];
@@ -76,9 +84,15 @@ export function useAddonItems() {
     queryKey: ["items", "addon"],
     queryFn: async () => {
       const supabase = createClient();
+      const staff = await isStaffSession(supabase);
       const { data, error } = await supabase
         .from("items")
-        .select("*")
+        .select((
+          staff
+            ? "id,user_id,name,unit,current_price,created_at,stock,is_addon,avg_price_updated_at,selling_price"
+            : "*"
+          ) as "*"
+        )
         .eq("is_addon", true)
         .order("name");
       if (error) throw error;

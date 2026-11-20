@@ -18,6 +18,19 @@ export function useCurrentUser() {
   });
 }
 
+export function useIsStaff() {
+  const { data: user } = useCurrentUser();
+  return user?.app_metadata?.role === "staff";
+}
+
+/** Baca role dari JWT session lokal (tanpa network) — dipakai queryFn untuk pilih kolom. */
+export async function isStaffSession(
+  supabase: ReturnType<typeof createClient>,
+): Promise<boolean> {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user?.app_metadata?.role === "staff";
+}
+
 export function useAuth() {
   const router = useRouter();
 
