@@ -18,7 +18,7 @@ export function useItems() {
         .from("items")
         .select((
           staff
-            ? "id,user_id,name,unit,current_price,created_at,stock,is_addon,avg_price_updated_at,selling_price"
+            ? "id,user_id,name,unit,current_price,created_at,stock,is_addon,avg_price_updated_at,selling_price,min_stock"
             : "*"
           ) as "*"
         )
@@ -89,7 +89,7 @@ export function useAddonItems() {
         .from("items")
         .select((
           staff
-            ? "id,user_id,name,unit,current_price,created_at,stock,is_addon,avg_price_updated_at,selling_price"
+            ? "id,user_id,name,unit,current_price,created_at,stock,is_addon,avg_price_updated_at,selling_price,min_stock"
             : "*"
           ) as "*"
         )

@@ -23,6 +23,7 @@ export interface Item {
   stock: number;
   is_addon: boolean;
   selling_price?: number | null;
+  min_stock?: number | null;
   created_at: string;
 }
 

@@ -63,6 +63,16 @@ export const FIELD_HELP: Record<string, FieldHelp> = {
     ),
     helpAnchor: { tab: "tour", id: "items" },
   },
+  "item.minStock": {
+    title: "Min. Stok",
+    short: (
+      <>
+        Batas bawah stok. Kalau stok sudah sama atau di bawah angka ini, baris bahan disorot dan
+        muncul peringatan &quot;menipis&quot;. Kosongi kalau bahan ini tidak perlu dipantau.
+      </>
+    ),
+    helpAnchor: { tab: "tour", id: "items" },
+  },
   "item.avgPrice": {
     title: "Harga Rata-rata (Avg Price)",
     short: (

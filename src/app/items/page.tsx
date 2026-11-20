@@ -29,6 +29,15 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getTenantId } from "@/lib/tenant";
 
+type StockStatus = "minus" | "low" | "ok" | "unset";
+// ponytail: batas menipis = stok <= min (inklusif); minus selalu menang
+function stockStatus(i: Pick<Item, "stock" | "min_stock">): StockStatus {
+  const s = i.stock ?? 0;
+  if (s < 0) return "minus";
+  if (i.min_stock == null) return "unset";
+  return s <= i.min_stock ? "low" : "ok";
+}
+
 const cls =
   "h-9 rounded-lg border border-[#D9CCAF] bg-[#FBF8F2] px-3 text-sm text-[#2C1810] placeholder:text-[#B88D6A] focus:outline-none focus:ring-2 focus:ring-[#A05035] focus:border-transparent";
 
@@ -42,18 +51,25 @@ export default function ItemsPage() {
   const { data: customUnits = [] } = useCustomUnits();
   const router = useRouter();
 
-  const negativeItems = useMemo(
-    () => (items ?? []).filter((i) => (i.stock ?? 0) < 0),
+  const alertItems = useMemo(
+    () => (items ?? []).filter((i) => ["minus", "low"].includes(stockStatus(i))),
     [items],
   );
+  const minusCount = alertItems.filter((i) => stockStatus(i) === "minus").length;
+  const lowCount = alertItems.length - minusCount;
 
   function openRestock() {
     sessionStorage.setItem(
       "restock_prefill",
       JSON.stringify(
-        negativeItems.map((i) => ({
+        alertItems.map((i) => ({
           itemId: i.id,
-          quantity: String(Math.abs(i.stock ?? 0)),
+          // ada min: isi sampai 2× min (cadangan); tanpa min (minus): tutup minusnya saja
+          quantity: String(
+            i.min_stock != null
+              ? Math.max(2 * i.min_stock - (i.stock ?? 0), 0)
+              : Math.abs(i.stock ?? 0),
+          ),
           pricePerUnit: String(Math.round(i.avg_price ?? 0)),
         })),
       ),
@@ -74,10 +90,11 @@ export default function ItemsPage() {
         unit: String(r["unit"] ?? "")
           .trim()
           .toLowerCase(),
+        min_stock: parseMin(r["min_stok"] ?? r["min_stock"]),
       }))
       .filter((r) => {
         const allUnits = [...HARDCODED_UNITS, ...(customUnits?.map(u => u.name.toLowerCase()) ?? [])];
-        return r.name && allUnits.includes(r.unit);
+        return r.name && allUnits.includes(r.unit) && !Number.isNaN(r.min_stock);
       });
     if (!valid.length) {
       toast.error("Tidak ada baris valid. Cek kolom nama & unit.");
@@ -104,6 +121,7 @@ export default function ItemsPage() {
   const [unit, setUnit] = useState<string>("gr");
   const [isAddon, setIsAddon] = useState(false);
   const [stock, setStock] = useState("");
+  const [minStock, setMinStock] = useState("");
 
   const [search, setSearch] = useState("");
   const [filterUnit, setFilterUnit] = useState("");
@@ -111,12 +129,21 @@ export default function ItemsPage() {
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
   const [pendingSortBy, setPendingSortBy] = useState("name_asc");
   const [pendingFilterUnit, setPendingFilterUnit] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [pendingFilterStatus, setPendingFilterStatus] = useState("");
+  const [filterAddon, setFilterAddon] = useState("");
+  const [pendingFilterAddon, setPendingFilterAddon] = useState("");
+  const [qtyMin, setQtyMin] = useState("");
+  const [qtyMax, setQtyMax] = useState("");
+  const [pendingQtyMin, setPendingQtyMin] = useState("");
+  const [pendingQtyMax, setPendingQtyMax] = useState("");
 
   function openCreate() {
     setEditing(null);
     setName("");
     setUnit("gr");
     setIsAddon(false);
+    setMinStock("");
     setModalOpen(true);
   }
 
@@ -126,12 +153,19 @@ export default function ItemsPage() {
     setUnit(item.unit);
     setIsAddon(item.is_addon ?? false);
     setStock(String(item.stock ?? 0));
+    setMinStock(item.min_stock == null ? "" : String(item.min_stock));
     setModalOpen(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
+    const min = parseMin(minStock);
+    if (Number.isNaN(min)) {
+      toast.error("Min. stok harus angka ≥ 0, atau kosongi");
+      return;
+    }
+    const minPatch = isStaff ? {} : { min_stock: min };
     if (editing) {
       const n = Number(stock);
       if (!isStaff && stock.trim() !== "" && !Number.isFinite(n)) {
@@ -144,10 +178,11 @@ export default function ItemsPage() {
         name: name.trim(),
         unit,
         is_addon: isAddon,
+        ...minPatch,
         ...(!isStaff && stock.trim() !== "" ? { stock: n } : {}),
       });
     } else {
-      await createItem.mutateAsync({ name: name.trim(), unit, is_addon: isAddon });
+      await createItem.mutateAsync({ name: name.trim(), unit, is_addon: isAddon, ...minPatch });
     }
     setModalOpen(false);
   }
@@ -165,9 +200,27 @@ export default function ItemsPage() {
     }
     if (filterUnit) {
       rows = rows.filter((i) => i.unit === filterUnit);
+      // rentang qty hanya bermakna dalam satu satuan
+      if (qtyMin !== "") rows = rows.filter((i) => i.stock >= Number(qtyMin));
+      if (qtyMax !== "") rows = rows.filter((i) => i.stock <= Number(qtyMax));
+    }
+    if (filterStatus) {
+      rows = rows.filter((i) => {
+        const st = stockStatus(i);
+        switch (filterStatus) {
+          case "alert": return st === "minus" || st === "low";
+          case "empty": return (i.stock ?? 0) === 0;
+          default: return st === filterStatus;
+        }
+      });
+    }
+    if (filterAddon) {
+      rows = rows.filter((i) => (i.is_addon ?? false) === (filterAddon === "yes"));
     }
     return [...rows].sort((a, b) => {
       switch (sortBy) {
+        case "critical":
+          return criticality(a) - criticality(b);
         case "name_desc":
           return b.name.localeCompare(a.name);
         case "price_desc":
@@ -182,9 +235,25 @@ export default function ItemsPage() {
           return a.name.localeCompare(b.name);
       }
     });
-  }, [items, search, filterUnit, sortBy]);
+  }, [items, search, filterUnit, sortBy, filterStatus, filterAddon, qtyMin, qtyMax]);
 
-  const hasFilters = search || filterUnit || sortBy !== "name_asc";
+  const activeFilterCount = [
+    filterUnit,
+    filterStatus,
+    filterAddon,
+    filterUnit && (qtyMin || qtyMax),
+    sortBy !== "name_asc",
+  ].filter(Boolean).length;
+  const hasFilters = search || activeFilterCount > 0;
+
+  function resetAll() {
+    setSearch("");
+    setFilterUnit(""); setPendingFilterUnit("");
+    setFilterStatus(""); setPendingFilterStatus("");
+    setFilterAddon(""); setPendingFilterAddon("");
+    setQtyMin(""); setQtyMax(""); setPendingQtyMin(""); setPendingQtyMax("");
+    setSortBy("name_asc"); setPendingSortBy("name_asc");
+  }
 
   return (
     <AppLayout
@@ -206,17 +275,32 @@ export default function ItemsPage() {
         </div>
       }
     >
-      {negativeItems.length > 0 && (
-        <button
-          onClick={openRestock}
-          className="w-full mb-3 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left hover:bg-red-100 transition-colors"
+      {alertItems.length > 0 && (
+        <div
+          className={`mb-3 flex items-center gap-3 rounded-xl border px-4 py-3 ${
+            minusCount ? "border-red-200 bg-red-50" : "border-[#E8C48A] bg-[#FBF0DC]"
+          }`}
         >
-          <AlertTriangle className="h-4 w-4 shrink-0 text-red-500" />
-          <span className="flex-1 text-sm font-medium text-red-700">
-            {negativeItems.length} bahan stok minus — ketuk untuk catat pembelian
-          </span>
-          <ShoppingCart className="h-4 w-4 shrink-0 text-red-400" />
-        </button>
+          <AlertTriangle className={`h-4 w-4 shrink-0 ${minusCount ? "text-red-500" : "text-[#B4691F]"}`} />
+          <button
+            onClick={() => { setFilterStatus("alert"); setPendingFilterStatus("alert"); }}
+            className={`flex-1 text-left text-sm font-medium hover:underline ${minusCount ? "text-red-700" : "text-[#8A4B12]"}`}
+          >
+            {[minusCount && `${minusCount} stok minus`, lowCount && `${lowCount} menipis`]
+              .filter(Boolean)
+              .join(" · ")}{" "}
+            — lihat
+          </button>
+          <button
+            onClick={openRestock}
+            className={`shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium text-white transition-colors ${
+              minusCount ? "bg-red-600 hover:bg-red-700" : "bg-[#A05035] hover:bg-[#8B4530]"
+            }`}
+          >
+            <ShoppingCart className="h-3.5 w-3.5" />
+            Catat pembelian
+          </button>
+        </div>
       )}
 
       <Card>
@@ -243,6 +327,7 @@ export default function ItemsPage() {
                     onChange={(e) => setPendingSortBy(e.target.value)}
                   >
                     <option value="name_asc">Nama A–Z</option>
+                    <option value="critical">Paling kritis</option>
                     <option value="name_desc">Nama Z–A</option>
                     {!isStaff && <option value="price_desc">Harga ↑</option>}
                     {!isStaff && <option value="price_asc">Harga ↓</option>}
@@ -263,12 +348,69 @@ export default function ItemsPage() {
                     ))}
                   </select>
                 </div>
+                <div>
+                  <label className="text-xs font-medium text-[#7C6352] mb-1 block">
+                    Rentang stok{pendingFilterUnit && ` (${pendingFilterUnit})`}
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number" step="any" inputMode="decimal" placeholder="Dari"
+                      className={`${cls} w-full disabled:opacity-50`}
+                      disabled={!pendingFilterUnit}
+                      value={pendingQtyMin}
+                      onChange={(e) => setPendingQtyMin(e.target.value)}
+                    />
+                    <span className="text-[#B88D6A]">–</span>
+                    <input
+                      type="number" step="any" inputMode="decimal" placeholder="Sampai"
+                      className={`${cls} w-full disabled:opacity-50`}
+                      disabled={!pendingFilterUnit}
+                      value={pendingQtyMax}
+                      onChange={(e) => setPendingQtyMax(e.target.value)}
+                    />
+                  </div>
+                  {!pendingFilterUnit && (
+                    <p className="mt-1 text-xs text-[#B88D6A]">Pilih satuan dulu biar angka stok bisa dibandingkan.</p>
+                  )}
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-[#7C6352] mb-1 block">Status stok</label>
+                  <select
+                    className={`${cls} w-full`}
+                    value={pendingFilterStatus}
+                    onChange={(e) => setPendingFilterStatus(e.target.value)}
+                  >
+                    <option value="">Semua</option>
+                    <option value="alert">Perlu restock (minus + menipis)</option>
+                    <option value="low">Menipis</option>
+                    <option value="minus">Minus</option>
+                    <option value="empty">Habis (0)</option>
+                    <option value="ok">Aman</option>
+                    <option value="unset">Belum diatur min. stok</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-[#7C6352] mb-1 block">Add-on</label>
+                  <select
+                    className={`${cls} w-full`}
+                    value={pendingFilterAddon}
+                    onChange={(e) => setPendingFilterAddon(e.target.value)}
+                  >
+                    <option value="">Semua</option>
+                    <option value="yes">Add-on saja</option>
+                    <option value="no">Bukan add-on</option>
+                  </select>
+                </div>
               </div>
               <div className="flex gap-2 pt-1">
                 <button
                   onClick={() => {
                     setPendingSortBy("name_asc");
                     setPendingFilterUnit("");
+                    setPendingFilterStatus("");
+                    setPendingFilterAddon("");
+                    setPendingQtyMin("");
+                    setPendingQtyMax("");
                   }}
                   className="flex-1 h-9 rounded-lg border border-[#D9CCAF] text-sm text-[#7C6352] font-medium hover:bg-[#EDE4CF] transition-colors"
                 >
@@ -278,6 +420,10 @@ export default function ItemsPage() {
                   onClick={() => {
                     setSortBy(pendingSortBy);
                     setFilterUnit(pendingFilterUnit);
+                    setFilterStatus(pendingFilterStatus);
+                    setFilterAddon(pendingFilterAddon);
+                    setQtyMin(pendingFilterUnit ? pendingQtyMin : "");
+                    setQtyMax(pendingFilterUnit ? pendingQtyMax : "");
                     setFilterSheetOpen(false);
                   }}
                   className="flex-1 h-9 rounded-lg bg-[#A05035] text-sm text-white font-medium hover:bg-[#8B4530] transition-colors"
@@ -312,19 +458,23 @@ export default function ItemsPage() {
               onClick={() => {
                 setPendingSortBy(sortBy);
                 setPendingFilterUnit(filterUnit);
+                setPendingFilterStatus(filterStatus);
+                setPendingFilterAddon(filterAddon);
+                setPendingQtyMin(qtyMin);
+                setPendingQtyMax(qtyMax);
                 setFilterSheetOpen(true);
               }}
               className={`relative h-9 px-3 rounded-lg border text-sm font-medium transition-colors flex items-center gap-1.5 ${
-                (filterUnit || sortBy !== "name_asc")
+                activeFilterCount
                   ? "border-[#A05035] bg-[#A05035]/10 text-[#A05035]"
                   : "border-[#D9CCAF] bg-[#FBF8F2] text-[#7C6352] hover:bg-[#EDE4CF]"
               }`}
             >
               <Filter className="w-3.5 h-3.5" />
               Filter
-              {(filterUnit || sortBy !== "name_asc") && (
+              {activeFilterCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#A05035] text-white text-[10px] flex items-center justify-center font-bold">
-                  {[filterUnit, sortBy !== "name_asc"].filter(Boolean).length}
+                  {activeFilterCount}
                 </span>
               )}
             </button>
@@ -337,13 +487,7 @@ export default function ItemsPage() {
             </span>
             {hasFilters && (
               <button
-                onClick={() => {
-                  setSearch("");
-                  setFilterUnit("");
-                  setSortBy("name_asc");
-                  setPendingSortBy("name_asc");
-                  setPendingFilterUnit("");
-                }}
+                onClick={resetAll}
                 className="text-[#A05035] hover:underline font-medium"
               >
                 Reset semua
@@ -396,15 +540,17 @@ export default function ItemsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((item) => (
+                  {filtered.map((item) => {
+                    const st = stockStatus(item);
+                    return (
                     <tr
                       key={item.id}
-                      className="border-b border-[#EDE4CF] last:border-0 hover:bg-[#F5EFE0] transition-colors"
+                      className={`border-b border-[#EDE4CF] last:border-0 transition-colors ${ROW_CLS[st]}`}
                     >
                       <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
                         <span className="break-words">{item.name}</span>
                         <span className="sm:hidden block text-xs text-[#B88D6A] font-normal mt-0.5">
-                          Stok: {formatNumber(item.stock, 2)} {item.unit}
+                          Stok: {formatNumber(item.stock, 2)} {item.unit} <StockBadge st={st} />
                         </span>
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3">
@@ -417,6 +563,10 @@ export default function ItemsPage() {
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs hidden sm:table-cell">
                         {formatNumber(item.stock, 2)} {item.unit}
+                        <StockBadge st={st} />
+                        {item.min_stock != null && (
+                          <span className="block text-[10px] text-[#B88D6A]">min {formatNumber(item.min_stock, 2)}</span>
+                        )}
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3">
                         <div className="flex items-center justify-end gap-1">
@@ -437,7 +587,8 @@ export default function ItemsPage() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -460,6 +611,26 @@ export default function ItemsPage() {
             placeholder="mis. Tepung Terigu"
           />
           <UnitSelect label="Unit" value={unit} onChange={setUnit} required />
+          {!isStaff && (
+            <div className="flex flex-col gap-1">
+              <Input
+                label={`Min. Stok (${unit})`}
+                help={<HelpTip fieldId="item.minStock" />}
+                type="number"
+                step="any"
+                min="0"
+                inputMode="decimal"
+                value={minStock}
+                onChange={(e) => setMinStock(e.target.value)}
+                placeholder="Jika bahan ini tidak dipantau min. stok nya, kosongi saja jangan kasih 0"
+              />
+              {editing && unit !== editing.unit && minStock.trim() !== "" && (
+                <p className="text-xs font-medium text-[#B4691F]">
+                  Awas, minimum stok ini awalnya dari {editing.unit}
+                </p>
+              )}
+            </div>
+          )}
           {editing && !isStaff && (
             <Input
               label={`Stok (${unit})`}
@@ -507,19 +678,51 @@ export default function ItemsPage() {
         onClose={() => setImportOpen(false)}
         title="Impor Bahan Baku"
         templateFilename="template_items.xlsx"
-        templateColumns={["nama", "unit"]}
+        templateColumns={["nama", "unit", "min_stok"]}
         templateRows={[
-          ["Tepung Terigu", "gr"],
-          ["Gula Pasir", "kg"],
-          ["Minyak Goreng", "liter"],
+          ["Tepung Terigu", "gr", "1000"],
+          ["Gula Pasir", "kg", ""],
+          ["Minyak Goreng", "liter", "2"],
         ]}
         previewColumns={[
           { key: "nama", label: "Nama" },
           { key: "unit", label: "Satuan" },
+          { key: "min_stok", label: "Min. Stok" },
         ]}
         onImport={handleImportItems}
         importing={importing}
       />
     </AppLayout>
   );
+}
+
+/** "" / null → null (tidak dipantau); angka ≥ 0 → angka; selain itu NaN (invalid). */
+function parseMin(v: unknown): number | null {
+  const t = String(v ?? "").trim().replace(",", ".");
+  if (t === "") return null;
+  const n = Number(t);
+  return Number.isFinite(n) && n >= 0 ? n : NaN;
+}
+
+/** Urutan "paling kritis": minus dulu, lalu rasio stok/min terkecil; tanpa min paling bawah. */
+function criticality(i: Item): number {
+  const s = i.stock ?? 0;
+  if (s < 0) return -1e9 + s;
+  if (i.min_stock == null) return 1e9;
+  return i.min_stock === 0 ? (s === 0 ? 0 : 1e8) : s / i.min_stock;
+}
+
+const ROW_CLS: Record<StockStatus, string> = {
+  minus: "bg-red-50 hover:bg-red-100 shadow-[inset_3px_0_0_#DC2626]",
+  low: "bg-[#FBF0DC] hover:bg-[#F6E4C4] shadow-[inset_3px_0_0_#C9822B]",
+  ok: "hover:bg-[#F5EFE0]",
+  unset: "hover:bg-[#F5EFE0]",
+};
+
+function StockBadge({ st }: { st: StockStatus }) {
+  if (st === "minus")
+    return <span className="ml-1.5 inline-block rounded px-1.5 py-px text-[10px] font-semibold bg-red-100 text-red-700">Minus</span>;
+  if (st === "low")
+    return <span className="ml-1.5 inline-block rounded px-1.5 py-px text-[10px] font-semibold bg-[#F3D9A8] text-[#8A4B12]">Menipis</span>;
+  return null;
 }
