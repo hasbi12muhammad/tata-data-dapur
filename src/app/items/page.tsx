@@ -553,8 +553,9 @@ export default function ItemsPage() {
                     >
                       <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
                         <span className="break-words">{item.name}</span>
-                        <span className="sm:hidden block text-xs text-[#B88D6A] font-normal mt-0.5">
-                          Stok: <span className="whitespace-nowrap">{formatNumber(item.stock, 2)} {item.unit}</span> <StockBadge st={st} />
+                        <span className="sm:hidden flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs text-[#B88D6A] font-normal mt-0.5">
+                          <span className="whitespace-nowrap">Stok: {formatNumber(item.stock, 2)} {item.unit}</span>
+                          <StockBadge st={st} />
                         </span>
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3 hidden sm:table-cell">
@@ -567,7 +568,7 @@ export default function ItemsPage() {
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-right tabular-nums text-[#4A3728] text-xs hidden sm:table-cell">
                         {formatNumber(item.stock, 2)} {item.unit}
-                        <StockBadge st={st} />
+                        <span className="ml-1.5"><StockBadge st={st} /></span>
                         {item.min_stock != null && (
                           <span className="block text-[10px] text-[#B88D6A]">min {formatNumber(item.min_stock, 2)}</span>
                         )}
@@ -726,8 +727,8 @@ const ROW_CLS: Record<StockStatus, string> = {
 
 function StockBadge({ st }: { st: StockStatus }) {
   if (st === "minus")
-    return <span className="ml-1.5 inline-block rounded px-1.5 py-px text-[10px] font-semibold bg-red-100 text-red-700">Minus</span>;
+    return <span className="inline-block rounded px-1.5 py-px text-[10px] font-semibold bg-red-100 text-red-700">Minus</span>;
   if (st === "low")
-    return <span className="ml-1.5 inline-block rounded px-1.5 py-px text-[10px] font-semibold bg-[#F3D9A8] text-[#8A4B12]">Menipis</span>;
+    return <span className="inline-block rounded px-1.5 py-px text-[10px] font-semibold bg-[#F3D9A8] text-[#8A4B12]">Menipis</span>;
   return null;
 }
