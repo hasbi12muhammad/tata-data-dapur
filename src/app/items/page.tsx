@@ -224,6 +224,26 @@ export default function ItemsPage() {
   ].filter(Boolean).length;
   const hasFilters = search || activeFilterCount > 0;
 
+  const STATUS_LABEL: Record<string, string> = {
+    alert: "Perlu restock", low: "Menipis", minus: "Minus", empty: "Habis (0)", ok: "Aman", unset: "Belum diatur min",
+  };
+  const SORT_LABEL: Record<string, string> = {
+    name_desc: "Nama Z–A", critical: "Paling kritis", price_desc: "Harga ↑", price_asc: "Harga ↓", stock_desc: "Stok ↑", stock_asc: "Stok ↓",
+  };
+  const chips: { label: string; clear: () => void }[] = [
+    filterUnit && {
+      label: `Satuan: ${filterUnit}`,
+      clear: () => { setFilterUnit(""); setPendingFilterUnit(""); setQtyMin(""); setQtyMax(""); setPendingQtyMin(""); setPendingQtyMax(""); },
+    },
+    filterUnit && (qtyMin || qtyMax) && {
+      label: `Stok ${qtyMin || "…"}–${qtyMax || "…"} ${filterUnit}`,
+      clear: () => { setQtyMin(""); setQtyMax(""); setPendingQtyMin(""); setPendingQtyMax(""); },
+    },
+    filterStatus && { label: `Status: ${STATUS_LABEL[filterStatus]}`, clear: () => { setFilterStatus(""); setPendingFilterStatus(""); } },
+    filterAddon && { label: filterAddon === "yes" ? "Add-on saja" : "Bukan add-on", clear: () => { setFilterAddon(""); setPendingFilterAddon(""); } },
+    sortBy !== "name_asc" && { label: `Urut: ${SORT_LABEL[sortBy]}`, clear: () => { setSortBy("name_asc"); setPendingSortBy("name_asc"); } },
+  ].filter(Boolean) as { label: string; clear: () => void }[];
+
   function resetAll() {
     setSearch("");
     setFilterUnit(""); setPendingFilterUnit("");
@@ -448,6 +468,21 @@ export default function ItemsPage() {
               )}
             </button>
           </div>
+          {chips.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {chips.map((c) => (
+                <button
+                  key={c.label}
+                  onClick={c.clear}
+                  aria-label={`Hapus filter ${c.label}`}
+                  className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full border border-[#A05035]/40 bg-[#A05035]/10 text-xs font-medium text-[#A05035] hover:bg-[#A05035]/20 transition-colors"
+                >
+                  {c.label}
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              ))}
+            </div>
+          )}
           <div className="flex items-center justify-between text-xs text-[#B88D6A]">
             <span>
               {filtered.length} bahan
@@ -519,7 +554,7 @@ export default function ItemsPage() {
                       <td className="px-4 sm:px-6 py-2.5 sm:py-3 font-medium text-[#2C1810]">
                         <span className="break-words">{item.name}</span>
                         <span className="sm:hidden block text-xs text-[#B88D6A] font-normal mt-0.5">
-                          Stok: {formatNumber(item.stock, 2)} {item.unit} <StockBadge st={st} />
+                          Stok: <span className="whitespace-nowrap">{formatNumber(item.stock, 2)} {item.unit}</span> <StockBadge st={st} />
                         </span>
                       </td>
                       <td className="px-3 sm:px-6 py-2.5 sm:py-3">
@@ -591,7 +626,8 @@ export default function ItemsPage() {
                 inputMode="decimal"
                 value={minStock}
                 onChange={(e) => setMinStock(e.target.value)}
-                placeholder="Jika bahan ini tidak dipantau min. stok nya, kosongi saja jangan kasih 0"
+                placeholder="Kosongi jika tidak dipantau"
+                helper="Jika bahan ini tidak dipantau min. stok nya, kosongi saja jangan kasih 0"
               />
               {editing && unit !== editing.unit && minStock.trim() !== "" && (
                 <p className="text-xs font-medium text-[#B4691F]">
