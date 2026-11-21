@@ -42,7 +42,7 @@ export function PWAInstallButton() {
   return (
     <button
       onClick={handleInstall}
-      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-[#7C6352] hover:bg-[#E9DFC6] transition-colors border border-[#D9CCAF]"
+      className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg text-sm font-medium text-[#7C6352] hover:bg-[#E9DFC6] transition-colors border border-[#D9CCAF]"
       title="Install aplikasi di perangkat ini"
       aria-label="Install aplikasi"
     >

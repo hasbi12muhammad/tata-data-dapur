@@ -528,13 +528,13 @@ export default function ItemsPage() {
                     <th className="text-left px-4 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
                       Nama
                     </th>
-                    <th className="text-left px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
+                    <th className="text-left px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
                       Satuan
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide">
-                      <span className="inline-flex items-center justify-end gap-1">
-                        {isStaff ? "Harga Jual" : "Harga Rata-rata"}
+                      <span className="inline-flex items-center justify-end gap-1 whitespace-nowrap">
                         <HelpTip fieldId="item.avgPrice" />
+                        {isStaff ? "Harga Jual" : "Harga Rata-rata"}
                       </span>
                     </th>
                     <th className="text-right px-3 sm:px-6 py-3 text-xs font-medium text-[#7C6352] uppercase tracking-wide hidden sm:table-cell">
@@ -557,7 +557,7 @@ export default function ItemsPage() {
                           Stok: <span className="whitespace-nowrap">{formatNumber(item.stock, 2)} {item.unit}</span> <StockBadge st={st} />
                         </span>
                       </td>
-                      <td className="px-3 sm:px-6 py-2.5 sm:py-3">
+                      <td className="px-3 sm:px-6 py-2.5 sm:py-3 hidden sm:table-cell">
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#EDE4CF] text-[#5C4535]">
                           {item.unit}
                         </span>
