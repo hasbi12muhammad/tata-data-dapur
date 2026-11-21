@@ -21,11 +21,10 @@ import { useIsStaff } from "@/hooks/useAuth";
 import { Item } from "@/types";
 import { formatCurrency, formatNumber } from "@/lib/utils";
 import { ImportExcelModal } from "@/components/ui/ImportExcelModal";
-import { AlertTriangle, FileUp, Filter, Package, Pencil, Plus, Search, ShoppingCart, Trash2, X } from "lucide-react";
+import { AlertTriangle, FileUp, Filter, Package, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getTenantId } from "@/lib/tenant";
 
@@ -49,7 +48,6 @@ export default function ItemsPage() {
   const deleteItem = useDeleteItem();
   const queryClient = useQueryClient();
   const { data: customUnits = [] } = useCustomUnits();
-  const router = useRouter();
 
   const alertItems = useMemo(
     () => (items ?? []).filter((i) => ["minus", "low"].includes(stockStatus(i))),
@@ -57,26 +55,6 @@ export default function ItemsPage() {
   );
   const minusCount = alertItems.filter((i) => stockStatus(i) === "minus").length;
   const lowCount = alertItems.length - minusCount;
-
-  function openRestock() {
-    sessionStorage.setItem(
-      "restock_prefill",
-      JSON.stringify(
-        alertItems.map((i) => ({
-          itemId: i.id,
-          // ada min: isi sampai 2× min (cadangan); tanpa min (minus): tutup minusnya saja
-          quantity: String(
-            i.min_stock != null
-              ? Math.max(2 * i.min_stock - (i.stock ?? 0), 0)
-              : Math.abs(i.stock ?? 0),
-          ),
-          pricePerUnit: String(Math.round(i.avg_price ?? 0)),
-        })),
-      ),
-    );
-    router.push("/purchases");
-  }
-  // ponytail: avg_price di sisi staff = 0 (kolom dikunci DB), prefill restock staff nol — tambah default harga manual saat restock jadi kebutuhan
 
   const [importOpen, setImportOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -290,15 +268,6 @@ export default function ItemsPage() {
               .filter(Boolean)
               .join(" · ")}{" "}
             — lihat
-          </button>
-          <button
-            onClick={openRestock}
-            className={`shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium text-white transition-colors ${
-              minusCount ? "bg-red-600 hover:bg-red-700" : "bg-[#A05035] hover:bg-[#8B4530]"
-            }`}
-          >
-            <ShoppingCart className="h-3.5 w-3.5" />
-            Catat pembelian
           </button>
         </div>
       )}

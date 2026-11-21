@@ -211,31 +211,6 @@ export default function PurchasesPage() {
     setModalOpen(true);
   }
 
-  // Restock pre-fill: ketika datang dari banner stok minus di halaman Bahan Baku
-  useEffect(() => {
-    const raw = sessionStorage.getItem("restock_prefill");
-    if (!raw) return;
-    sessionStorage.removeItem("restock_prefill");
-    try {
-      const prefill: { itemId: string; quantity: string; pricePerUnit: string }[] = JSON.parse(raw);
-      if (!prefill.length) return;
-      const rows = prefill.map((p) => ({
-        ...emptyItemRow(),
-        itemId: p.itemId,
-        quantity: p.quantity,
-        pricePerUnit: p.pricePerUnit,
-      }));
-      setEditing(null);
-      setItemRows(rows);
-      setExpandedKey(rows[0]._key);
-      setDate(new Date().toISOString().slice(0, 10));
-      setModalOpen(true);
-    } catch {
-      // ignore malformed prefill
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items]); // tunggu items loaded agar dropdown bisa resolve nama
-
   const [search, setSearch] = useState("");
   const [filterItem, setFilterItem] = useState("");
   const [sortBy, setSortBy] = useState("date_desc");
